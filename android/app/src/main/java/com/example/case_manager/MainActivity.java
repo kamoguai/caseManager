@@ -1,4 +1,4 @@
-package com.example.case_manager;
+package com.dctv.caseManager;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
