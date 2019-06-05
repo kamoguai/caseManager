@@ -13,7 +13,7 @@ class UserInfo {
     this.userData,
     this.authorityData
   );
-   // 反序列化
+   // 反序列化, 因資料字首是大寫，所以要手動把小寫轉大寫
    factory UserInfo.fromJson(Map<String, dynamic> json) => _$UserInfoFromJson(json);
    // 序列化
    Map<String, dynamic> toJson() => _$UserInfoToJson(this);

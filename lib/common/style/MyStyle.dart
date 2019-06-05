@@ -74,7 +74,7 @@ class MyConstant {
   static const lagerTextSize = 30.0;
   static const bigTextSize = 20.0;
   static const normalTextSize = 18.0;
-  static const middleTextWhiteSize = 16.0;
+  static const middleTextSize = 16.0;
   static const smallTextSize = 14.0;
   static const minTextSize = 12.0;
   static const miniTextSize = 10.0;
@@ -123,39 +123,39 @@ class MyConstant {
 
   static const middleText = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
   );
 
   static const middleTextWhite = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
   );
 
   static const middleSubText = TextStyle(
     color: Color(MyColors.subTextColor),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
   );
 
   static const middleSubLightText = TextStyle(
     color: Color(MyColors.subLightTextColor),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
   );
 
   static const middleTextBold = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
     fontWeight: FontWeight.bold,
   );
 
   static const middleTextWhiteBold = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
     fontWeight: FontWeight.bold,
   );
 
   static const middleSubTextBold = TextStyle(
     color: Color(MyColors.subTextColor),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
     fontWeight: FontWeight.bold,
   );
 
@@ -318,6 +318,24 @@ class MyICons {
   static const IconData PUSH_ITEM_MIN = Icons.indeterminate_check_box;
 }
 class MyScreen {
+  ///登入textFiled大小
+  static double loginTextFieldFontSize(BuildContext context) {
+    final deviceHeight = MediaQuery.of(context).size.height;
+    var fontSize = 12.0;
+    if (deviceHeight < 570) {
+      fontSize = MyConstant.middleTextSize;
+    }
+    else if (deviceHeight > 600 && deviceHeight < 800) {
+      fontSize = MyConstant.normalTextSize;
+    }
+    else if (deviceHeight > 800) {
+      fontSize = MyConstant.normalTextSize;
+    }
+    else {
+      fontSize = MyConstant.bigTextSize;
+    }
+    return fontSize;
+  }
   ///首頁bar按鈕長度
   static double homePageBarButtonWidth(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
@@ -335,7 +353,7 @@ class MyScreen {
     final deviceHeight = MediaQuery.of(context).size.height;
     double fontSize = 0.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.bigTextSize;
     } else if (deviceHeight > 600 && deviceHeight < 800) {
@@ -367,11 +385,11 @@ class MyScreen {
     if (deviceHeight < 570) {
       fontSize = MyConstant.smallTextSize;
     } else if (deviceHeight > 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     } else if (deviceHeight > 600 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     } else {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     }
     return ScreenUtil().setSp(fontSize);
   }
@@ -414,7 +432,7 @@ class MyScreen {
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.normalTextSize;
     } else if (deviceHeight > 600 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     } else {
       fontSize = MyConstant.normalTextSize;
     }
@@ -427,9 +445,9 @@ class MyScreen {
     if (deviceHeight < 570) {
       fontSize = MyConstant.miniTextSize;
     } else if (deviceHeight > 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     } else if (deviceHeight > 600 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     }
     else {
       fontSize = MyConstant.normalTextSize;
@@ -443,14 +461,14 @@ class MyScreen {
     if (deviceHeight < 570) {
       fontSize = MyConstant.smallTextSize;
     } else if (deviceHeight > 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     } else if (deviceHeight > 600 && deviceHeight < 800) {
       fontSize = MyConstant.smallTextSize;
     }
     else {
       fontSize = MyConstant.smallTextSize;
     }
-    return ScreenUtil().setSp(fontSize);
+    return fontSize;
   }
   ///通用detailList字體大小s
   static double defaultTableCellFontSize_s(BuildContext context) {
@@ -509,7 +527,7 @@ class MyScreen {
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.bigTextSize;
     } else if (deviceHeight > 600 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextWhiteSize;
+      fontSize = MyConstant.middleTextSize;
     }
     else {
       fontSize = MyConstant.smallTextSize;
@@ -530,6 +548,6 @@ class MyScreen {
     else {
       fontSize = MyConstant.normalTextSize;
     }
-    return ScreenUtil().setSp(fontSize);
+    return fontSize;
   }
 }

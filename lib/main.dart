@@ -4,6 +4,10 @@ import 'package:case_manager/common/event/HttpErrorEvent.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/net/Code.dart';
 import 'package:case_manager/common/redux/SysState.dart';
+import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/CommonUtils.dart';
+import 'package:case_manager/page/HomePage.dart';
+import 'package:case_manager/page/LoginPage.dart';
 import 'package:case_manager/page/WelcomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +27,7 @@ class MyApp extends StatelessWidget {
     ///初始化數據
     initialState: SysState(
       userInfo: UserInfo.empty(),
-      themeData: ThemeData(primaryColor: Colors.blue),
+      themeData: CommonUtils.getThemeData(MyColors.primarySwatch),
     )
   );
 
@@ -38,15 +42,21 @@ class MyApp extends StatelessWidget {
       store: store,
       child: StoreBuilder<SysState>(builder: (context, store) {
         return MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-  
-            primarySwatch: Colors.blue,
-          ),
+          theme: store.state.themeData,
           routes: {
             ///設定route path, app一開始先進入welcome頁
             WelcomePage.sName: (context) {
               return WelcomePage();
+            },
+            LoginPage.sName: (context) {//登入
+              return MyHomePage(
+                child: LoginPage(),
+              );
+            },
+            HomePage.sName: (context) {//首頁
+              return MyHomePage(
+                child: HomePage(),
+              );
             }
           },
         );

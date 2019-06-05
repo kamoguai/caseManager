@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:case_manager/common/redux/SysState.dart';
-// import 'package:snr/common/utils/CommonUtils.dart';
-// import 'package:snr/common/dao/UserDao.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
-// import 'package:snr/common/style/MyStyle.dart';
+
 
 class WelcomePage extends StatefulWidget {
   static final String sName = "/";
@@ -18,10 +18,10 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+ 
   var isUpdate = false;
- /*
   updateFunc() async {
-    var res = await UserDao.isUpdateApp(context);
+    var res = await UserInfoDao.isUpdateApp(context);
     setState(() {
       isUpdate = res;
     });
@@ -45,14 +45,15 @@ class _WelcomePageState extends State<WelcomePage> {
     //計算bar高度
     new Future.delayed(const Duration(seconds: 2), () {
       //延遲2秒跳轉
-      UserDao.initUserInfo(store).then((res) {
+      UserInfoDao.initUserInfo(store).then((res) {
         if (isUpdate) {
           NavigatorUtils.goLogin(context);
         }
         else {
           // 將使用者信息去store查詢
           if (res != null && res.result) {
-            NavigatorUtils.goHome(context);
+            // NavigatorUtils.goHome(context);
+            NavigatorUtils.goLogin(context);
           }
           else {
             NavigatorUtils.goLogin(context);
@@ -62,7 +63,7 @@ class _WelcomePageState extends State<WelcomePage> {
       });
     });
   }
-  */
+  
 
   @override
   Widget build(BuildContext context) {

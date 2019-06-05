@@ -1,4 +1,6 @@
 
+import 'package:case_manager/page/HomePage.dart';
+import 'package:case_manager/page/LoginPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,5 +25,14 @@ class NavigatorUtils {
   ///跳轉至頁面並移除上一頁
   static NavigatorRemoveRouter(BuildContext context, Widget widget) {
     Navigator.pushAndRemoveUntil(context, new CupertinoPageRoute(builder: (context) => widget), null);
+  }
+  ///登入頁
+  static goLogin(BuildContext context) {
+    Navigator.pushReplacementNamed(context, LoginPage.sName);
+  }
+  ///首頁
+  ///pushReplacementNamed需要由main.dart做導航
+  static goHome(BuildContext context) {
+    Navigator.pushReplacementNamed(context, HomePage.sName);
   }
 }

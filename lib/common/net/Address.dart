@@ -45,11 +45,11 @@ class Address {
     } on PlatformException {
       
     }
-    return "${ssoDomain}${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=SNR&tokenType=$deviceType&tokenID=slg;ksl;dc123&packageName=com.dc.SNR&type=$deviceType";
+    return "${ssoDomain}${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseinformation&tokenType=$deviceType&tokenID=slg;ksl;dc123&packageName=com.dctv.caseinformation&type=$deviceType";
   }
 
   ///登入取得使用者資訊
-  static loginWithCmAccount(account, password, serial, tokenId, ssokey) {
+  static loginWithCmAccount(account, ssokey) {
     return "${kCMHostPath}FunctionName=Login2&SYSName=caseinformation&Account=$account&SSOKey=$ssokey";
   }
 

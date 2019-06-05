@@ -8,18 +8,18 @@ part of 'UserInfo.dart';
 
 UserInfo _$UserInfoFromJson(Map<String, dynamic> json) {
   return UserInfo(
-      json['userData'] == null
+      json['UserData'] == null
           ? null
-          : UserData.fromJson(json['userData'] as Map<String, dynamic>),
-      json['authorityData'] == null
+          : UserData.fromJson(json['UserData'] as Map<String, dynamic>),
+      json['AuthorityData'] == null
           ? null
           : AuthorityData.fromJson(
-              json['authorityData'] as Map<String, dynamic>));
+              json['AuthorityData'] as Map<String, dynamic>));
 }
 
 Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
-      'userData': instance.userData,
-      'authorityData': instance.authorityData
+      'UserData': instance.userData,
+      'AuthorityData': instance.authorityData
     };
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) {
