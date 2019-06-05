@@ -5,5 +5,5 @@ flutter_webview_plugin=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlan
 fluttertoast=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-3.1.0/
 path_provider=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.1.0/
 permission_handler=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler-3.1.0/
-shared_preferences=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3/
-url_launcher=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.0.2/
+shared_preferences=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/
+url_launcher=/Users/dctv/Desktop/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-5.0.3/
