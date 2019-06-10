@@ -22,9 +22,11 @@ class _WelcomePageState extends State<WelcomePage> {
   var isUpdate = false;
   updateFunc() async {
     var res = await UserInfoDao.isUpdateApp(context);
-    setState(() {
+    if(mounted) {
+       setState(() {
       isUpdate = res;
     });
+    }
   }
 
   void initState() {

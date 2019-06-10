@@ -84,6 +84,7 @@ flutter:
     - static/images/title_tick.png
     - static/images/uncheck.png
     - static/images/welcomePic.png
+    - static/images/bg.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

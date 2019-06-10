@@ -30,6 +30,10 @@ class NavigatorUtils {
   static goLogin(BuildContext context) {
     Navigator.pushReplacementNamed(context, LoginPage.sName);
   }
+  ///跳回登入頁
+  static goTopLogin(BuildContext context) {
+    NavigatorRemoveRouter(context, LoginPage());
+  }
   ///首頁
   ///pushReplacementNamed需要由main.dart做導航
   static goHome(BuildContext context) {

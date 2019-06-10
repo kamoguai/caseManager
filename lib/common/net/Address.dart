@@ -230,9 +230,9 @@ class Address {
   static assignDPMaint(userId, caseId, pdeptId, puserId, newStatus, newAData) {
     return "${kCMHostPath}FunctionName=DPMaint&UserID=$userId&CaseID=$caseId&PDeptID=$pdeptId&PUserID=$puserId&NewStatus=$newStatus&NewAData=$newAData";
   }
-  ///
+  ///取得使用者案件筆數
   static getUserCaseType(account) {
-    return "${kCMHostPath}FunctionName=CaseTypeSelect&account=$account";
+    return "${kCMHostPath}FunctionName=GetUserCaseCount&account=$account";
   }
 
 }
