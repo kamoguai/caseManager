@@ -213,7 +213,17 @@ mixin MyListState<T extends StatefulWidget> on State<T>, AutomaticKeepAliveClien
     );
   }
 
-  ///取得裝置width並切6份
+  ///取得裝置width並切2份
+  deviceWidth2() {
+    var width = MediaQuery.of(context).size.width;
+    return width / 2;
+  }
+  ///取得裝置width並切3份
+  deviceWidth3() {
+    var width = MediaQuery.of(context).size.width;
+    return width / 3;
+  }
+  ///取得裝置width並切4份
   deviceWidth4() {
     var width = MediaQuery.of(context).size.width;
     return width / 4;
@@ -286,25 +296,25 @@ mixin MyListState<T extends StatefulWidget> on State<T>, AutomaticKeepAliveClien
     return height / 4;
   }
 
-  ///自動字大小
-  autoTextSize(text, color) {
-    var fontSize = MyScreen.normalPageFontSize_s(context);
-
+   ///自動縮放-中
+  autoTextSize(text, style) {
+    var fontSize = MyScreen.defaultTableCellFontSize(context);
+    var fontStyle = TextStyle(fontSize: fontSize);
     return AutoSizeText(
       text,
-      style: TextStyle(color: color, fontSize: fontSize),
+      style: style.merge(fontStyle),
       minFontSize: 5.0,
       textAlign: TextAlign.center,
     );
   }
-  
-  ///自動字大小靠左
-  Widget autoTextSizeLeft(text, color) {
-    var fontSize = MyScreen.normalPageFontSize_s(context);
 
+  ///自動縮放-左
+  autoTextSizeLeft(text, style) {
+    var fontSize = MyScreen.defaultTableCellFontSize(context);
+    var fontStyle = TextStyle(fontSize: fontSize);
     return AutoSizeText(
       text,
-      style: TextStyle(color: color, fontSize: fontSize),
+      style: style.merge(fontStyle),
       minFontSize: 5.0,
       textAlign: TextAlign.left,
     );

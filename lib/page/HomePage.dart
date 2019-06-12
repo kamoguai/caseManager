@@ -1,6 +1,4 @@
 
-import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/HomeDao.dart';
@@ -240,7 +238,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isMaint) {
-
+                NavigatorUtils.goMaint(context, _accName);
               }
             },
           ),
@@ -370,6 +368,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
+            leading: Container(),
+            elevation: 0.0,
             actions: actions(),
           ),
           body: Container(

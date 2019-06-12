@@ -1,6 +1,7 @@
 
 import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
+import 'package:case_manager/page/maint/%EF%BC%ADaintPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -38,5 +39,9 @@ class NavigatorUtils {
   ///pushReplacementNamed需要由main.dart做導航
   static goHome(BuildContext context) {
     Navigator.pushReplacementNamed(context, HomePage.sName);
+  }
+  ///個人案件處理
+  static goMaint(BuildContext context, String accName) {
+    NavigatorRouter(context, MaintPage(accName: accName));
   }
 }

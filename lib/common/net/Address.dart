@@ -131,7 +131,7 @@ class Address {
   static didAssignEmpl(userId, caseId, pUser) {
     return "${kCMHostPath}FunctionName=AssignEmpl&UserID=$userId&CaseID=$caseId&PUser=$pUser";
   }
-  ///取得
+  ///取得個人案件處理清單
   static didMaintList(userId, deptId) {
     return "${kCMHostPath}FunctionName=MaintList&UserID=$userId&DeptID=$deptId";
   }
@@ -139,7 +139,7 @@ class Address {
   static didGetSalesMaintList(userId, deptId) {
     return "${kCMHostPath}FunctionName=SalesList&UserID=$userId&DeptID=$deptId";
   }
-  ///
+  ///取得個人案件處理清單，條件查詢
   static didGetMaintListExt(itype, userId, deptId, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial) {
     var urlStr = "${kCMHostPath}FunctionName=MaintList&UserID=$userId&DeptID=$deptId";
     if (itype == 1) {

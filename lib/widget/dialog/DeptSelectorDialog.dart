@@ -1,5 +1,8 @@
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/dao/DeptInfoDao.dart';
+import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
 /**
@@ -7,6 +10,8 @@ import 'package:flutter/material.dart';
  * Date: 2019-06-10
  */
 class DeptSelectorDialog extends StatefulWidget {
+  final Function callApiData;
+  DeptSelectorDialog({this.callApiData});
   @override
   _DeptSelectorDialogState createState() => _DeptSelectorDialogState();
 }
@@ -14,7 +19,7 @@ class DeptSelectorDialog extends StatefulWidget {
 class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget {
   ///裝載api list
   final List<dynamic> dataArray = [];
-  
+  Map<String, dynamic> pickData = {};
   @override
   void initState() {
     super.initState();
@@ -27,6 +32,17 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
     super.dispose();
   }
 
+  @override
+  autoTextSize(text, style, context){
+    return AutoSizeText(
+      text,
+      style: style,
+      minFontSize: 5.0,
+      textAlign: TextAlign.start,  
+    );
+  }
+  
+  ///初始化
   initParam() {
 
     _getApiData();
@@ -56,21 +72,18 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
     var dic = DeptSelectorModel.forMap(dicIndex);
     item = GestureDetector(
       child: Container(
+        color: pickData == dicIndex ? Colors.yellow : Colors.white,
+        height: titleHeight(context) * 1.5,
         padding: EdgeInsets.only(left: 5.0, right: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              child: autoTextSize(dic, TextStyle(color: Colors.black), context),
-            ),
-            Container(
-
-              child: Icon(Icons.check), color: Colors.blueAccent,),
-          ],
-        ),
+        child: Center(
+          child: autoTextSize(dic.deptName, TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+        )
       ),
       onTap: () {
-
+        setState(() {
+          pickData = dicIndex;
+        });
+        print('select dept -> $pickData');
       },
     );
     
@@ -99,8 +112,60 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
   Widget build(BuildContext context) {
     return isLoading ?  Container(width: 150, child: showLoadingAnime(context)) : 
      Container(
-       height: deviceHeight4(context) * 2,
-       child: Column(),
+      //  padding: EdgeInsets.symmetric(vertical: 20.0),
+      //  decoration: BoxDecoration(shape: BoxShape.circle),
+      //  height: deviceHeight4(context) * 2,
+       child: Column(
+         children: <Widget>[
+           Container(
+             decoration: BoxDecoration(
+               borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+               color: Color(MyColors.hexFromStr('#40b89e')),
+             ),
+             height: titleHeight(context) * 1.5,
+             child: Center(child: autoTextSize('選擇部門', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),)
+           ),
+           listView(),
+           Container(
+             height: titleHeight(context) * 1.5,
+             child: Row(
+               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+               children: <Widget>[
+                 Expanded(
+                   flex: 5,
+                   child: Container(
+                     height: titleHeight(context) * 1.5,
+                     child: FlatButton(
+                        color: Color(MyColors.hexFromStr('#f2f2f2')),
+                        child: autoTextSize('取消', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+                        onPressed: (){
+                          Navigator.pop(context, 'cancel');
+                          NavigatorUtils.goHome(context);
+                        },
+                      ),
+                   )
+                 ),
+                 Expanded(
+                   flex: 5,
+                    child: Container(
+                      height: titleHeight(context) * 1.5, 
+                      child: FlatButton(
+                        color: Color(MyColors.hexFromStr('#40b89e')),
+                        child: autoTextSize('確定', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),
+                        onPressed: () {
+                          if (pickData.length > 0) {
+                            widget.callApiData(pickData);
+                          }
+                          Navigator.pop(context, 'ok');
+                        },
+                      ),
+                    )
+                 )
+               ],
+             ),
+           )
+         ],
+       ),
      );
   }
 }

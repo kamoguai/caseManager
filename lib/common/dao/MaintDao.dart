@@ -1,0 +1,62 @@
+
+import 'package:case_manager/common/config/Config.dart';
+import 'package:case_manager/common/dao/DaoResult.dart';
+import 'package:case_manager/common/net/Address.dart';
+import 'package:case_manager/common/net/Api.dart';
+
+/**
+ * 個人案件相關api呼叫
+ * Date: 2019-06-11
+ */
+class MaintDao{
+  ///取得個人案件處理清單
+  static getMaintList({userId, deptId}) async {
+    Map<String, dynamic> mainDataArray = {};
+    List<dynamic> dataArray = [];
+    var res = await HttpManager.netFetch(Address.didMaintList(userId, deptId), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("個人案件list resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray.length > 0) {
+        dataArray = mainDataArray["QLists"];
+        return new DataResult(dataArray, true);
+
+      }
+      else {
+        return new DataResult(null, false);
+      }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
+  ///取得個人案件處理清單，條件查詢
+  static getMaintListExt({itype, userId, deptId, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial}) async {
+     Map<String, dynamic> mainDataArray = {};
+     List<dynamic> dataArray = [];
+     var res = await HttpManager.netFetch(Address.didGetMaintListExt(itype, userId, deptId, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial), null, null, null);
+     if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("個人案件list resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray.length > 0) {
+        dataArray = mainDataArray["QLists"];
+        return new DataResult(dataArray, true);
+
+      }
+      else {
+        return new DataResult(null, false);
+      }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
+}
