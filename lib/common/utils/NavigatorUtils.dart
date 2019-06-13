@@ -1,7 +1,7 @@
 
 import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
-import 'package:case_manager/page/maint/%EF%BC%ADaintPage.dart';
+import 'package:case_manager/page/maint/MaintPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

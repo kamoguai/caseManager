@@ -2,11 +2,14 @@
 
 import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
+import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/redux/SysState.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
+import 'package:case_manager/widget/MyPullLoadWidget.dart';
 import 'package:case_manager/widget/dialog/DeptSelectorDialog.dart';
+import 'package:case_manager/widget/items/MaintListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/widget/MyListState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -17,28 +20,41 @@ import 'package:redux/redux.dart';
  * Date: 2019-06-11
  */
 class MaintPage extends StatefulWidget {
-  final String accName = "";
-  MaintPage({accName});
+  final String accName;
+  MaintPage({this.accName});
   @override
   _MaintPageState createState() => _MaintPageState();
 }
 
 class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixin<MaintPage>, MyListState<MaintPage>{
-  
+  ///app bar左邊title
   var userTitle = "個人案件";
+  ///部門id
+  var deptId = "";
+  ///新案count
+  var newCaseCount = 0;
+  ///未結count
+  var noCloseCount = 0;
+  ///超常count
+  var overCount = 0;
+  ///全部筆數
+  var totalCount = 0;
   ///userInfo model
   UserInfo userInfo;
+  ///數據資料arr
+  final List<dynamic> dataArray = [];
 
   @override
   void initState() {
     super.initState();
+    clearData();
     initParam();
   }
 
   @override
   void dispose() {
     super.dispose();
-
+    clearData();
   }
 
   @override
@@ -53,11 +69,47 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
   requestLoadMore() async {
     return null;
   }
-
+  //透過override pullcontroller裡面的handleRefresh覆寫數據
   @override
   Future<Null> handleRefresh() async {
+    dataArray.clear();
+    if (isLoading) {
+      return null;
+    }
 
-
+    isLoading = true;
+    var res = await getApiData();
+    if (res != null && res.result) {
+      List<MaintTableCell> list = new List();
+      dataArray.addAll(res.data);
+      if (dataArray.length > 0) {
+        for (var dic in dataArray) {
+          list.add(MaintTableCell.fromJson(dic));
+        }
+      }
+      List<dynamic> newCount = [];
+      List<dynamic> noCount = [];
+      List<dynamic> oCount = [];
+      for (var dic in res.data) {
+        if (dic["StatusName"] == '新案') {
+          newCount.add(dic);
+        }
+        else if (dic["StatusName"] == '接案') {
+          noCount.add(dic);
+        }
+      }
+      if(mounted) {
+        setState(() {
+          totalCount = res.data.length;
+          newCaseCount = newCount.length;
+          noCloseCount = noCount.length;
+          isLoading = false;
+          pullLoadWidgetControl.dataList.clear();
+          pullLoadWidgetControl.dataList.addAll(list);
+          pullLoadWidgetControl.needLoadMore = false;
+        });
+      }
+    }
   }
 
    Store<SysState> _getStore() {
@@ -77,27 +129,93 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
       builder: (BuildContext context) => deptSelectorDialog(context)
       );
     });
-    
+  }
+  ///列表顯示物件
+  _renderItem(index) {
+    MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
+    MaintListModel model = MaintListModel.forMap(mtc);
+    return MaintListItem(model: model,);
+  }
+  ///頁面上方head
+  _renderHeader() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5),
+      height: titleHeight(),
+      decoration: BoxDecoration(color: Color(MyColors.hexFromStr('#eeffec')),border: Border(top: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid), bottom: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          autoTextSize('新案: $newCaseCount', TextStyle(color: Colors.black)),
+          SizedBox(width: 5.0,),
+          autoTextSize('未結: $noCloseCount', TextStyle(color: Colors.black)),
+          SizedBox(width: 5.0,),
+          autoTextSize('超常: $overCount', TextStyle(color: Colors.black)),
+        ],
+      ),
+    );
+  }
+
+  ///產生body列表
+  _renderBody() {
+    return MyPullLoadWidget(
+        pullLoadWidgetControl,
+        (BuildContext context, int index) => _renderItem(index),
+        handleRefresh,
+        onLoadMore,
+        refreshKey: refreshIndicatorKey,
+    );
   }
   ///function給DeptSelectorDialog呼叫並把值帶回
   void _callApiData(Map<String, dynamic> map) async {
+    dataArray.clear();
     if (isLoading) {
       Fluttertoast.showToast(msg: '資料正在讀取中..');
       return;
     }
-    isLoading = true;
     setState(() {
+      isLoading = true;
       userTitle = map["DeptName"];
+      deptId = map["DeptID"];
     });
-    var res = await getApiData(userInfo.userData.UserID, map["DeptID"]);
+    // showRefreshLoading();
+    var res = await MaintDao.getMaintList(userId: userInfo.userData.UserID, deptId: deptId);
     if (res != null && res.result) {
-      print('maintPage apiData => ${res.data}');
+      List<MaintTableCell> list = new List();
+      dataArray.addAll(res.data);
+      if (dataArray.length > 0) {
+        for (var dic in dataArray) {
+          list.add(MaintTableCell.fromJson(dic));
+        }
+      }
+      List<dynamic> newCount = [];
+      List<dynamic> noCount = [];
+      List<dynamic> oCount = [];
+      for (var dic in res.data) {
+        if (dic["StatusName"] == '新案') {
+          newCount.add(dic);
+        }
+        else if (dic["StatusName"] == '接案') {
+          noCount.add(dic);
+        }
+      }
+      if(mounted) {
+        setState(() {
+          totalCount = res.data.length;
+          newCaseCount = newCount.length;
+          noCloseCount = noCount.length;
+          isLoading = false;
+          pullLoadWidgetControl.dataList.clear();
+          pullLoadWidgetControl.dataList.addAll(list);
+          pullLoadWidgetControl.needLoadMore = false;
+        });
+      }
     }
     
   }
   ///取得api資料
-  getApiData(userId, deptId) async {
-    var res = await MaintDao.getMaintList(userId: userId, deptId: deptId);
+  getApiData() async {
+    
+    var res = await MaintDao.getMaintList(userId: userInfo.userData.UserID, deptId: deptId);
     return res;
   }
   ///部門選擇dialog
@@ -121,16 +239,28 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-           Container(
-              margin: EdgeInsets.only(left: 5.0),
-              height: 38,
-              alignment: Alignment.center,
-              width: deviceWidth4(),
-              child: autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+            GestureDetector(
+              child: Container(
+                margin: EdgeInsets.only(left: 5.0),
+                height: 38,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.white)),
+                width: deviceWidth4(),
+                child: autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              ),
+              onTap: () {
+                Future.delayed(const Duration(milliseconds: 50),(){
+                  showDialog(
+                  context: context,
+                  builder: (BuildContext context) => deptSelectorDialog(context)
+                  );
+                });
+              },
             ),
             Container(
+              alignment: Alignment.center,
               height: 30,
-              width: deviceWidth2(),
+              width: deviceWidth3() * 1.1,
               child: FlatButton.icon(
                 icon: Image.asset('static/images/24.png'),
                 color: Colors.transparent,
@@ -141,15 +271,28 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               ),
             ),
             Container(
+              alignment: Alignment.center,
               height: 30,
-              width: deviceWidth5(),
-              child: autoTextSize(widget.accName, TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
-            )
+              width: deviceWidth4(),
+              child: autoTextSize('${widget.accName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+            ),
           ],
         ),
       )
     ];
     return list;
+  }
+  Widget bodyView() {
+    Widget body;
+    body = Column(
+      children: <Widget>[
+        _renderHeader(),
+        Expanded(
+          child: _renderBody(),
+        )
+      ],
+    );
+    return body;
   }
   ///bottomNavigationBar 按鈕
   Widget bottomBar() {
@@ -167,24 +310,40 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-              
+              showRefreshLoading();
             },
-          ),
-          
-          Container(
-            height: 42,
-            width: deviceWidth5(),
-          ),
-          Container(
-            height: 42,
-            width: deviceWidth5(),
           ),
           GestureDetector(
             child: Container(
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth3(),
+              width: deviceWidth4(),
+              child: autoTextSize('查詢', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+            ),
+            onTap: (){
+
+            },
+          ),
+          GestureDetector(
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              alignment: Alignment.center,
+              height: 42,
+              width: deviceWidth4(),
+              child: autoTextSize('排序', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+            ),
+            onTap: (){
+
+            },
+          ),
+          
+          GestureDetector(
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              alignment: Alignment.center,
+              height: 42,
+              width: deviceWidth4(),
               child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
@@ -209,7 +368,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
           elevation: 0.0,
           actions: actions(),
         ),
-        body: Container(color: Colors.white,),
+        body: bodyView(),
         bottomNavigationBar: bottomBar()
       ),
     );

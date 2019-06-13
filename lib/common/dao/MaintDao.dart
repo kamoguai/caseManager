@@ -3,6 +3,7 @@ import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DaoResult.dart';
 import 'package:case_manager/common/net/Address.dart';
 import 'package:case_manager/common/net/Api.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 /**
  * 個人案件相關api呼叫
@@ -54,6 +55,52 @@ class MaintDao{
       else {
         return new DataResult(null, false);
       }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
+  ///個人案件處理案件
+  static getMaintCase({userId, caseId}) async {
+    Map<String, dynamic> mainDataArray = {};
+    Map<String, dynamic> dataArray = {};
+    var res = await HttpManager.netFetch(Address.didMaintCase(userId, caseId), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("個人案件處理 resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray.length > 0) {
+        dataArray = mainDataArray["QDetail"];
+        return new DataResult(dataArray, true);
+
+      }
+      else {
+        return new DataResult(null, false);
+      }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
+  ///個人案件處理作業
+  static didMaint({userId, caseId, newStatus, newAData}) async {
+    Map<String, dynamic> mainDataArray = {};
+    Map<String, dynamic> dataArray = {};
+    var res = await HttpManager.netFetch(Address.didMaint(userId, caseId, newStatus, newAData), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("個人案件處理作業 resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        Fluttertoast.showToast(msg:'回覆成功');
+      }
+      else {
+        Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');
+      }
+      
     }
     else {
       return new DataResult(null, false);

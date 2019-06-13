@@ -1,3 +1,4 @@
+import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/common/redux/UserInfoRedux.dart';
@@ -12,6 +13,9 @@ class SysState {
 
   ///主題數據
   ThemeData themeData;
+
+  ///個人案件列表
+  List<MaintTableCell> maintList = new List();
 
   ///構造方法
   SysState({this.userInfo, this.themeData});

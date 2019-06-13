@@ -4,6 +4,8 @@ import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 /**
  * 個人案件處理item
  * Date: 2019-06-11
@@ -31,8 +33,153 @@ class MaintListItem extends StatelessWidget with BaseWidget{
         statusColor = Colors.white;
         break;
     }
+    ///第二條row
+    List<Widget> secondRowView() {
 
-    return Container(
+      List<Widget> row = [];
+      
+
+      if (model.statusName == '新案') {
+        if(model.pUserName == "未指派") {
+          row.add(autoTextSize('立案:', TextStyle(color: Colors.indigo), context));
+          row.add(autoTextSize('${model.dataTime} ${model.dataTime2}', TextStyle(color: Colors.grey[600]), context));
+        }
+        else {
+          row.add(autoTextSize('派案:', TextStyle(color: Colors.indigo), context));
+          row.add(autoTextSize('${model.pushTime}', TextStyle(color: Colors.grey[600]), context));
+          if(model.pushTimeDiffStatus == "" && model.pushTimeDiff != "") {
+            row.add(autoTextSize('未接:', TextStyle(color: Colors.grey[600]), context));
+            row.add(autoTextSize('${model.pushTimeDiff}', TextStyle(color: Colors.indigo), context));
+
+          }
+        }
+      }
+      else if (model.statusName == '接案'){
+        if (model.takeTimeDiff == "") {
+          row.add(autoTextSize('接案:', TextStyle(color: Colors.indigo), context));
+          row.add(autoTextSize('未結:', TextStyle(color: Colors.indigo), context));
+        }
+        else {
+          Color col;
+          if (model.takeTimeDiffStatus == "1") {
+            col = Colors.red;
+          }
+          else {
+            col = Colors.indigo;
+          }
+          row.add(autoTextSize('接案:', TextStyle(color: Colors.indigo), context));
+          row.add(autoTextSize('${model.takeTime}', TextStyle(color: Colors.grey[600]), context));
+          row.add(autoTextSize('未結:', TextStyle(color: Colors.indigo), context));
+          row.add(autoTextSize('${model.takeTimeDiff}', TextStyle(color: col), context));
+        }
+
+      }
+      else if (model.statusName == '結案'){
+        if (model.pushTime != "") {
+          var strStartDate = model.pushTime;
+          var strPushTime = model.pushTime;
+          if (strPushTime.length > 4) {
+            strPushTime = strPushTime.substring(2);
+          }
+          var strCloseDataTime = '${model.closeDataTime} ${model.closeDataTime2}';
+          if (strStartDate.length < 19) {
+            strStartDate = strStartDate + ':00';
+          }
+          final dft = new DateFormat('yyyy/MM/dd HH:mm:ss');
+          var myStartDate = dft.parse(strStartDate);
+          var myDateClose = strCloseDataTime;
+          if (myDateClose.length < 19) {
+            myDateClose = myDateClose + ":00";
+          }
+          var myCloseDate = dft.parse(myDateClose);
+          var deference = myCloseDate.difference(myStartDate);
+          var inday = deference.inDays;
+          var inhour = deference.inHours;
+          if (inhour > 24) {
+            inhour = inhour - (inday * 24);
+          }
+          var inminut = deference.inMinutes - (deference.inHours * 60);
+          Color col;
+          if (model.pushTimeDiffStatus == "1") {
+            col = Colors.red;
+          }
+          else {
+            col = Colors.indigo;
+          }
+          row.add(autoTextSize('結案:', TextStyle(color: Colors.green), context));
+          row.add(Icon(Icons.access_time, size: 20,));
+          row.add(autoTextSize('$inday天$inhour時$inminut分', TextStyle(color: col), context));
+        }
+        else {
+          row.add(autoTextSize('結案:', TextStyle(color: Colors.green), context));
+          row.add(autoTextSize('${model.closeDataTime} ${model.closeDataTime2}', TextStyle(color: Colors.grey[600]), context));
+        }
+        
+      }
+      return row;
+    }
+    ///第三條row
+    List<Widget> thirdRowView() {
+      List<Widget> row = [];
+      if (model.statusName == '新案') {
+        row.add(
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: <Widget>[
+                autoTextSize('指派:', TextStyle(color: Colors.black), context),
+                autoTextSize('${model.pUserName}', TextStyle(color: Colors.grey[600]), context)
+              ],
+            ),
+          )
+        );
+        Widget w;
+        if (model.pushTimeDiffStatus == "" && model.pushTimeDiff != "") {
+          w = autoTextSize('新案-未接案', TextStyle(color: Colors.red), context);
+        }
+        else {
+          w = autoTextSize('新案', TextStyle(color: Colors.red), context);
+        }
+        row.add(
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: <Widget>[
+                autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
+                w
+              ],
+            ),
+          )
+        );
+      }
+      else {
+        row.add(
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: <Widget>[
+                autoTextSize('指派:', TextStyle(color: Colors.black), context),
+                autoTextSize('${model.pUserName}', TextStyle(color: Colors.grey[600]), context)
+              ],
+            ),
+          )
+        );
+        row.add(
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: <Widget>[
+                autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
+                autoTextSize('${model.statusName}', TextStyle(color: statusColor), context)
+              ],
+            ),
+          )
+        );
+      }
+      return row;
+    }
+
+    Widget content = Container(
       child: Column(
         children: <Widget>[
           Container(
@@ -40,12 +187,20 @@ class MaintListItem extends StatelessWidget with BaseWidget{
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
               children: <Widget>[
-                autoTextSize('立案:', TextStyle(color: Colors.black), context),
-                autoTextSize('${model.dataTime}', TextStyle(color: Colors.grey[600]), context),
-                SizedBox(width: 5.0,),
-                autoTextSize('${model.dataTime2}', TextStyle(color: Colors.grey[600]), context),
-                SizedBox(width: 5.0,),
-                autoTextSize('${model.pUserName}', TextStyle(color: Colors.grey[600]), context),
+                Expanded(
+                  flex: 7,
+                  child: Row(
+                    children: <Widget>[
+                      autoTextSize('立案:', TextStyle(color: Colors.black), context),
+                      autoTextSize('${model.dataTime} ${model.dataTime2}', TextStyle(color: Colors.grey[600]), context),
+                    ],
+                  ),
+                ),          
+                Expanded(
+                  flex: 3,
+                  child: autoTextSizeLeft('${model.pUserName}', TextStyle(color: Colors.grey[600]), context),
+                ),
+                
               ],
             ),
           ),
@@ -53,33 +208,50 @@ class MaintListItem extends StatelessWidget with BaseWidget{
             padding: EdgeInsets.only(left: 5.0),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
-              children: <Widget>[
-                autoTextSize('派案:', TextStyle(color: Colors.black), context),
-                autoTextSize('${model.pushTime}', TextStyle(color: Colors.grey[600]), context),
-
-              ],
+              children: secondRowView()
             ),
           ),
           Container(
             padding: EdgeInsets.only(left: 5.0),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
-              children: <Widget>[
-                autoTextSize('指派:', TextStyle(color: Colors.black), context),
-                autoTextSize('${model.pUserName}', TextStyle(color: Colors.grey[600]), context),
-                SizedBox(width: 5.0,),
-                autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
-                autoTextSize('${model.statusName}', TextStyle(color: statusColor), context)
-              ],
+              children: thirdRowView()
             ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 5.0),
+            padding: EdgeInsets.only(left: 5.0, right: 5.0),
             decoration: BoxDecoration(color: Color(MyColors.hexFromStr('f2f2f2')), border: Border(bottom: BorderSide(width: 1.0, color: Colors.red))),
-              
-          )
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: autoTextSize('案由',  TextStyle(color: Colors.black), context),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: autoTextSizeLeft('${model.subject}',  TextStyle(color: Colors.blueAccent), context),
+                )
+                
+              ],
+            )
+          ),
         ],
       ),
+    );
+    return Stack(
+      children: <Widget>[
+        content,
+        Positioned(
+          right: 5.0,
+          bottom: -8.0,
+          child: GestureDetector(
+            child: Image.asset('static/images/detail.png', width: 50, height: 50),
+            onTap: (){
+              Fluttertoast.showToast(msg: 'caseID: ${model.caseID}, caseNo: ${model.caseNO}');
+            },
+          )
+        )
+      ],
     );
   }
 }
@@ -125,7 +297,7 @@ class MaintListModel {
     statusName = data.StatusName == null ? "" : data.StatusName; 
     fUnitName = data.FUnitName == null ? "" : data.FUnitName; 
     pDeptName = data.PDeptName == null ? "" : data.PDeptName; 
-    pUserName = data.PUserName == null ? "" : data.PUserName; 
+    pUserName = data.PUserName == "" ? "未指派" : data.PUserName; 
     pushTime = data.PushTime == null ? "" : data.PushTime; 
     takeTime = data.TakeTime == null ? "" : data.TakeTime; 
     pushTimeDiff = data.PushTimeDiff == null ? "" : data.PushTimeDiff; 
