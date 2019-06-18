@@ -134,7 +134,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model,);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID,);
   }
   ///頁面上方head
   _renderHeader() {
@@ -177,7 +177,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
       userTitle = map["DeptName"];
       deptId = map["DeptID"];
     });
-    // showRefreshLoading();
+    
     var res = await MaintDao.getMaintList(userId: userInfo.userData.UserID, deptId: deptId);
     if (res != null && res.result) {
       List<MaintTableCell> list = new List();
@@ -284,7 +284,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
   }
   Widget bodyView() {
     Widget body;
-    body = Column(
+    body = isLoading ? showLoadingAnime(context) : Column(
       children: <Widget>[
         _renderHeader(),
         Expanded(

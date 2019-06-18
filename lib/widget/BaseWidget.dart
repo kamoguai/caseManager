@@ -71,6 +71,29 @@ mixin BaseWidget{
     );
   }
 
+  ///anime loding blue
+  showLoadingAnimeB(BuildContext context) {
+    return Center(
+      child: new Container(
+        width: 150.0,
+        height: 150.0,
+        padding: new EdgeInsets.all(4.0),
+        decoration: new BoxDecoration(
+          color: Colors.transparent,
+          //用一个BoxDecoration装饰器提供背景图片
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+        ),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Container(child: SpinKitCubeGrid(color: Colors.blue[200])),
+            new Container(height: 10.0),
+            new Container(child: new Text('資料讀取中..', style: TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(20.0)))),
+          ],
+        ),
+      )
+    );
+  }
   ///分隔線
   buildLine() {
     return new Container(

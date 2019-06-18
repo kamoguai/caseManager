@@ -9,6 +9,8 @@ class Address {
   static const String kCMHostPath = "http://msg.dctv.net.tw/api/Q2/?";
   static const String kDHostPath = "http://msg.dctv.net.tw/api/OnDuty/?";
   static const String kAreaHostPath = "http://msg.dctv.net.tw/api/AreaBugData?";
+  static const String kSNRHostName = "http://snr.dctv.tw:25888/";
+  static const String kSNRHostPingName = "http://snr.dctv.tw:8989/";
   static const String getSsoKey = "SSO/json/login.do?";
   static const String getVersion = "ValidataVersion/json/index!checkVersion.action?";
   static const String loginAPI = "WorkOrder/json/wok!login.action?";
@@ -29,7 +31,7 @@ class Address {
     } on PlatformException {
       
     }
-    return "${ssoDomainName}/${getVersion}packageName=${bundleID}&type=$deviceType&verNo=${verNo}";
+    return "$ssoDomainName/${getVersion}packageName=$bundleID&type=$deviceType&verNo=$verNo";
   }
 
   ///登入SSO
@@ -45,7 +47,7 @@ class Address {
     } on PlatformException {
       
     }
-    return "${ssoDomain}${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseinformation&tokenType=$deviceType&tokenID=slg;ksl;dc123&packageName=com.dctv.caseinformation&type=$deviceType";
+    return "$ssoDomain${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseinformation&tokenType=$deviceType&tokenID=slg;ksl;dc123&packageName=com.dctv.caseinformation&type=$deviceType";
   }
 
   ///登入取得使用者資訊
@@ -233,6 +235,100 @@ class Address {
   ///取得使用者案件筆數
   static getUserCaseType(account) {
     return "${kCMHostPath}FunctionName=GetUserCaseCount&account=$account";
+  }
+
+
+
+  ///小ping資料
+  static getPingSNR(str) {
+    String paraType = "";
+    int type = 0;
+    switch (type) {
+      case 0: {
+          paraType = "CustCode";
+        }
+        break;
+      case 1: {
+          paraType = "Telephone";
+        }
+        break;
+      case 2: {
+          paraType = "Address";
+        }
+        break;
+      case 3: {
+          paraType = "CMMAC";
+        }
+        break;
+      default: {}
+        break;
+
+    }
+    var aesUri = AesUtils.aes128Encrypt("$kSNRHostPingName/SNRping.php?Action=getSNR&$paraType=$str");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+
+  ///大ping-cpe
+  static getCPEDataAPI(cmts, cmmac) {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostPingName}SNRping.php?Action=getCPE&CMTS=$cmts&CMMAC=$cmmac");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+  ///大ping-flap
+  static getFLAPDataAPI(cmts, cmmac) {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostPingName}SNRping.php?Action=getFLAP&CMTS=$cmts&CMMAC=$cmmac");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+  ///大ping-清除flap
+  static clearFLAPDataAPI(cmts, cmmac) {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostPingName}SNRping.php?Action=ClearFLAP&CMTS=$cmts&CMMAC=$cmmac");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+  ///操作維修紀錄
+  static getHipassLogDataAPI(custNo) {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostName}SNRProcess?FunctionName=query_hilowpass_log&custNo=$custNo");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+  ///清除維修記錄
+  static delReportLog(senderId, senderName, logIdList, custId, from) {
+    var logidStr = "";
+    var i = 0;
+    for (var str in logIdList) {
+      if (str.contains("XXXXX")) {
+        if (logidStr != "") {
+          if (i < 1) {
+            logidStr += ",XXXXX";
+          }
+        }
+        else {
+          if (i < 1) {
+            logidStr += "XXXXX";
+          }
+        }
+        i += 1;
+      }
+      else {
+        if (logidStr == "") {
+          logidStr = str;
+        }
+        else {
+          logidStr = "$logidStr,$str";
+        }
+      }
+    }
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostName}SNRProcess?FunctionName=DeleteReportLog&SenderID=$senderId&SenderName=$senderName&LogID=$logidStr&CustCD=$custId&From=$from");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+  ///操作維修紀錄-添加log
+  static addDescriptionAPI(custId, inputText, senderId, senderName, from) {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostName}SNRProcess?FunctionName=AddReportLog&SenderID=$senderId&SenderName=$senderName&InputText=$inputText&CustCD=$custId&From=$from");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
   }
 
 }

@@ -2,9 +2,9 @@
 
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 /**
  * 個人案件處理item
@@ -12,8 +12,8 @@ import 'package:intl/intl.dart';
  */
 class MaintListItem extends StatelessWidget with BaseWidget{
   final MaintListModel model;
-
-  MaintListItem({this.model});
+  final userId;
+  MaintListItem({this.model, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +219,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
             ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 5.0, right: 5.0),
+            padding: EdgeInsets.all(5.0),
             decoration: BoxDecoration(color: Color(MyColors.hexFromStr('f2f2f2')), border: Border(bottom: BorderSide(width: 1.0, color: Colors.red))),
             child: Row(
               children: <Widget>[
@@ -247,7 +247,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
           child: GestureDetector(
             child: Image.asset('static/images/detail.png', width: 50, height: 50),
             onTap: (){
-              Fluttertoast.showToast(msg: 'caseID: ${model.caseID}, caseNo: ${model.caseNO}');
+              NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID);
             },
           )
         )

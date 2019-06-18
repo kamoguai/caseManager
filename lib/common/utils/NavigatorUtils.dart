@@ -1,6 +1,7 @@
 
 import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
+import 'package:case_manager/page/maint/MaintDetailPage.dart';
 import 'package:case_manager/page/maint/MaintPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,8 +41,12 @@ class NavigatorUtils {
   static goHome(BuildContext context) {
     Navigator.pushReplacementNamed(context, HomePage.sName);
   }
-  ///個人案件處理
+  ///個人案件處理列表頁面
   static goMaint(BuildContext context, String accName) {
     NavigatorRouter(context, MaintPage(accName: accName));
+  }
+  ///個人案件處理詳情頁面
+  static goMaintDetail(BuildContext context, String custCode, String userId, String caseId) {
+    NavigatorRouter(context, MaintDetailPage(custCode: custCode, userId: userId, caseId: caseId,));
   }
 }

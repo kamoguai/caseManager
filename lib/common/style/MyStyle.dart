@@ -325,7 +325,7 @@ class MyScreen {
     if (deviceHeight < 570) {
       fontSize = MyConstant.middleTextSize;
     }
-    else if (deviceHeight > 600 && deviceHeight < 800) {
+    else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.normalTextSize;
     }
     else if (deviceHeight > 800) {
@@ -386,7 +386,7 @@ class MyScreen {
       fontSize = MyConstant.smallTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.middleTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.middleTextSize;
     } else {
       fontSize = MyConstant.middleTextSize;
@@ -401,7 +401,7 @@ class MyScreen {
       fontSize = MyConstant.normalTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.normalTextSize;
     } else {
       fontSize = MyConstant.bigTextSize;
@@ -416,7 +416,7 @@ class MyScreen {
       fontSize = MyConstant.normalTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.normalTextSize;
     } else {
       fontSize = MyConstant.bigTextSize;
@@ -431,7 +431,7 @@ class MyScreen {
       fontSize = MyConstant.minTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.normalTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.middleTextSize;
     } else {
       fontSize = MyConstant.normalTextSize;
@@ -446,7 +446,7 @@ class MyScreen {
       fontSize = MyConstant.miniTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.middleTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.middleTextSize;
     }
     else {
@@ -461,12 +461,12 @@ class MyScreen {
     if (deviceHeight < 570) {
       fontSize = MyConstant.smallTextSize;
     } else if (deviceHeight > 800) {
+      fontSize = MyConstant.normalTextSize;
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.middleTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
-      fontSize = MyConstant.smallTextSize;
     }
     else {
-      fontSize = MyConstant.smallTextSize;
+      fontSize = MyConstant.bigTextSize;
     }
     return fontSize;
   }
@@ -478,7 +478,7 @@ class MyScreen {
       fontSize = MyConstant.miniTextSize ;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.smallTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.minTextSize;
     }
     else {
@@ -494,7 +494,7 @@ class MyScreen {
       width = 60.0;
     } else if (deviceHeight > 800) {
       width = 80.0;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       width = 70.0;
     }
     else {
@@ -510,7 +510,7 @@ class MyScreen {
       width = 30.0;
     } else if (deviceHeight > 800) {
       width = 30.0;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       width = 30.0;
     }
     else {
@@ -526,7 +526,7 @@ class MyScreen {
       fontSize = MyConstant.smallTextSize ;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.middleTextSize;
     }
     else {
@@ -542,7 +542,7 @@ class MyScreen {
       fontSize = MyConstant.smallTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 600 && deviceHeight < 800) {
+    } else if (deviceHeight > 570 && deviceHeight < 800) {
       fontSize = MyConstant.normalTextSize;
     }
     else {
