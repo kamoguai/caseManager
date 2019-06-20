@@ -4,10 +4,10 @@ import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DaoResult.dart';
 import 'package:case_manager/common/net/Address.dart';
 import 'package:case_manager/common/net/Api.dart';
-/**
- * 首頁相關API呼叫
- * Date: 2019-06-10
- */
+///
+///首頁相關API呼叫
+///Date: 2019-06-10
+///
 class HomeDao {
   
   static getUserCaseType(account) async {

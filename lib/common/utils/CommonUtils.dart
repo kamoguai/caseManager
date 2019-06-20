@@ -14,10 +14,10 @@ import 'package:case_manager/common/redux/ThemeRedux.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/widget/MyFlexButton.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-/**
- * 通用邏輯
- * Date: 2019-03-11
- */
+///
+///通用邏輯
+///Date: 2019-03-11
+///
 class CommonUtils {
   static final double MILLIS_LIMIT = 1000.0;
 

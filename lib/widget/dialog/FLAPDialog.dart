@@ -2,10 +2,10 @@
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
-/**
- * 詳情頁面裡面的 FLAP dialog
- * Date: 2019-06-17
- */
+///
+///詳情頁面裡面的 FLAP dialog
+///Date: 2019-06-17
+///
 class FLAPDialog extends StatelessWidget with BaseWidget {
   final String custNo;
   final String custName;

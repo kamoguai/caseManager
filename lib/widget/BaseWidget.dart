@@ -88,7 +88,7 @@ mixin BaseWidget{
           children: <Widget>[
             new Container(child: SpinKitCubeGrid(color: Colors.blue[200])),
             new Container(height: 10.0),
-            new Container(child: new Text('資料讀取中..', style: TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(20.0)))),
+            new Container(child: new Text('資料讀取中..', style: TextStyle(color: Colors.blue[200], fontSize: ScreenUtil().setSp(20.0)))),
           ],
         ),
       )

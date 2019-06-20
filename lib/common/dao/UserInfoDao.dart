@@ -11,10 +11,10 @@ import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:case_manager/common/model/SsoLogin.dart';
-/**
- * 使用者信息dao
- * Date: 2019-06-05
- */
+///
+///使用者信息dao
+///Date: 2019-06-05
+///
 class UserInfoDao {
 
   static login(account, password, store, context) async {

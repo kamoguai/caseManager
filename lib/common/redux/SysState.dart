@@ -3,10 +3,10 @@ import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/common/redux/UserInfoRedux.dart';
 import 'package:case_manager/common/redux/ThemeRedux.dart';
-/**
- * Redux全局State
- * Date: 2019-06-04
- */
+///
+///Redux全局State
+///Date: 2019-06-04
+///
 class SysState {
   ///用戶信息
   UserInfo userInfo;

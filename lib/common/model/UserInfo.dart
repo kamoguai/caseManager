@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'UserInfo.g.dart';
-/**
- * 使用者信息model
- * Date: 2019-06-04
- */
+///
+///使用者信息model
+///Date: 2019-06-04
+///
 @JsonSerializable()
 class UserInfo {
   UserData userData;

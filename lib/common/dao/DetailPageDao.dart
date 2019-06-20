@@ -6,10 +6,10 @@ import 'package:case_manager/common/net/Api.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-/**
- * 詳情頁面呼叫api
- * Date: 2019-06-17
- */
+///
+///詳情頁面呼叫api
+///Date: 2019-06-17
+///
 class DetailPageDao {
 
   ///小ping

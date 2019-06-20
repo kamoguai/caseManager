@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/**
- * 滿版的button
- * Date: 2019-03-11
- */
+///
+///滿版的button
+///Date: 2019-03-11
+///
 class MyFlexButton extends StatelessWidget {
   final String text;
 

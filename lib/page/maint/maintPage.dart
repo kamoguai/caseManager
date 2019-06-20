@@ -15,10 +15,10 @@ import 'package:case_manager/widget/MyListState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
-/**
- * 個人案件處理頁面
- * Date: 2019-06-11
- */
+///
+///個人案件處理頁面
+///Date: 2019-06-11
+///
 class MaintPage extends StatefulWidget {
   final String accName;
   MaintPage({this.accName});

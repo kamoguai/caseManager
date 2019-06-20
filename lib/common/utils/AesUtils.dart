@@ -5,10 +5,10 @@ import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
 
-/**
- * aes加解密
- * Date: 2019-05-23
- */
+///
+///aes加解密
+///Date: 2019-05-23
+///
 class AesUtils {
   
   static final String _aeskey_en = 'dctv2952dctv2952';

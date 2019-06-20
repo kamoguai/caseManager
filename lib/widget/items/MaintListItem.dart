@@ -4,12 +4,13 @@ import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-/**
- * 個人案件處理item
- * Date: 2019-06-11
- */
+///
+///個人案件處理item
+///Date: 2019-06-11
+///
 class MaintListItem extends StatelessWidget with BaseWidget{
   final MaintListModel model;
   final userId;
@@ -33,6 +34,35 @@ class MaintListItem extends StatelessWidget with BaseWidget{
         statusColor = Colors.white;
         break;
     }
+    ///第一條row
+    List<Widget> firstRowView() {
+      List<Widget> row = [];
+      var createTime = '${model.dataTime} ${model.dataTime2}';
+      final dft = new DateFormat('yyyy/MM/dd HH:mm');
+      final dft2 = new DateFormat('yy/MM/dd HH:mm');
+      var cTime = dft.parse(createTime);
+      var cTimeStr = dft2.format(cTime);
+      row.add(
+        Expanded(
+          flex: 6,
+          child: Row(
+            children: <Widget>[
+              autoTextSize('立案:', TextStyle(color: Colors.black), context),
+              autoTextSize('$cTimeStr', TextStyle(color: Colors.grey[600]), context),
+            ],
+          ),
+        ),  
+      );
+      row.add(
+        Expanded(
+          flex: 4,
+          child: autoTextSizeLeft('${model.pUserName}', TextStyle(color: Colors.grey[600]), context),
+        ),
+      );
+      return row;
+
+    }
+
     ///第二條row
     List<Widget> secondRowView() {
 
@@ -41,8 +71,13 @@ class MaintListItem extends StatelessWidget with BaseWidget{
 
       if (model.statusName == '新案') {
         if(model.pUserName == "未指派") {
+          var createTime = '${model.dataTime} ${model.dataTime2}';
+          final dft = new DateFormat('yyyy/MM/dd HH:mm');
+          final dft2 = new DateFormat('yy/MM/dd HH:mm');
+          var cTime = dft.parse(createTime);
+          var cTimeStr = dft2.format(cTime);
           row.add(autoTextSize('立案:', TextStyle(color: Colors.indigo), context));
-          row.add(autoTextSize('${model.dataTime} ${model.dataTime2}', TextStyle(color: Colors.grey[600]), context));
+          row.add(autoTextSize('$cTimeStr', TextStyle(color: Colors.grey[600]), context));
         }
         else {
           row.add(autoTextSize('派案:', TextStyle(color: Colors.indigo), context));
@@ -186,22 +221,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
             padding: EdgeInsets.only(left: 5.0),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 7,
-                  child: Row(
-                    children: <Widget>[
-                      autoTextSize('立案:', TextStyle(color: Colors.black), context),
-                      autoTextSize('${model.dataTime} ${model.dataTime2}', TextStyle(color: Colors.grey[600]), context),
-                    ],
-                  ),
-                ),          
-                Expanded(
-                  flex: 3,
-                  child: autoTextSizeLeft('${model.pUserName}', TextStyle(color: Colors.grey[600]), context),
-                ),
-                
-              ],
+              children: firstRowView()
             ),
           ),
           Container(

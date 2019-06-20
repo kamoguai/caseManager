@@ -1,14 +1,16 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/dao/DeptInfoDao.dart';
+import 'package:case_manager/common/dao/UserInfoDao.dart';
+import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
-/**
- * 部門選擇dialog
- * Date: 2019-06-10
- */
+///
+///部門選擇dialog
+///Date: 2019-06-10
+///
 class DeptSelectorDialog extends StatefulWidget {
   final Function callApiData;
   DeptSelectorDialog({this.callApiData});
@@ -20,6 +22,8 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
   ///裝載api list
   final List<dynamic> dataArray = [];
   Map<String, dynamic> pickData = {};
+  ///userInfo model
+  UserInfo userInfo;
   @override
   void initState() {
     super.initState();
@@ -49,7 +53,13 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
   }
   ///取得api資料
   _getApiData() async{
-    var res = await DeptInfoDao.getDeptSelect(null);
+    var userInfoData = await UserInfoDao.getUserInfoLocal();
+    if (mounted) {
+      setState(() {
+        userInfo = userInfoData.data;
+      });
+    }
+    var res = await DeptInfoDao.getDeptSelect(userInfo.userData.UserID);
     if (res != null && res.result) {
       if(mounted) {
         setState(() {
@@ -98,7 +108,7 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
         child: ListView.builder(
           shrinkWrap: true,
           itemBuilder: listItem,
-          itemCount:  dataArray.length - 1,
+          itemCount:  dataArray.length,
         ),
       );
     }

@@ -5,14 +5,14 @@ import 'package:case_manager/common/dao/DaoResult.dart';
 import 'package:case_manager/common/net/Address.dart';
 import 'package:case_manager/common/net/Api.dart';
 
-/**
- * 部門相關API呼叫
- * Date: 2019-06-10
- */
+///
+///部門相關API呼叫
+///Date: 2019-06-10
+///
 class DeptInfoDao {
   ///部門list
-  static getDeptSelect(accNo) async {
-    var res = await HttpManager.netFetch(Address.didDeptSelect(accNo), null, null, null);
+  static getDeptSelect(userId) async {
+    var res = await HttpManager.netFetch(Address.didUserDeptSelect(userId), null, null, null);
     Map<String, dynamic> mainDataArray = {};
     List<dynamic> dataArray = [];
     if (res != null && res.result) {

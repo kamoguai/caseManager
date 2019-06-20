@@ -2,10 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'MaintTableCell.g.dart';
 
-/**
- * 案件列表table cell
- * Date; 2019-06-11
- */
+///
+///案件列表table cell
+///Date; 2019-06-11
+///
 @JsonSerializable()
 class MaintTableCell {
 

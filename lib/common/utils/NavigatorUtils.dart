@@ -6,10 +6,10 @@ import 'package:case_manager/page/maint/MaintPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/**
- * 導航欄
- * Date: 2019-06-04
- */
+///
+///導航欄
+///Date: 2019-06-04
+///
 class NavigatorUtils {
   ///替換
   static pushReplacementNamed(BuildContext context, String routeName) {

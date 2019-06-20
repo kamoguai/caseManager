@@ -13,10 +13,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-/**
- * 首頁
- * Date: 2019-06-05
- */
+///
+///首頁
+///Date: 2019-06-05
+///
 class HomePage extends StatefulWidget {
   static final String sName = "home";
   @override
@@ -205,6 +205,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
 
     Widget body;
     body = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Container(
           padding: EdgeInsets.only(top: 5.0),

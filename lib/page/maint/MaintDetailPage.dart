@@ -8,10 +8,10 @@ import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:case_manager/widget/DetailFiveBtnWidget.dart';
 import 'package:case_manager/widget/DetailItemWidget.dart';
 import 'package:flutter/material.dart';
-/**
- * 個人案件詳情頁面
- * Date: 2019-06-17
- */
+///
+///個人案件詳情頁面
+///Date: 2019-06-17
+///
 class MaintDetailPage extends StatefulWidget {
   ///由前頁傳入客編
   final custCode;
@@ -124,7 +124,14 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
       children: <Widget>[
         DetailFiveBtnWidget(custNoStr: pingArray["CustCode"],custNameStr: pingArray["CustName"],cmtsStr: pingArray["CMTS"], cmmacStr: pingArray["CMMAC"], cwData: pingArray["CodeWord"],),
         buildLine(),
-        DetailItemWidget(defaultModel: model, data: dataArray),
+        Expanded(
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              DetailItemWidget(defaultModel: model, data: dataArray),
+            ],
+          ),
+        ),
       ],
     );
     return body;

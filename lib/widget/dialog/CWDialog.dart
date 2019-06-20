@@ -3,10 +3,10 @@
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
-/**
- * 詳情頁面裡面得 code word dialog
- * Date: 2019-06-17
- */
+///
+///詳情頁面裡面得 code word dialog
+///Date: 2019-06-17
+///
 class CWDialog extends StatelessWidget with BaseWidget{
 
   final CWViewModel defaultViewModel;

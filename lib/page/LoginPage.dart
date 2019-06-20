@@ -14,10 +14,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/**
- * 登入頁面
- * Date: 2019-03-11
- */
+///
+///登入頁面
+///Date: 2019-03-11
+///
 class LoginPage extends StatefulWidget {
   static final String sName = "login";
 

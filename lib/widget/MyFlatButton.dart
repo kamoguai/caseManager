@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/**
- * 提供tool bar用的按鈕
- * Date: 2019-03-11
- */
+///
+///提供tool bar用的按鈕
+///Date: 2019-03-11
+///
 class MyFlatButton extends StatelessWidget {
   final String text;
 
