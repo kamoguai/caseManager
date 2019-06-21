@@ -104,4 +104,26 @@ class DetailPageDao {
       return new DataResult(null, false);
     }
   }
+  ///取得維修記錄log
+  static getHipassLogData({custNo}) async {
+    Map<String,dynamic> mainDataArray = new Map<String,dynamic>();
+    var res = await HttpManager.netFetch(Address.getHipassLogDataAPI(custNo), null, null, new Options(method: "post"));
+
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("getHipassLogData resp => " + res.data.toString());
+      }
+      if (res.data['Response']['ReturnCode'] == "0") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray != null && mainDataArray.length > 0) {
+        return new DataResult(mainDataArray, true);
+      } else {
+        Fluttertoast.showToast(msg: res.data['Response']['MSG']);
+        return new DataResult(null, false);
+      }
+    } else {
+      return new DataResult(null, false);
+    }
+  }
 }

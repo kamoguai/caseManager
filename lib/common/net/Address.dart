@@ -49,7 +49,7 @@ class Address {
     }
     return "$ssoDomain${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseinformation&tokenType=$deviceType&tokenID=slg;ksl;dc123&packageName=com.dctv.caseinformation&type=$deviceType";
   }
-
+  ///-------------------- caseManager api -------------------- ///
   ///登入取得使用者資訊
   static loginWithCmAccount(account, ssokey) {
     return "${kCMHostPath}FunctionName=Login2&SYSName=caseinformation&Account=$account&SSOKey=$ssokey";
@@ -239,6 +239,13 @@ class Address {
 
 
 
+  ///-------------------- snr api -------------------- ///
+  ///取得snr設定檔
+  static getQueryConfigureAPI() {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostName}SNRProcess?FunctionName=QueryConfigure");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
   ///小ping資料
   static getPingSNR(str) {
     String paraType = "";
@@ -268,7 +275,6 @@ class Address {
     var appendUrl = aesDomain + aesUri;
     return appendUrl;
   }
-
   ///大ping-cpe
   static getCPEDataAPI(cmts, cmmac) {
     var aesUri = AesUtils.aes128Encrypt("${kSNRHostPingName}SNRping.php?Action=getCPE&CMTS=$cmts&CMMAC=$cmmac");

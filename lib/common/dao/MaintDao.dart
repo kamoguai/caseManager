@@ -87,8 +87,7 @@ class MaintDao{
   }
   ///個人案件處理作業
   static didMaint({userId, caseId, newStatus, newAData}) async {
-    Map<String, dynamic> mainDataArray = {};
-    Map<String, dynamic> dataArray = {};
+    
     var res = await HttpManager.netFetch(Address.didMaint(userId, caseId, newStatus, newAData), null, null, null);
     if (res != null && res.result) {
       if (Config.DEBUG) {

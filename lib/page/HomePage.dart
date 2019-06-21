@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   initParam() async {
     _account = await LocalStorage.get(Config.USER_NAME_KEY);
     _getApiData(_account);
+    getSnrConfigData();
     var userInfoData = await UserInfoDao.getUserInfoLocal();
     if (mounted) {
       setState(() {  
@@ -106,6 +107,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         });
       }
     }
+  }
+  ///取得snr config
+  getSnrConfigData() async {
+     await HomeDao.getSnrConfigAPI();
   }
 
   ///區域dialog, ios樣式

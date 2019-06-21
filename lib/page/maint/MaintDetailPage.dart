@@ -1,12 +1,17 @@
 
 
+import 'dart:convert';
+
+import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DetailPageDao.dart';
 import 'package:case_manager/common/dao/MaintDao.dart';
+import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:case_manager/widget/DetailFiveBtnWidget.dart';
 import 'package:case_manager/widget/DetailItemWidget.dart';
+import 'package:case_manager/widget/items/PingItem.dart';
 import 'package:flutter/material.dart';
 ///
 ///個人案件詳情頁面
@@ -50,6 +55,7 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
     super.initState(); 
     getCaseData();
     getPingData();
+    getSnrConfigData();
   }
 
   @override
@@ -86,6 +92,13 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
       }
     }
   }
+
+  ///取得snr config資料
+  getSnrConfigData() async {
+    final configData = await LocalStorage.get(Config.SNR_CONFIG);
+    final dic = json.decode(configData);
+    config = dic;
+  }
   
   /// app bar action按鈕
   List<Widget> actions() {
@@ -119,6 +132,8 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
   Widget bodyView() {
     DetailItemModel model;
     model = DetailItemModel.forMap(dataArray);
+    PingViewModel pingModel;
+    pingModel = PingViewModel.forMap(pingArray);
     Widget body;
     body = isLoading ? showLoadingAnimeB(context) : Column(
       children: <Widget>[
@@ -129,6 +144,7 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
             scrollDirection: Axis.vertical,
             children: <Widget>[
               DetailItemWidget(defaultModel: model, data: dataArray),
+              PingItem(defaultViewModel: pingModel, configData: config,),
             ],
           ),
         ),
@@ -149,37 +165,26 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth4(context),
-              child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
+              child: autoTextSize('回覆', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
             onTap: () {
               // showRefreshLoading();
             },
           ),
-          GestureDetector(
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              alignment: Alignment.center,
-              height: 42,
-              width: deviceWidth4(context),
-              child: autoTextSize('查詢', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
+         
+          Container(
+            alignment: Alignment.center,
+            height: 30,
+            // width: deviceWidth3(context) * 1.1,
+            child: FlatButton.icon(
+              icon: Image.asset('static/images/24.png'),
+              color: Colors.transparent,
+              label: Text(''),
+              onPressed: (){
+                NavigatorUtils.goLogin(context);
+              },
             ),
-            onTap: (){
-
-            },
           ),
-          GestureDetector(
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              alignment: Alignment.center,
-              height: 42,
-              width: deviceWidth4(context),
-              child: autoTextSize('排序', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
-            ),
-            onTap: (){
-
-            },
-          ),
-          
           GestureDetector(
             child: Container(
               padding: EdgeInsets.all(5.0),

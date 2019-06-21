@@ -101,6 +101,13 @@ mixin BaseWidget{
       color: Colors.grey,
     );
   }
+   ///分隔線-紅
+  buildRedLine() {
+    return new Container(
+      height: 1.0,
+      color: Colors.red,
+    );
+  }
 
   ///高分隔線
   buildLineHeight(BuildContext context) {
@@ -125,6 +132,14 @@ mixin BaseWidget{
       height: titleHeight(context),
       width: 1.0,
       color: Colors.red,
+    );
+  }
+  ///51高分隔線
+  buildHeightLine51() {
+    return new Container(
+      height: 51.0,
+      width: 1.0,
+      color: Colors.grey,
     );
   }
 
@@ -168,6 +183,17 @@ mixin BaseWidget{
   deviceWidth8(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return width / 8;
+  }
+  ///取得裝置width並切9份
+  deviceWidth9(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    return width / 9;
+  }
+  ///取得裝置width並切9 * 2 + 9 * 0.5 份
+  deviceWidth92(context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    var width9 =  deviceWidth / 9;
+    return (width9 * 2) + (width9 * 0.5);
   }
 
   ///取得裝置height切4分

@@ -89,12 +89,12 @@ class CommonUtils {
     return appPath;
   }
 
-   static splitFileNameByPath(String path) {
+  static splitFileNameByPath(String path) {
     return path.substring(path.lastIndexOf("/"));
   }
 
 
-   static pushTheme(Store store, int index) {
+  static pushTheme(Store store, int index) {
     ThemeData themeData;
     List<Color> colors = getThemeListColor();
     themeData = getThemeData(colors[index]);
