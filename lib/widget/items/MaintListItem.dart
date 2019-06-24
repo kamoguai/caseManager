@@ -267,7 +267,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
           child: GestureDetector(
             child: Image.asset('static/images/detail.png', width: 50, height: 50),
             onTap: (){
-              NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID);
+              NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
             },
           )
         )

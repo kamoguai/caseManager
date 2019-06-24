@@ -5,12 +5,15 @@ import 'dart:convert';
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DetailPageDao.dart';
 import 'package:case_manager/common/dao/MaintDao.dart';
+import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
+import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:case_manager/widget/DetailFiveBtnWidget.dart';
 import 'package:case_manager/widget/DetailItemWidget.dart';
+import 'package:case_manager/widget/dialog/DetailReportDialog.dart';
 import 'package:case_manager/widget/items/PingItem.dart';
 import 'package:flutter/material.dart';
 ///
@@ -24,7 +27,9 @@ class MaintDetailPage extends StatefulWidget {
   final userId;
   ///由前頁傳入案件id
   final caseId;
-  MaintDetailPage({this.custCode, this.userId, this.caseId});
+  ///由前頁傳入案件狀態
+  final statusName;
+  MaintDetailPage({this.custCode, this.userId, this.caseId, this.statusName});
   @override
   MaintDetailPageState createState() => MaintDetailPageState();
 }
@@ -33,6 +38,8 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
   
   ///取得設定檔
   var config;
+  ///userInfo model
+  UserInfo userInfo;
   ///裝詳情 data
   Map<String,dynamic> dataArray = Map<String,dynamic>();
   ///裝ping data
@@ -49,19 +56,33 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
   var cmtsStr = "";
   ///保留cmmac
   var cmmacStr = "";
+
+  DetailItemModel model;
   
   @override
-  void initState() {
+  void initState(){
     super.initState(); 
-    getCaseData();
-    getPingData();
-    getSnrConfigData();
+    
+    initParam();
   }
 
   @override
   void dispose() {
     super.dispose();
   }
+  ///初始化資料
+  initParam() async {
+    var userInfoData = await UserInfoDao.getUserInfoLocal();
+    if (mounted) {
+      setState(() {
+        userInfo = userInfoData.data;
+      });
+    }
+    getCaseData();
+    getPingData();
+    getSnrConfigData();
+  }
+
   ///呼叫maintCase api
   getCaseData() async {
     isLoading = true;
@@ -99,6 +120,21 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
     final dic = json.decode(configData);
     config = dic;
   }
+
+   ///回覆dialog
+  Widget detailReportDialog(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+        child: DetailReportDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName,)
+      )
+    );
+  }
   
   /// app bar action按鈕
   List<Widget> actions() {
@@ -130,26 +166,33 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
   }
   ///body內容
   Widget bodyView() {
-    DetailItemModel model;
-    model = DetailItemModel.forMap(dataArray);
-    PingViewModel pingModel;
-    pingModel = PingViewModel.forMap(pingArray);
     Widget body;
-    body = isLoading ? showLoadingAnimeB(context) : Column(
-      children: <Widget>[
-        DetailFiveBtnWidget(custNoStr: pingArray["CustCode"],custNameStr: pingArray["CustName"],cmtsStr: pingArray["CMTS"], cmmacStr: pingArray["CMMAC"], cwData: pingArray["CodeWord"],),
-        buildLine(),
-        Expanded(
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: <Widget>[
-              DetailItemWidget(defaultModel: model, data: dataArray),
-              PingItem(defaultViewModel: pingModel, configData: config,),
-            ],
-          ),
-        ),
-      ],
-    );
+    if (isLoading) {
+      body = showLoadingAnimeB(context);
+    }
+    else {
+      if (dataArray.length > 0) {
+        // DetailItemModel model;
+        model = DetailItemModel.forMap(dataArray);
+        PingViewModel pingModel;
+        pingModel = PingViewModel.forMap(pingArray);
+        body = isLoading ? showLoadingAnimeB(context) : Column(
+          children: <Widget>[
+            DetailFiveBtnWidget(custNoStr: pingArray["CustCode"],custNameStr: pingArray["CustName"],cmtsStr: pingArray["CMTS"], cmmacStr: pingArray["CMMAC"], cwData: pingArray["CodeWord"],),
+            buildLine(),
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  DetailItemWidget(defaultModel: model, data: dataArray),
+                  PingItem(defaultViewModel: pingModel, configData: config,),
+                ],
+              ),
+            ),
+          ],
+        );
+      }
+    }
     return body;
   }
   ///bottomNavigationBar 按鈕
@@ -168,7 +211,10 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
               child: autoTextSize('回覆', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
             onTap: () {
-              // showRefreshLoading();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => detailReportDialog(context)
+              );
             },
           ),
          

@@ -254,10 +254,24 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           width: _buildButtonWidth(),              
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('單位案件處理', TextStyle(color: isDeptClose == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            child: autoTextSize('指派個人', TextStyle(color: isDeptClose == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
-              if (isDeptClose) {
+              if (isAssignEmpl) {
+                NavigatorUtils.goAssign(context, _accName);
+              }
+            },
+          ),
+        ),
+        Container(  
+          padding: EdgeInsets.only(top: 5.0),
+          width: _buildButtonWidth(),      
+          child: RaisedButton(
+            disabledTextColor: Colors.grey,
+            child: autoTextSize('單位案件處理', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            onPressed: () {
+              if (isDPMaint) {
 
               }
             },
@@ -268,31 +282,19 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           width: _buildButtonWidth(),      
           child: RaisedButton(
             disabledTextColor: Colors.grey,
+            child: autoTextSize('指派單位', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            onPressed: () {
+
+            },
+          ),
+        ),
+        Container(  
+          padding: EdgeInsets.only(top: 5.0),
+          width: _buildButtonWidth(),      
+          child: RaisedButton(
+            disabledTextColor: Colors.grey,
             child: autoTextSize('案件分析', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            onPressed: () {
-
-            },
-          ),
-        ),
-        Container(  
-          padding: EdgeInsets.only(top: 5.0),
-          width: _buildButtonWidth(),      
-          child: RaisedButton(
-            disabledTextColor: Colors.grey,
-            child: autoTextSize('地址修正', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            onPressed: () {
-
-            },
-          ),
-        ),
-        Container(  
-          padding: EdgeInsets.only(top: 5.0),
-          width: _buildButtonWidth(),      
-          child: RaisedButton(
-            disabledTextColor: Colors.grey,
-            child: autoTextSize('地址無對應', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
 

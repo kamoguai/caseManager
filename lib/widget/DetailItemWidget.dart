@@ -646,7 +646,7 @@ class DetailItemModel {
     area = data["Area"] == null ? "" : data["Area"];
     custNO = data["CustNO"] == null ? "" : data["CustNO"];
     custName = data["CustName"] == null ? "" : data["CustName"];
-    tel = data["Tel"] == null ? "" : data["Tel"];
+    tel = data["Tel"] == "nullnull" ? "" : data["Tel"];
     mobile = data["Mobile"] == null ? "" : data["Mobile"];
     address = data["Address"] == null ? "" : data["Address"];
     createrName = data["CreaterName"] == null ? "" : data["CreaterName"];
