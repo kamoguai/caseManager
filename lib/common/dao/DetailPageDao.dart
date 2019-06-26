@@ -24,7 +24,7 @@ class DetailPageDao {
         mainDataArray = res.data["ReturnData"];
       }
       else {
-        Fluttertoast.showToast(msg: res.data['Response']['MSG']);
+        Fluttertoast.showToast(msg: 'Ping' + res.data['Response']['MSG']);
         return new DataResult(null, false);
       }
       if (mainDataArray.length > 0) {
@@ -112,6 +112,28 @@ class DetailPageDao {
     if (res != null && res.result) {
       if (Config.DEBUG) {
         print("getHipassLogData resp => " + res.data.toString());
+      }
+      if (res.data['Response']['ReturnCode'] == "0") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray != null && mainDataArray.length > 0) {
+        return new DataResult(mainDataArray, true);
+      } else {
+        Fluttertoast.showToast(msg: res.data['Response']['MSG']);
+        return new DataResult(null, false);
+      }
+    } else {
+      return new DataResult(null, false);
+    }
+  }
+  ///取得訊號data
+  static getSignalLogData({custNo}) async {
+    Map<String,dynamic> mainDataArray = new Map<String,dynamic>();
+    var res = await HttpManager.netFetch(Address.getSignalLog(custNo), null, null, new Options(method: "post"));
+
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("getSignalLogData resp => " + res.data.toString());
       }
       if (res.data['Response']['ReturnCode'] == "0") {
         mainDataArray = res.data["ReturnData"];

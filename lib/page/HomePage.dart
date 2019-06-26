@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           width: _buildButtonWidth(),              
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('指派個人', TextStyle(color: isDeptClose == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            child: autoTextSize('指派個人', TextStyle(color: isAssignEmpl == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isAssignEmpl) {
@@ -268,7 +268,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           width: _buildButtonWidth(),      
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('單位案件處理', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            child: autoTextSize('單位案件處理', TextStyle(color: isDPMaint == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isDPMaint) {
@@ -282,10 +282,12 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           width: _buildButtonWidth(),      
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('指派單位', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            child: autoTextSize('指派單位', TextStyle(color: isAssignDept == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
+              if (isAssignDept) {
 
+              }
             },
           ),
         ),

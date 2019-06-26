@@ -4,7 +4,6 @@ import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 ///
@@ -12,9 +11,13 @@ import 'package:intl/intl.dart';
 ///Date: 2019-06-11
 ///
 class MaintListItem extends StatelessWidget with BaseWidget{
+  ///set, get
   final MaintListModel model;
+  ///使用者id
   final userId;
-  MaintListItem({this.model, this.userId});
+  ///來自功能
+  final fromFunc;
+  MaintListItem({this.model, this.userId, this.fromFunc});
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +270,15 @@ class MaintListItem extends StatelessWidget with BaseWidget{
           child: GestureDetector(
             child: Image.asset('static/images/detail.png', width: 50, height: 50),
             onTap: (){
-              NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+              switch (fromFunc) {
+                case 'Maint':
+                  NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                  break;
+                case 'AssignEmpl':
+                  NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                  break;
+              }
+             
             },
           )
         )

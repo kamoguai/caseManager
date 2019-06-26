@@ -13,10 +13,10 @@ import 'package:flutter/material.dart';
 ///
 class DeptSelectorDialog extends StatefulWidget {
   ///依功能使用選擇器
-  final maintType;
+  final fromFunc;
   ///呼叫function給主頁使用
   final Function callApiData;
-  DeptSelectorDialog({this.maintType, this.callApiData});
+  DeptSelectorDialog({this.fromFunc, this.callApiData});
   @override
   _DeptSelectorDialogState createState() => _DeptSelectorDialogState();
 }
@@ -62,13 +62,21 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
         userInfo = userInfoData.data;
       });
     }
-    if (widget.maintType == 'person') {
+    if (widget.fromFunc == 'AssignEmpl') {
       var res = await DeptInfoDao.getDeptSelect(userInfo.userData.UserID);
       if (res != null && res.result) {
         if(mounted) {
           setState(() {
             isLoading = false;
             dataArray.addAll(res.data);
+            if (dataArray.length > 0 && dataArray.length < 2) {
+              pickData = dataArray[0];
+              widget.callApiData(pickData);
+              Navigator.pop(context);
+            }
+            else if (dataArray.length < 1) {
+              Navigator.pop(context);
+            }
           });
         }
       }
@@ -85,6 +93,11 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
           setState(() {
             isLoading = false;
             dataArray.addAll(res.data);
+            if (dataArray.length > 0 && dataArray.length < 2) {
+              pickData = dataArray[0];
+              widget.callApiData(pickData);
+              Navigator.pop(context);
+            }
           });
         }
       }

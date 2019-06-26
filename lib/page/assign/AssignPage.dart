@@ -1,5 +1,5 @@
 
-import 'package:case_manager/common/dao/MaintDao.dart';
+import 'package:case_manager/common/dao/AssignDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
@@ -132,7 +132,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID,);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: 'AssignEmpl',);
   }
   ///頁面上方head
   _renderHeader() {
@@ -176,7 +176,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
       deptId = map["DeptID"];
     });
     
-    var res = await MaintDao.getMaintList(userId: userInfo.userData.UserID, deptId: deptId);
+    var res = await AssignDao.getAssignEmplList(userId: userInfo.userData.UserID, deptId: deptId);
     if (res != null && res.result) {
       List<MaintTableCell> list = new List();
       dataArray.addAll(res.data);
@@ -213,7 +213,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
   ///取得api資料
   getApiData() async {
     
-    var res = await MaintDao.getMaintList(userId: userInfo.userData.UserID, deptId: deptId);
+    var res = await AssignDao.getAssignEmplList(userId: userInfo.userData.UserID, deptId: deptId);
     return res;
   }
   ///部門選擇dialog
@@ -226,7 +226,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
-        child: DeptSelectorDialog(maintType: 'person', callApiData: _callApiData,),
+        child: DeptSelectorDialog(fromFunc: 'AssignEmpl', callApiData: _callApiData,),
       )
     );
   }

@@ -9,10 +9,13 @@ import 'package:intl/intl.dart';
 ///Date: 2019-06-18
 ///
 class DetailItemWidget extends StatelessWidget with BaseWidget{
-
+  ///set, get
   final DetailItemModel defaultModel;
+  ///裝data
   final Map<String, dynamic> data;
-  DetailItemWidget({this.defaultModel, this.data});
+  ///來自功能
+  final fromFunc;
+  DetailItemWidget({this.defaultModel, this.data, this.fromFunc});
   
  
   

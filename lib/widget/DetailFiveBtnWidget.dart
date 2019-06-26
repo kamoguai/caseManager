@@ -261,7 +261,7 @@ class DetailFiveBtnWidget extends StatelessWidget with BaseWidget {
                   
                 ),
                 onTap: (){
-                  if(cwData == null || cmtsStr == '---') {
+                  if(custNoStr == null || custNoStr == '') {
                     Fluttertoast.showToast(msg: '查無資料!');
                     return;
                   }
@@ -396,7 +396,7 @@ class DetailFiveBtnWidget extends StatelessWidget with BaseWidget {
                   
                 ),
                 onTap: (){
-                  if(cwData == null || cmtsStr == '---') {
+                  if(custNoStr == null || custNoStr == '') {
                     Fluttertoast.showToast(msg: '查無資料!');
                     return;
                   }

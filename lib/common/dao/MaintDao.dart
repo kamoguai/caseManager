@@ -105,4 +105,29 @@ class MaintDao{
       return new DataResult(null, false);
     }
   }
+  ///案件狀態選擇list
+  static caseTypeSelect() async {
+    Map<String, dynamic> mainDataArray = {};
+    List<dynamic> dataArray = [];
+    var res = await HttpManager.netFetch(Address.getCaseType(), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("案件狀態選擇list resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray.length > 0) {
+        dataArray = mainDataArray["CaseTypeDatas"];
+        return new DataResult(dataArray, true);
+
+      }
+      else {
+        return new DataResult(null, false);
+      }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
 }

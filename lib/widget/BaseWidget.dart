@@ -189,6 +189,11 @@ mixin BaseWidget{
     var width = MediaQuery.of(context).size.width;
     return width / 9;
   }
+  ///取得裝置width並切10份
+  deviceWidth10(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    return width / 10;
+  }
   ///取得裝置width並切9 * 2 + 9 * 0.5 份
   deviceWidth92(context) {
     final deviceWidth = MediaQuery.of(context).size.width;

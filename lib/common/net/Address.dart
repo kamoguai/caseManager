@@ -105,7 +105,7 @@ class Address {
   static didUserDeptSelect(userId) {
     return "${kCMHostPath}FunctionName=userdeptselect&UserID=$userId";
   }
-  ///取得部門內員工資料
+  ///取得部門內員工list
   static didEmplSelect(deptId) {
     return "${kCMHostPath}FunctionName=EmplSelect&DeptID=$deptId";
   }
@@ -121,15 +121,15 @@ class Address {
   static didAssignDeptExt(userId, caseId, funit, puserId, newAData) {
     return "${kCMHostPath}FunctionName=AssignDept&UserID=$userId&CaseID=$caseId&FUnit=$funit&NewAData=$newAData&PuserID=$puserId";
   }
-  ///取得指派部門員工
+  ///取得指派部門員工案件列表
   static didAssignEmplList(userId, deptId) {
     return "${kCMHostPath}FunctionName=AssignEmplList&UserID=$userId&DeptID=$deptId";
   }
-  ///指派case給員工
+  ///指派case給員工詳情
   static didAssignEmplCase(userId, caseId) {
-    return "${kCMHostPath}FunctionName=AssignEmplList&UserID=$userId&CaseID=$caseId";
+    return "${kCMHostPath}FunctionName=AssignEmplCase&UserID=$userId&CaseID=$caseId";
   }
-  ///指派員工
+  ///指派員工作業
   static didAssignEmpl(userId, caseId, pUser) {
     return "${kCMHostPath}FunctionName=AssignEmpl&UserID=$userId&CaseID=$caseId&PUser=$pUser";
   }
@@ -195,7 +195,7 @@ class Address {
   static didFile(userId, caseId) {
     return "${kCMHostPath}FunctionName=File&UserID=$userId&CaseID=$caseId";
   }
-  ///取得case狀態
+  ///取得可選case狀態
   static getCaseType() {
     return "${kCMHostPath}FunctionName=CaseTypeSelect";
   }
@@ -333,6 +333,12 @@ class Address {
   ///操作維修紀錄-添加log
   static addDescriptionAPI(custId, inputText, senderId, senderName, from) {
     var aesUri = AesUtils.aes128Encrypt("${kSNRHostName}SNRProcess?FunctionName=AddReportLog&SenderID=$senderId&SenderName=$senderName&InputText=$inputText&CustCD=$custId&From=$from");
+    var appendUrl = aesDomain + aesUri;
+    return appendUrl;
+  }
+  ///信號log
+  static getSignalLog(custId) {
+    var aesUri = AesUtils.aes128Encrypt("${kSNRHostName}SNRProcess?FunctionName=QuerySignalLog&CustCD=$custId");
     var appendUrl = aesDomain + aesUri;
     return appendUrl;
   }

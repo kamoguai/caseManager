@@ -130,7 +130,7 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
               children: <Widget>[
                 autoTextSize('回覆處理', TextStyle(color: Colors.black, fontSize: MyScreen.normalPageFontSize(context) * 1.5), context),
                 GestureDetector(
-                  child: autoTextSize('X', TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: MyScreen.normalPageFontSize(context) * 2 ), context),
+                  child: Icon(Icons.cancel, color: Colors.blue, size: titleHeight(context) * 1.3,),
                   onTap: () {
                     Navigator.pop(context);
                   },

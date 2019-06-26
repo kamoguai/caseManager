@@ -158,7 +158,7 @@ class _MaintainLogDialogState extends State<MaintainLogDialog> with BaseWidget{
       );
     } 
     else {
-      logList = Container(child: Center(child: Text('目前沒有資料')));
+      logList = Expanded(child: Container(child: Center(child: Text('目前沒有資料'))));
     }
     return logList;
   }
@@ -402,26 +402,14 @@ class _MaintainLogDialogState extends State<MaintainLogDialog> with BaseWidget{
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height)..init(context);
     Widget btnAction;
-    Widget btnType;
     
     btnAction = Container(
       color: Color(MyColors.hexFromStr('e8fcff')),
       height: titleHeight(context),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            width: deviceWidth2(context) - 1,
-            child: FlatButton(
-              textColor: Colors.red,
-              child: autoTextSize('輸入', TextStyle(color: Colors.blue), context),
-              onPressed: () {
-                  
-              },
-            ),
-          ),
-          buildLineHeight(context),
-          Container(
-            
             width: deviceWidth2(context) ,
             child: FlatButton(
               textColor: Colors.red,
