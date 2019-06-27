@@ -4,7 +4,6 @@ import 'package:case_manager/common/dao/DeptInfoDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
-import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
 ///
@@ -12,11 +11,13 @@ import 'package:flutter/material.dart';
 ///Date: 2019-06-10
 ///
 class DeptSelectorDialog extends StatefulWidget {
+  ///是否點擊此下拉選單
+  final isClickDeptSelect;
   ///依功能使用選擇器
   final fromFunc;
   ///呼叫function給主頁使用
   final Function callApiData;
-  DeptSelectorDialog({this.fromFunc, this.callApiData});
+  DeptSelectorDialog({this.isClickDeptSelect, this.fromFunc, this.callApiData});
   @override
   _DeptSelectorDialogState createState() => _DeptSelectorDialogState();
 }
@@ -62,8 +63,80 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
         userInfo = userInfoData.data;
       });
     }
+    ///如果是指派個人
     if (widget.fromFunc == 'AssignEmpl') {
-      var res = await DeptInfoDao.getDeptSelect(userInfo.userData.UserID);
+      if (userInfo.userData.Position == '2') {
+        var res = await DeptInfoDao.getDeptSelect(null);
+        if (res != null && res.result) {
+          if(mounted) {
+            setState(() {
+              isLoading = false;
+              dataArray.addAll(res.data);
+              if (dataArray.length > 0 && dataArray.length < 2) {
+                pickData = dataArray[0];
+                widget.callApiData(pickData);
+                Navigator.pop(context);
+              }
+            });
+          }
+        }
+        else {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+      else if (userInfo.userData.Position == '3') {
+        var res = await DeptInfoDao.getUserDeptSelect(userInfo.userData.UserID);
+        if (res != null && res.result) {
+          if(mounted) {
+            setState(() {
+              isLoading = false;
+              dataArray.addAll(res.data);
+              if (dataArray.length > 0 && dataArray.length < 2) {
+                pickData = dataArray[0];
+                widget.callApiData(pickData);
+                Navigator.pop(context);
+              }
+              else if (dataArray.length < 1) {
+                Navigator.pop(context);
+              }
+            });
+          }
+        }
+        else {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } 
+      else {
+        var res = await DeptInfoDao.getDeptSelect(userInfo.userData.UserID);
+        if (res != null && res.result) {
+          if(mounted) {
+            setState(() {
+              isLoading = false;
+              dataArray.addAll(res.data);
+              if (dataArray.length > 0 && dataArray.length < 2) {
+                pickData = dataArray[0];
+                widget.callApiData(pickData);
+                Navigator.pop(context);
+              }
+              else if (dataArray.length < 1) {
+                Navigator.pop(context);
+              }
+            });
+          }
+        }
+        else {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    }
+    else {//其他
+      var res = await DeptInfoDao.getUserDeptSelect(userInfo.userData.UserID);
       if (res != null && res.result) {
         if(mounted) {
           setState(() {
@@ -75,27 +148,6 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
               Navigator.pop(context);
             }
             else if (dataArray.length < 1) {
-              Navigator.pop(context);
-            }
-          });
-        }
-      }
-      else {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-    else {
-      var res = await DeptInfoDao.getUserDeptSelect(userInfo.userData.UserID);
-      if (res != null && res.result) {
-        if(mounted) {
-          setState(() {
-            isLoading = false;
-            dataArray.addAll(res.data);
-            if (dataArray.length > 0 && dataArray.length < 2) {
-              pickData = dataArray[0];
-              widget.callApiData(pickData);
               Navigator.pop(context);
             }
           });
@@ -183,8 +235,15 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
                         color: Color(MyColors.hexFromStr('#f2f2f2')),
                         child: autoTextSize('取消', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
                         onPressed: (){
-                          Navigator.pop(context, 'cancel');
-                          NavigatorUtils.goHome(context);
+                          if (widget.isClickDeptSelect) {
+                             Navigator.pop(context, 'cancel');
+                          }
+                          else {
+                            //第一次pop跳離dialog
+                            Navigator.pop(context, 'cancel');
+                            //第二次pop跳回主頁
+                            Navigator.pop(context, 'cancel');
+                          }
                         },
                       ),
                    )

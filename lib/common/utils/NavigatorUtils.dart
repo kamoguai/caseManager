@@ -3,6 +3,7 @@ import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
 import 'package:case_manager/page/assign/AssignDetailPage.dart';
 import 'package:case_manager/page/assign/AssignPage.dart';
+import 'package:case_manager/page/maint/DPMaintPage.dart';
 import 'package:case_manager/page/maint/MaintDetailPage.dart';
 import 'package:case_manager/page/maint/MaintPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,5 +59,9 @@ class NavigatorUtils {
   ///指派個人案件處理詳情頁面
   static goAssignEmplDetail(BuildContext context, String custCode, String userId, String caseId, String statusName) {
     NavigatorRouter(context, AssignDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName));
+  }
+  ///單位案件處理列表頁面
+  static goDPMaint(BuildContext context, String accName) {
+    NavigatorRouter(context, DPMaintPage(accName: accName));
   }
 }

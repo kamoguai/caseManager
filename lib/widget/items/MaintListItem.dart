@@ -17,8 +17,31 @@ class MaintListItem extends StatelessWidget with BaseWidget{
   final userId;
   ///來自功能
   final fromFunc;
-  MaintListItem({this.model, this.userId, this.fromFunc});
+  ///callApi
+  final Function callApiData;
+  ///call add caseId func
+  final Function addCaseIdFunc;
+  ///裝填所選caseId
+  final List<String> pickCaseIdArray;
+  MaintListItem({this.model, this.userId, this.fromFunc, this.callApiData, this.pickCaseIdArray, this.addCaseIdFunc});
 
+  ///選定check改變icon圖示
+  Icon changeCheckIcon(context) {
+    var deviceHeight = MediaQuery.of(context).size.height;
+    var iconSize = 20.0;
+    if (deviceHeight < 600) {
+      iconSize = titleHeight(context) * 1.2;
+    }
+    else {
+      iconSize = listHeight(context) * 0.9;
+    }
+    if (pickCaseIdArray.contains(model.caseID)) {
+      return Icon(Icons.check_box, color: Colors.blue, size: iconSize,);
+    }
+    else {
+      return Icon(Icons.check_box_outline_blank, color: Colors.grey, size: iconSize);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     ///案件狀態
@@ -184,7 +207,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
             child: Row(
               children: <Widget>[
                 autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
-                w
+                w,
               ],
             ),
           )
@@ -221,21 +244,21 @@ class MaintListItem extends StatelessWidget with BaseWidget{
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(left: 5.0),
+            padding: EdgeInsets.all(5.0),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
               children: firstRowView()
             ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 5.0),
+            padding: EdgeInsets.only(left:5.0, top: 5.0, bottom: 5.0),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
               children: secondRowView()
             ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 5.0),
+            padding: EdgeInsets.only(left:5.0, top: 5.0, bottom: 5.0),
             decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
             child: Row(
               children: thirdRowView()
@@ -261,28 +284,47 @@ class MaintListItem extends StatelessWidget with BaseWidget{
         ],
       ),
     );
-    return Stack(
-      children: <Widget>[
-        content,
+
+    List<Widget> wList = [];
+    wList.add(content);
+    wList.add(
+      Positioned(
+        right: 5.0,
+        bottom: -8.0,
+        child: GestureDetector(
+          child: Image.asset('static/images/detail.png', width: 50, height: 50),
+          onTap: (){
+            switch (fromFunc) {
+              case 'Maint':
+                NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                break;
+              case 'AssignEmpl':
+                NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                break;
+            }
+          },
+        )
+      ),
+    );
+    if (fromFunc == 'DPMaint' && model.statusName == '結案') {
+      wList.add(
         Positioned(
           right: 5.0,
-          bottom: -8.0,
+          top: -3.0,
           child: GestureDetector(
-            child: Image.asset('static/images/detail.png', width: 50, height: 50),
+            child: Container(
+              color: Colors.white,
+              child: changeCheckIcon(context),
+            ), 
             onTap: (){
-              switch (fromFunc) {
-                case 'Maint':
-                  NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
-                  break;
-                case 'AssignEmpl':
-                  NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, model.caseID, model.statusName);
-                  break;
-              }
-             
+              addCaseIdFunc(model.caseID);
             },
           )
-        )
-      ],
+        ),
+      );
+    }
+    return Stack(
+      children: wList
     );
   }
 }

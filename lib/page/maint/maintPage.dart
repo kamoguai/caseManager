@@ -17,7 +17,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
 ///
-///個人案件處理頁面
+///個人案件處理list頁面
 ///Date: 2019-06-11
 ///
 class MaintPage extends StatefulWidget {
@@ -40,6 +40,8 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
   var overCount = 0;
   ///全部筆數
   var totalCount = 0;
+  ///是否點擊部門下拉選單
+  var isClickDeptSelect = false;
   ///userInfo model
   UserInfo userInfo;
   ///數據資料arr
@@ -276,7 +278,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
-        child: DeptSelectorDialog(callApiData: _callApiData,),
+        child: DeptSelectorDialog(isClickDeptSelect: isClickDeptSelect, callApiData: _callApiData,),
       )
     );
   }
@@ -290,7 +292,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Card(
-                child: SearchDialog(userId: userInfo.userData.UserID, deptId: userInfo.userData.DeptID, callApiDataExt: _callApiDataExt,)
+                child: SearchDialog(userId: userInfo.userData.UserID, deptId: userInfo.userData.DeptID, isDPCase: false, callApiDataExt: _callApiDataExt,)
               ),
             ],
           ),
@@ -315,6 +317,9 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
                 child: autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
               ),
               onTap: () {
+                setState(() {
+                  isClickDeptSelect = true;
+                });
                 Future.delayed(const Duration(milliseconds: 50),(){
                   showDialog(
                   context: context,
