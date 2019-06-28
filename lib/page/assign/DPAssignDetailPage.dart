@@ -14,6 +14,7 @@ import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:case_manager/widget/DetailFiveBtnWidget.dart';
 import 'package:case_manager/widget/DetailItemWidget.dart';
+import 'package:case_manager/widget/dialog/DPAssignSelectorDialog.dart';
 import 'package:case_manager/widget/dialog/DetailReportDialog.dart';
 import 'package:case_manager/widget/dialog/SignalLogDialog.dart';
 import 'package:case_manager/widget/items/PingItem.dart';
@@ -137,7 +138,7 @@ class _DPAssignDetailPageState extends State<DPAssignDetailPage> with BaseWidget
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-        child: AssignSelectorDialog(deptId: userInfo.userData.DeptID, callApiData: _callPostApi,)
+        child: DPAssignSelectorDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName, fromFunc: 'DPAssign', userInfo: userInfo,)
       )
     );
   }

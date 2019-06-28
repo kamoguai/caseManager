@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/DetailPageDao.dart';
-import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
