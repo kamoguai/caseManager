@@ -28,7 +28,7 @@ class AssignPage extends StatefulWidget {
 
 class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMixin<AssignPage>, MyListState<AssignPage>{
   ///app bar左邊title
-  var userTitle = "個人案件";
+  var userTitle = "指派個人";
   ///部門id
   var deptId = "";
   ///新案count
@@ -213,54 +213,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
       }
     }
   }
-  ///function給DeptSelectorDialog呼叫並把值帶回，多個條件
-  void _callApiDataExt(Map<String, dynamic> map) async {
-    dataArray.clear();
-    if (isLoading) {
-      Fluttertoast.showToast(msg: '資料正在讀取中..');
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
-    var searchStatus = map['SearchStatus'] == null ? '' : '${map['SearchStatus']}';
-    var searchCaseType = map['SearchCaseType'] == null ? '' : map['SearchCaseType'];
-    var searchSubject = map['SearchSubject'] == null ? '' : map['SearchSubject'];
-    var searchCustNO = map['SearchCustNO'] == null ? '' : map['SearchCustNO'];
-    var searchSerial = map['SearchSerial'] == null ? '' : map['SearchSerial'];
-    var res = await MaintDao.getMaintListExt(itype: 1, userId: userInfo.userData.UserID, deptId: deptId, searchStatus: searchStatus, searchCaseType: searchCaseType, searchSerial: searchSerial, searchSubject: searchSubject, searchCustNo: searchCustNO);
-    if (res != null && res.result) {
-      List<MaintTableCell> list = new List();
-      dataArray.addAll(res.data);
-      if (dataArray.length > 0) {
-        for (var dic in dataArray) {
-          list.add(MaintTableCell.fromJson(dic));
-        }
-      }
-      List<dynamic> newCount = [];
-      List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
-      for (var dic in res.data) {
-        if (dic["StatusName"] == '新案') {
-          newCount.add(dic);
-        }
-        else if (dic["StatusName"] == '接案') {
-          noCount.add(dic);
-        }
-      }
-      if(mounted) {
-        setState(() {
-          totalCount = res.data.length;
-          newCaseCount = newCount.length;
-          noCloseCount = noCount.length;
-          isLoading = false;
-          pullLoadWidgetControl.dataList.clear();
-          pullLoadWidgetControl.dataList.addAll(list);
-          pullLoadWidgetControl.needLoadMore = false;
-        });
-      }
-    }
-  }
+  
   ///取得api資料
   getApiData() async {
     
@@ -278,24 +231,6 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
         child: DeptSelectorDialog(isClickDeptSelect: isClickDeptSelect, fromFunc: 'AssignEmpl', callApiData: _callApiData,),
-      )
-    );
-  }
-  ///查詢dialog
-  Widget searchDialog(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: SingleChildScrollView(
-         child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Card(
-                child: SearchDialog(userId: userInfo.userData.UserID, deptId: userInfo.userData.DeptID, isDPCase: false, callApiDataExt: _callApiDataExt,)
-              ),
-            ],
-          ),
-        )
       )
     );
   }

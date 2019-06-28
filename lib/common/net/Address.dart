@@ -163,25 +163,28 @@ class Address {
     }
     return urlStr;
   }
-  ///
-  static didMaintCase(userId, caseId) {
+  ///取得個人案件詳情
+  static getMaintCase(userId, caseId) {
     return "${kCMHostPath}FunctionName=MaintCase&UserID=$userId&CaseID=$caseId";
   }
-  ///
+  ///送出個人案件狀態
   static didMaint(userId, caseId, newStatus, newAData) {
-    return "${kCMHostPath}FunctionName=Maint&UserID=$userId&CaseID=$caseId&newStatus=$newStatus&newAData=$newAData";
+    var str = "${kCMHostPath}FunctionName=Maint&UserID=$userId&CaseID=$caseId&newStatus=$newStatus&newAData=$newAData";
+    return str;
   }
-  ///部門關閉list
-  static didDeptCloseList(userId, deptId) {
+  ///部門關閉caselist
+  static getDeptCloseList(userId, deptId) {
     return "${kCMHostPath}FunctionName=DeptCloseList&UserID=$userId&DeptID=$deptId";
   }
-  ///部門關閉case list
-  static didDeptCloseCase(userId, caseId) {
-    return "${kCMHostPath}FunctionName=DPMaintCase&UserID=$userId&CaseID=$caseId";
+  ///部門case詳情資料
+  static getDeptCaseDetail(userId, caseId) {
+    var str = "${kCMHostPath}FunctionName=DPMaintCase&UserID=$userId&CaseID=$caseId";
+    return str;
   }
-  ///部門關閉case
+  ///部門關閉case多筆
   static didDeptClose(userId, caseId) {
-    return "${kCMHostPath}FunctionName=DeptClose&UserID=$userId&CaseID=$caseId";
+    var str = "${kCMHostPath}FunctionName=DeptClose&UserID=$userId&CaseID=$caseId";
+    return str;
   }
   ///file list
   static didFileList(userId) {
@@ -199,7 +202,7 @@ class Address {
   static getCaseType() {
     return "${kCMHostPath}FunctionName=CaseTypeSelect";
   }
-  ///
+  ///單位條件查詢case
   static didGetDPMaintList(iType, userId, searchFunit, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial, searchPuser,) {
     var urlStr = "${kCMHostPath}FunctionName=DPMaintList&UserID=$userId&SearchFUnit=$searchFunit";
     if (iType == 1) {
@@ -228,9 +231,10 @@ class Address {
   static toSalesOk(userId, caseId, toSales) {
     return "${kCMHostPath}FunctionName=ToSalesOk&UserID=$userId&CaseID=$caseId&ToSales=$toSales";
   }
-  ///
+  ///單位部門回覆
   static assignDPMaint(userId, caseId, pdeptId, puserId, newStatus, newAData) {
-    return "${kCMHostPath}FunctionName=DPMaint&UserID=$userId&CaseID=$caseId&PDeptID=$pdeptId&PUserID=$puserId&NewStatus=$newStatus&NewAData=$newAData";
+    var str = "${kCMHostPath}FunctionName=DPMaint&UserID=$userId&CaseID=$caseId&PDeptID=$pdeptId&PUserID=$puserId&NewStatus=$newStatus&NewAData=$newAData";
+    return str;
   }
   ///取得使用者案件筆數
   static getUserCaseType(account) {

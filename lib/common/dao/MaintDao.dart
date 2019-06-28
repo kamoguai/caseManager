@@ -64,7 +64,7 @@ class MaintDao{
   static getMaintCase({userId, caseId}) async {
     Map<String, dynamic> mainDataArray = {};
     Map<String, dynamic> dataArray = {};
-    var res = await HttpManager.netFetch(Address.didMaintCase(userId, caseId), null, null, null);
+    var res = await HttpManager.netFetch(Address.getMaintCase(userId, caseId), null, null, null);
     if (res != null && res.result) {
       if (Config.DEBUG) {
         print("個人案件處理 resp => " + res.data.toString());
@@ -85,7 +85,7 @@ class MaintDao{
       return new DataResult(null, false);
     }
   }
-  ///個人案件處理作業
+  ///個人案件回覆作業
   static didMaint({userId, caseId, newStatus, newAData}) async {
     
     var res = await HttpManager.netFetch(Address.didMaint(userId, caseId, newStatus, newAData), null, null, null);

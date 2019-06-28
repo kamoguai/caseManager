@@ -42,6 +42,8 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
   var totalCount = 0;
   ///是否點擊部門下拉選單
   var isClickDeptSelect = false;
+  ///是否點擊全選，0:未選，大於0:已選
+  var isCheckAll = 0;
   ///userInfo model
   UserInfo userInfo;
   ///數據資料arr
@@ -279,7 +281,11 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
   }
   ///全選caseId function
   void addCaseIdAllFunc() {
-    if (dataArray.length > 0 ) {
+    if (dataArray.length < 1) {
+      Fluttertoast.showToast(msg: '無資料可選擇!');
+      return;
+    }
+    if (isCheckAll < 1) {
       pickCaseIdArray.clear();
       for (var dic in dataArray) {
         if (dic['StatusName'] == '結案') {
@@ -287,6 +293,19 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
         }
       }
       print('所選caseId => ${pickCaseIdArray.length}');
+      setState(() {
+        isCheckAll += 1;
+      });
+    }
+    else {
+      for (var dic in dataArray) {
+        if (dic['StatusName'] == '結案') {
+          addCaseIdFunc(dic['CaseID']);
+        }
+      }
+      setState(() {
+        isCheckAll = 0;
+      });
     }
     
   }
@@ -436,8 +455,21 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               // width: deviceWidth5(),
               child: autoTextSize('單位結案', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: (){
-
+            onTap: () async {
+              if (pickCaseIdArray.length < 1) {
+                Fluttertoast.showToast(msg: '尚未選擇欲結案資料');
+                return ;
+              }
+              var appendStr = "";
+              for (var i = 0; i < pickCaseIdArray.length; i++) {
+                if (i == pickCaseIdArray.length - 1) {
+                  appendStr += "${pickCaseIdArray[i]}";
+                }
+                else {
+                  appendStr += "${pickCaseIdArray[i]},";
+                }
+              }
+              await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
             },
           ),
           GestureDetector(

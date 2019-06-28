@@ -3,6 +3,9 @@ import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
 import 'package:case_manager/page/assign/AssignDetailPage.dart';
 import 'package:case_manager/page/assign/AssignPage.dart';
+import 'package:case_manager/page/assign/DPAssignDetailPage.dart';
+import 'package:case_manager/page/assign/DPAssignPage.dart';
+import 'package:case_manager/page/maint/DPMaintDetailPage.dart';
 import 'package:case_manager/page/maint/DPMaintPage.dart';
 import 'package:case_manager/page/maint/MaintDetailPage.dart';
 import 'package:case_manager/page/maint/MaintPage.dart';
@@ -63,5 +66,17 @@ class NavigatorUtils {
   ///單位案件處理列表頁面
   static goDPMaint(BuildContext context, String accName) {
     NavigatorRouter(context, DPMaintPage(accName: accName));
+  }
+  ///單位案件處理詳情頁面
+  static goDPMaintDetail(BuildContext context, String custCode, String userId, String caseId, String statusName) {
+    NavigatorRouter(context, DPMaintDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName));
+  }
+  ///單位指派列表頁面
+  static goDPAssign(BuildContext context, String accName) {
+    NavigatorRouter(context, DPAssignPage(accName: accName));
+  }
+  ///單位指派詳情頁面
+  static goDPAssignDetail(BuildContext context, String custCode, String userId, String caseId, String statusName) {
+    NavigatorRouter(context, DPAssignDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName));
   }
 }

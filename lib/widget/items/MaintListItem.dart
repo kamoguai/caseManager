@@ -29,8 +29,11 @@ class MaintListItem extends StatelessWidget with BaseWidget{
   Icon changeCheckIcon(context) {
     var deviceHeight = MediaQuery.of(context).size.height;
     var iconSize = 20.0;
-    if (deviceHeight < 600) {
+    if (deviceHeight < 590) {
       iconSize = titleHeight(context) * 1.2;
+    }
+    else if (deviceHeight < 600) {
+      iconSize = titleHeight(context) * 1.1;
     }
     else {
       iconSize = listHeight(context) * 0.9;
@@ -301,6 +304,11 @@ class MaintListItem extends StatelessWidget with BaseWidget{
               case 'AssignEmpl':
                 NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, model.caseID, model.statusName);
                 break;
+              case 'DPMaint':
+                NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                break;
+              case 'DPAssign':
+                NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, model.caseID, model.statusName);
             }
           },
         )

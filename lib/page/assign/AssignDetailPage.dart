@@ -125,8 +125,7 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
   ///由dialog呼叫此api
   void _callPostApi(Map<String, dynamic> map) async {
     print('post param: {userId: ${widget.userId}, caseId: ${widget.caseId} pUserId: ${map['UserID']}}');
-    // Fluttertoast.showToast(msg: 'post param: {userId: ${widget.userId}, caseId: ${widget.caseId} pUserId: ${map['UserID']}}');
-    // await AssignDao.didAssignEmpl(userId: widget.userId, caseId: widget.caseId, pUser: map['UserID']); 
+    // await AssignDao.didAssignEmpl(userId: widget.userId, caseId: widget.caseId, pUser: '${map['UserID']}');
   }
 
   ///指派人員dialog
@@ -232,6 +231,10 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
               child: autoTextSize('指派', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
             onTap: () {
+              if (isLoading) {
+                Fluttertoast.showToast(msg: '資料讀取中..');
+                return;
+              }
               showDialog(
                 context: context,
                 builder: (BuildContext context) => assignEmplDialog(context)
@@ -247,6 +250,10 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
               child: autoTextSize('訊號', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
             onTap: () {
+              if (isLoading) {
+                Fluttertoast.showToast(msg: '資料讀取中..');
+                return;
+              }
               showDialog(
                 context: context,
                 builder: (BuildContext context) => signalDialog(context)

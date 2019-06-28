@@ -286,7 +286,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isAssignDept) {
-
+                NavigatorUtils.goDPAssign(context, _accName);
               }
             },
           ),
