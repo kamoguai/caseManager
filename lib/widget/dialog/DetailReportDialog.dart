@@ -378,11 +378,14 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
         );
         columnList.add(
           Container(
+            height: titleHeight(context) * 2,
             padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 5, right: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                RaisedButton(
+                Container(
+                  padding: EdgeInsets.all(4),
+                  child: RaisedButton(
                   textColor: Colors.white,
                   color: bntArr[0],
                   highlightColor: Colors.pink[200],
@@ -394,7 +397,10 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
                     });
                   },
                 ),
-                RaisedButton(
+                ),
+                Container(
+                  padding: EdgeInsets.all(4),
+                  child: RaisedButton(
                   textColor: Colors.white,
                   color: bntArr[1],
                   highlightColor: Colors.pink[100],
@@ -405,7 +411,10 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
                     });
                   },
                 ),
-                RaisedButton(
+                ),
+                Container(
+                  padding: EdgeInsets.all(4),
+                  child: RaisedButton(
                   textColor: Colors.white,
                   color: bntArr[2],
                   highlightColor: Colors.pink[100],
@@ -415,6 +424,7 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
                       statusType = 2;
                     });
                   },
+                ),
                 ),
               ],
             ),
@@ -483,57 +493,71 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
         );
         columnList.add(
           Container(
+            height: titleHeight(context) * 2,
             padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 5, right: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
               children: <Widget>[
-                RaisedButton(
-                  textColor: Colors.white,
-                  color: bntArr[0],
-                  highlightColor: Colors.pink[200],
-                  animationDuration: Duration(milliseconds: 300),
-                  child: autoTextSize('新案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
-                  onPressed: () {
-                    setState(() {
-                      statusType = 0;
-                    });
-                  },
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: bntArr[0],
+                    highlightColor: Colors.pink[200],
+                    animationDuration: Duration(milliseconds: 300),
+                    child: autoTextSize('新案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                    onPressed: () {
+                      setState(() {
+                        statusType = 0;
+                      });
+                    },
+                  ),
                 ),
-                RaisedButton(
-                  textColor: Colors.white,
-                  color: bntArr[1],
-                  highlightColor: Colors.pink[100],
-                  child: autoTextSize('接案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
-                  onPressed: () {
-                    setState(() {
-                      statusType = 1;
-                    });
-                  },
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: bntArr[1],
+                    highlightColor: Colors.pink[100],
+                    child: autoTextSize('接案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                    onPressed: () {
+                      setState(() {
+                        statusType = 1;
+                      });
+                    },
+                  ),
                 ),
-                RaisedButton(
-                  textColor: Colors.white,
-                  color: bntArr[2],
-                  highlightColor: Colors.pink[100],
-                  child: autoTextSize('結案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
-                  onPressed: () {
-                    setState(() {
-                      statusType = 2;
-                    });
-                  },
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: bntArr[2],
+                    highlightColor: Colors.pink[100],
+                    child: autoTextSize('結案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                    onPressed: () {
+                      setState(() {
+                        statusType = 2;
+                      });
+                    },
+                  ),
                 ),
-                RaisedButton(
-                  textColor: Colors.white,
-                  color: bntArr[3],
-                  highlightColor: Colors.pink[100],
-                  child: autoTextSize('單位結案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
-                  onPressed: () {
-                    setState(() {
-                      statusType = 4;
-                    });
-                  },
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: bntArr[3],
+                    highlightColor: Colors.pink[100],
+                    child: autoTextSize('單位結案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                    onPressed: () {
+                      setState(() {
+                        statusType = 4;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
+           
           ),
         );
         break;

@@ -59,8 +59,8 @@ class DPAssignDao {
     }
   }
   ///單位指派回覆
-  static didDPAssignCase({userId, caseId, funit, newAData}) async {
-    var res = await HttpManager.netFetch(Address.didAssignDept(userId, caseId, funit, newAData), null, null, null);
+  static didDPAssignCase({userId, caseId, funit, newAData, pUserId}) async {
+    var res = await HttpManager.netFetch(Address.didAssignDept(userId, caseId, funit, newAData, pUserId), null, null, null);
     if (res != null && res.result) {
       if (Config.DEBUG) {
         print("單位指派回覆 resp => " + res.data.toString());

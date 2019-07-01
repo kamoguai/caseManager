@@ -449,13 +449,14 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
           ),
           GestureDetector(
             child: Container(
+              decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(5.0), border: Border.all(width: 1.0, color: Colors.black, style: BorderStyle.solid)),
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
-              height: 42,
+              height: 36,
               // width: deviceWidth5(),
               child: autoTextSize('單位結案', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: () async {
+            onTap: () {
               if (pickCaseIdArray.length < 1) {
                 Fluttertoast.showToast(msg: '尚未選擇欲結案資料');
                 return ;
@@ -469,7 +470,31 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
                   appendStr += "${pickCaseIdArray[i]},";
                 }
               }
-              await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    title: Text(''),
+                    content: autoTextSize('是否要將${pickCaseIdArray.length}筆資料執行單位結案?', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context))),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: autoTextSize('取消', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize(context))),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: autoTextSize('確定', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context))),
+                        onPressed: () async {
+                          await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                }
+              );
             },
           ),
           GestureDetector(

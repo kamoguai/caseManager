@@ -5,6 +5,8 @@ import 'package:case_manager/page/assign/AssignDetailPage.dart';
 import 'package:case_manager/page/assign/AssignPage.dart';
 import 'package:case_manager/page/assign/DPAssignDetailPage.dart';
 import 'package:case_manager/page/assign/DPAssignPage.dart';
+import 'package:case_manager/page/file/FileDetailPage.dart';
+import 'package:case_manager/page/file/FilePage.dart';
 import 'package:case_manager/page/maint/DPMaintDetailPage.dart';
 import 'package:case_manager/page/maint/DPMaintPage.dart';
 import 'package:case_manager/page/maint/MaintDetailPage.dart';
@@ -78,5 +80,13 @@ class NavigatorUtils {
   ///單位指派詳情頁面
   static goDPAssignDetail(BuildContext context, String custCode, String userId, String caseId, String statusName) {
     NavigatorRouter(context, DPAssignDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName));
+  }
+  ///案件歸檔/單位結案列表
+  static goFileList(BuildContext context, String accName) {
+    NavigatorRouter(context, FilePage(accName: accName));
+  }
+  ///案件歸檔詳情
+  static goFileDettail(BuildContext context, String custCode, String userId, String caseId, String statusName, String fromFunc) {
+     NavigatorRouter(context, FileDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName, fromFunc: fromFunc,));
   }
 }

@@ -114,8 +114,8 @@ class Address {
     return "${kCMHostPath}FunctionName=AssignDeptCase&UserID=$userId&CaseID=$caseId";
   }
   ///指派部門, params: userId, caseId, funit, newAData
-  static didAssignDept(userId, caseId, funit, newAData) {
-    return "${kCMHostPath}FunctionName=AssignDept&UserID=$userId&CaseID=$caseId&FUnit=$funit&NewAData=$newAData";
+  static didAssignDept(userId, caseId, funit, newAData, pUserId) {
+    return "${kCMHostPath}FunctionName=AssignDept&UserID=$userId&CaseID=$caseId&FUnit=$funit&PUserID=$pUserId&NewAData=$newAData";
   }
   ///指派部門 params: userId, caseId, funit, puserId, newAData
   static didAssignDeptExt(userId, caseId, funit, puserId, newAData) {
@@ -138,7 +138,7 @@ class Address {
     return "${kCMHostPath}FunctionName=MaintList&UserID=$userId&DeptID=$deptId";
   }
   ///取得業務list
-  static didGetSalesMaintList(userId, deptId) {
+  static getSalesMaintList(userId, deptId) {
     return "${kCMHostPath}FunctionName=SalesList&UserID=$userId&DeptID=$deptId";
   }
   ///取得個人案件處理清單，條件查詢
@@ -187,16 +187,17 @@ class Address {
     return str;
   }
   ///file list
-  static didFileList(userId) {
+  static getFileList(userId) {
     return "${kCMHostPath}FunctionName=FileList&UserID=$userId";
   }
   ///file case
-  static didFileCase(userId, caseId) {
+  static getFileCase(userId, caseId) {
     return "${kCMHostPath}FunctionName=FileCase&UserID=$userId&CaseID=$caseId";
   }
-  ///
+  ///案件歸檔執行
   static didFile(userId, caseId) {
-    return "${kCMHostPath}FunctionName=File&UserID=$userId&CaseID=$caseId";
+    var str = "${kCMHostPath}FunctionName=File&UserID=$userId&CaseID=$caseId";
+    return str;
   }
   ///取得可選case狀態
   static getCaseType() {
@@ -239,6 +240,10 @@ class Address {
   ///取得使用者案件筆數
   static getUserCaseType(account) {
     return "${kCMHostPath}FunctionName=GetUserCaseCount&account=$account";
+  }
+  ///部門結案詳情
+  static getDeptCloseCase(userId, caseId) {
+    return "${kCMHostPath}FunctionName=DeptCloseCase&UserID=$userId&CaseID=$caseId";
   }
 
 

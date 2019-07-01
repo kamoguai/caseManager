@@ -122,12 +122,6 @@ class _DPAssignDetailPageState extends State<DPAssignDetailPage> with BaseWidget
     config = dic;
   }
 
-  ///由dialog呼叫此api
-  void _callPostApi(Map<String, dynamic> map) async {
-    print('post param: {userId: ${widget.userId}, caseId: ${widget.caseId} pUserId: ${map['UserID']}}');
-    // await AssignDao.didAssignEmpl(userId: widget.userId, caseId: widget.caseId, pUser: '${map['UserID']}');
-  }
-
   ///指派人員dialog
   Widget assignEmplDialog(BuildContext context) {
     return Material(
@@ -138,7 +132,7 @@ class _DPAssignDetailPageState extends State<DPAssignDetailPage> with BaseWidget
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-        child: DPAssignSelectorDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName, fromFunc: 'DPAssign', userInfo: userInfo,)
+        child: DPAssignSelectorDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: widget.userId, caseId: widget.caseId, fromFunc: 'DPAssign', userInfo: userInfo,),
       )
     );
   }

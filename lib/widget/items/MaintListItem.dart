@@ -138,7 +138,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
         }
 
       }
-      else if (model.statusName == '結案'){
+      else if (model.statusName == '結案' || model.statusName == '單位結案'){
         if (model.pushTime != "") {
           var strStartDate = model.pushTime;
           var strPushTime = model.pushTime;
@@ -170,12 +170,12 @@ class MaintListItem extends StatelessWidget with BaseWidget{
           else {
             col = Colors.indigo;
           }
-          row.add(autoTextSize('結案:', TextStyle(color: Colors.green), context));
+          row.add(autoTextSize('${model.statusName}:', TextStyle(color: Colors.green), context));
           row.add(Icon(Icons.access_time, size: 20,));
           row.add(autoTextSize('$inday天$inhour時$inminut分', TextStyle(color: col), context));
         }
         else {
-          row.add(autoTextSize('結案:', TextStyle(color: Colors.green), context));
+          row.add(autoTextSize('${model.statusName}:', TextStyle(color: Colors.green), context));
           row.add(autoTextSize('${model.closeDataTime} ${model.closeDataTime2}', TextStyle(color: Colors.grey[600]), context));
         }
         
@@ -309,12 +309,19 @@ class MaintListItem extends StatelessWidget with BaseWidget{
                 break;
               case 'DPAssign':
                 NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                break;
+              case 'File':
+                NavigatorUtils.goFileDettail(context, model.custNO, userId, model.caseID, model.statusName, 'File');
+                break;
+              case 'DPMaintClose':
+                NavigatorUtils.goFileDettail(context, model.custNO, userId, model.caseID, model.statusName, 'DPMaintClose');
+                break;
             }
           },
         )
       ),
     );
-    if (fromFunc == 'DPMaint' && model.statusName == '結案') {
+    if ((fromFunc == 'DPMaint' && model.statusName == '結案') || fromFunc == 'File' || fromFunc == 'DPMaintClose') {
       wList.add(
         Positioned(
           right: 5.0,

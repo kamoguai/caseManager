@@ -209,32 +209,72 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   Widget bodyColumn() {
 
     Widget body;
-    body = Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
+    List<Widget> columnList = [];
+    columnList.add(
+      Container(
+        padding: EdgeInsets.only(top: 5.0),
+      ),
+    );
+    columnList.add(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          autoTextSize('登入者: ', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+          autoTextSize('$_accName ($_accDept)', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context)
+        ],
+      ),
+    );
+    columnList.add(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          autoTextSize('新案: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          autoTextSize('$_newCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          Container(padding: EdgeInsets.only(left: 5.0),),
+          autoTextSize('未結案: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          autoTextSize('$_takeCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          Container(padding: EdgeInsets.only(left: 5.0),),
+          autoTextSize('超常: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          autoTextSize('$_overCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+        ],
+      ),
+    );
+    if (isCreateCase) {
+      columnList.add(
         Container(
-          padding: EdgeInsets.only(top: 5.0),
+          padding: EdgeInsets.only(top: 5.0),   
+          width: _buildButtonWidth(),       
+          child: RaisedButton(
+            disabledTextColor: Colors.grey,
+            child: autoTextSize('維修插單處理', TextStyle(color: isCreateCase == true ? Colors.blue : Colors.grey, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            onPressed: () {
+              if (isCreateCase) {
+                // NavigatorUtils.goMaint(context, _accName);
+              }
+            },
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            autoTextSize('登入者: ', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
-            autoTextSize('$_accName ($_accDept)', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context)
-          ],
+      );
+    }
+    columnList.add(
+      Container(
+        padding: EdgeInsets.only(top: 5.0),   
+        width: _buildButtonWidth(),       
+        child: RaisedButton(
+          disabledTextColor: Colors.grey,
+          child: autoTextSize('裝機問題通知', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          onPressed: () {
+            if (isCreateCase) {
+              // NavigatorUtils.goMaint(context, _accName);
+            }
+          },
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            autoTextSize('新案: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-            autoTextSize('$_newCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-            Container(padding: EdgeInsets.only(left: 5.0),),
-            autoTextSize('未結案: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-            autoTextSize('$_takeCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-            Container(padding: EdgeInsets.only(left: 5.0),),
-            autoTextSize('超常: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-            autoTextSize('$_overCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-          ],
-        ),
+      ),
+    );
+    if (isMaint) {
+      columnList.add(
         Container(
           padding: EdgeInsets.only(top: 5.0),   
           width: _buildButtonWidth(),       
@@ -249,6 +289,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             },
           ),
         ),
+      );
+    }
+    if (isAssignEmpl) {
+      columnList.add(
         Container(  
           padding: EdgeInsets.only(top: 5.0),
           width: _buildButtonWidth(),              
@@ -263,6 +307,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             },
           ),
         ),
+      );
+    }
+    if (isDPMaint) {
+      columnList.add(
         Container(  
           padding: EdgeInsets.only(top: 5.0),
           width: _buildButtonWidth(),      
@@ -277,6 +325,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             },
           ),
         ),
+      );
+    }
+    if (isAssignDept) {
+      columnList.add(
         Container(  
           padding: EdgeInsets.only(top: 5.0),
           width: _buildButtonWidth(),      
@@ -291,33 +343,24 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             },
           ),
         ),
-        Container(  
-          padding: EdgeInsets.only(top: 5.0),
-          width: _buildButtonWidth(),      
-          child: RaisedButton(
-            disabledTextColor: Colors.grey,
-            child: autoTextSize('案件分析', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            onPressed: () {
+      );
+    }
+    columnList.add(
+      Container(  
+        padding: EdgeInsets.only(top: 5.0),
+        width: _buildButtonWidth(),      
+        child: RaisedButton(
+          disabledTextColor: Colors.grey,
+          child: autoTextSize('案件分析', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          onPressed: () {
 
-            },
-          ),
+          },
         ),
-        Container(  
-          padding: EdgeInsets.only(top: 5.0),
-          width: _buildButtonWidth(),      
-          child: RaisedButton(
-            disabledTextColor: Colors.grey,
-
-            child: autoTextSize('指派單位', TextStyle(color: isAssignDept == true? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            onPressed: () {
-              if (isAssignDept) {
-
-              }
-            },
-          ),
-        ),
+      ),
+    );
+    if (isFile) {
+      columnList.add(
         Container( 
           padding: EdgeInsets.only(top: 5.0), 
           width: _buildButtonWidth(),      
@@ -327,12 +370,16 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isFile) {
-
+                NavigatorUtils.goFileList(context, _accName);
               }
             },
           ),
         ),
-      ],
+      );
+    }
+    body = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: columnList
     );
     return body;
   }

@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/dao/AssignInfoDao.dart';
+import 'package:case_manager/common/dao/DPAssignDao.dart';
 import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/DeptInfoDao.dart';
+import 'package:case_manager/common/dao/FileDao.dart';
 import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
@@ -38,8 +40,6 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
   ///選取資料
   Map<String, dynamic> pickData = {};
 
-  ///案件狀態，0: 新案，1: 接案，2: 結案，4: 部門結案
-  int statusType = 0;
   ///輸入內文
   String inputText = '';
   ///部門選單
@@ -76,7 +76,7 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
 
   ///初始化資料
   initParam() {
-
+    getDeptListApiData();
   }
   ///取得部門列表
   getDeptListApiData() async {
@@ -102,18 +102,25 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
       });
     }
   }
+  ///post指派api
+  postDPAssignApi(userId, inputField, caseId, pUserId, pDeptId) async {
+    await DPAssignDao.didDPAssignCase(userId: userId, caseId: caseId, funit: pDeptId, pUserId: pUserId);
+  }
+  ///post歸檔api
+  postFileApi(userId, caseId) async {
+    await FileDao.postFile(userId: userId, caseId: caseId);
+  }
   ///送出按鈕action
-  sendAction(inputField, caseId, newStatus, pUserId, pDeptId) async {
-    print(inputField);
-    ///舊按為新案，轉接案
-    if (!(widget.statusName == '新案' && widget.statusName == '接案')) {
-      if (inputField == '') {
-        Fluttertoast.showToast(msg: '輸入內容無資料!');
-        return;
-      }
-    }
-    Fluttertoast.showToast(msg: 'userId: ${widget.userId}, caseId: $caseId, newStatus: $newStatus, newAData: $inputField, pUserId: $pUserId, pDeptId: $pDeptId');
+  sendAction(userId, inputField, caseId, pUserId, pDeptId) {
+    
+    postDPAssignApi(userId, inputField, caseId, pUserId, pDeptId);
    
+  }
+  ///送出歸檔指令
+  sendFile(userId, caseId) {
+
+    postFileApi(userId, caseId);
+
   }
   ///部門選擇Actions
   List<Widget> deptListActions() {
@@ -202,7 +209,11 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
 
     Widget body;
     List<Widget> columnList = [];
-    
+    var deviceHeight = MediaQuery.of(context).size.height;
+    var deviceWidth = deviceWidth3(context);
+    if (deviceHeight < 590) {
+      deviceWidth = deviceWidth3(context) * 1.2;
+    }
     columnList.add(
       Container(
         padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -241,7 +252,7 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
                     child: GestureDetector(
                       child: Container(
                         alignment: Alignment.centerLeft,
-                        child: autoTextSize('${selectDeptName == '' ? widget.deptName : selectDeptName}', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context)), context),
+                        child: autoTextSize('${selectDeptName == '' ? '請選擇' : selectDeptName}', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context)), context),
                       ),
                       onTap: () {
                         showSelectorDeptSheetController(context);
@@ -265,7 +276,7 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
                     child: GestureDetector(
                       child: Container(
                         alignment: Alignment.centerLeft,
-                        child: autoTextSize('${selectPuserName == '' ? widget.takeName : selectPuserName}', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context)), context),
+                        child: autoTextSize('${selectPuserName == '' ? '請選擇' : selectPuserName}', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context)), context),
                       ),
                       onTap: () async {
                         showSelectorPuserSheetController(context);
@@ -327,7 +338,19 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
                   if (selectDeptId == '') {
                     selectDeptId = widget.userInfo.userData.DeptID;
                   }
-                  sendAction(inputText, widget.caseId, statusType, selectPuserId, selectDeptId);
+                  sendAction(widget.userId, inputText, widget.caseId, selectPuserId, selectDeptId);
+                },
+              ),
+            ),
+            Container(
+              width: deviceWidth,
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              child: RaisedButton(
+                textColor: Colors.red,
+                color: Colors.blue,
+                child: autoTextSize('直接歸檔', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                onPressed: () {
+                  sendFile(widget.userId, widget.caseId);
                 },
               ),
             ),
@@ -336,6 +359,14 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
         
       )
     );
+
+    body = Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: columnList
+      ),
+    );
+
     return body;
   }
 }

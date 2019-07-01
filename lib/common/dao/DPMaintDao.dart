@@ -90,4 +90,54 @@ class DPMaintDao {
       return new DataResult(null, false);
     }
   }
+  ///單位部門結案列表
+  static getDPMaintCloseList({userId, deptId}) async {
+    Map<String, dynamic> mainDataArray = {};
+    List<dynamic> dataArray = [];
+    var res = await HttpManager.netFetch(Address.getDeptCloseList(userId, deptId), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("單位案件結案list resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray.length > 0) {
+        dataArray = mainDataArray["QLists"];
+        return new DataResult(dataArray, true);
+
+      }
+      else {
+        return new DataResult(null, false);
+      }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
+  ///單位部門結案詳情
+  static getDPMaintCloseDetail({userId, caseId}) async {
+    Map<String, dynamic> mainDataArray = {};
+    Map<String, dynamic> dataArray = {};
+    var res = await HttpManager.netFetch(Address.getDeptCloseCase(userId, caseId), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("部門結案詳情 resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        mainDataArray = res.data["ReturnData"];
+      }
+      if (mainDataArray.length > 0) {
+        dataArray = mainDataArray["QDetail"];
+        return new DataResult(dataArray, true);
+
+      }
+      else {
+        return new DataResult(null, false);
+      }
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
 }

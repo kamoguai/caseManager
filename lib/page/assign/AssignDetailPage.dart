@@ -13,9 +13,11 @@ import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:case_manager/widget/DetailFiveBtnWidget.dart';
 import 'package:case_manager/widget/DetailItemWidget.dart';
 import 'package:case_manager/widget/dialog/AssignSelectorDialog.dart';
+import 'package:case_manager/widget/dialog/DPAssignSelectorDialog.dart';
 import 'package:case_manager/widget/dialog/DetailReportDialog.dart';
 import 'package:case_manager/widget/dialog/SignalLogDialog.dart';
 import 'package:case_manager/widget/items/PingItem.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
