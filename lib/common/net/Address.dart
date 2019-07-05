@@ -138,26 +138,30 @@ class Address {
     return "${kCMHostPath}FunctionName=MaintList&UserID=$userId&DeptID=$deptId";
   }
   ///取得業務list
-  static getSalesMaintList(userId, deptId) {
-    return "${kCMHostPath}FunctionName=SalesList&UserID=$userId&DeptID=$deptId";
+  static getSalesMaintList(userId, deptId, searchStatus) {
+    var str = "${kCMHostPath}FunctionName=SalesList&UserID=$userId&DeptID=$deptId";
+    if (searchStatus != null && searchStatus != '') {
+      str += "&$searchStatus";
+    }
+    return str;
   }
   ///取得個人案件處理清單，條件查詢
   static didGetMaintListExt(itype, userId, deptId, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial) {
     var urlStr = "${kCMHostPath}FunctionName=MaintList&UserID=$userId&DeptID=$deptId";
     if (itype == 1) {
-      if (searchStatus.length > 0) {
+      if (searchStatus != null && searchStatus.length > 0) {
         urlStr += "&SearchStatus=$searchStatus";
       }
-      if (searchCaseType.length > 0) {
+      if (searchCaseType != null && searchCaseType.length > 0) {
         urlStr += "&SearchCaseType=$searchCaseType";
       }
-      if (searchSubject.length > 0) {
+      if (searchSubject != null && searchSubject.length > 0) {
         urlStr += "&SearchSubject=$searchSubject";
       }
-      if (searchCustNo.length > 0) {
+      if (searchCustNo != null && searchCustNo.length > 0) {
         urlStr += "&SearchCustNO=$searchCustNo";
       }
-      if (searchSerial.length > 0) {
+      if (searchSerial != null && searchSerial.length > 0) {
         urlStr += "&SearchSerial=$searchSerial";
       }
     }
@@ -207,22 +211,22 @@ class Address {
   static didGetDPMaintList(iType, userId, searchFunit, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial, searchPuser,) {
     var urlStr = "${kCMHostPath}FunctionName=DPMaintList&UserID=$userId&SearchFUnit=$searchFunit";
     if (iType == 1) {
-      if (searchStatus.length > 0) {
+      if (searchStatus != null && searchStatus.length > 0) {
         urlStr += "&SearchStatus=$searchStatus";
       }
-      if (searchCaseType.length > 0) {
+      if (searchCaseType != null && searchCaseType.length > 0) {
         urlStr += "&SearchCaseType=$searchCaseType";
       }
-      if (searchSubject.length > 0) {
+      if (searchSubject != null && searchSubject.length > 0) {
         urlStr += "&SearchSubject=$searchSubject";
       }
-      if (searchCustNo.length > 0) {
+      if (searchCustNo != null && searchCustNo.length > 0) {
         urlStr += "&SearchCustNO=$searchCustNo";
       }
-      if (searchSerial.length > 0) {
+      if (searchSerial != null && searchSerial.length > 0) {
         urlStr += "&SearchSerial=$searchSerial";
       }
-      if (searchPuser.length > 0) {
+      if (searchPuser != null && searchPuser.length > 0) {
         urlStr += "&SearchPuser=$searchPuser";
       }
     }
@@ -245,7 +249,10 @@ class Address {
   static getDeptCloseCase(userId, caseId) {
     return "${kCMHostPath}FunctionName=DeptCloseCase&UserID=$userId&CaseID=$caseId";
   }
-
+  ///取得案件部門統計分析列表
+  static getAnalizeCaseList(searchYear, searchMonth) {
+    return "${kCMHostPath}FunctionName=GetDeptCaseCount&SearchYear=$searchYear&SearchMonth=$searchMonth";
+  }
 
 
   ///-------------------- snr api -------------------- ///

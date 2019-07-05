@@ -239,19 +239,17 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ],
       ),
     );
-    if (isCreateCase) {
+    if (userInfo.userData.DeptID == '4' || userInfo.userData.Position == '2') {
       columnList.add(
         Container(
           padding: EdgeInsets.only(top: 5.0),   
           width: _buildButtonWidth(),       
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('維修插單處理', TextStyle(color: isCreateCase == true ? Colors.blue : Colors.grey, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
+            child: autoTextSize('維修插單處理', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
-              if (isCreateCase) {
-                // NavigatorUtils.goMaint(context, _accName);
-              }
+                NavigatorUtils.goFixInsert(context, _accName);
             },
           ),
         ),
@@ -266,9 +264,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           child: autoTextSize('裝機問題通知', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           onPressed: () {
-            if (isCreateCase) {
-              // NavigatorUtils.goMaint(context, _accName);
-            }
+            NavigatorUtils.goSalesMaint(context, _accName);
           },
         ),
       ),
@@ -354,7 +350,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           child: autoTextSize('案件分析', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           onPressed: () {
-
+            NavigatorUtils.goAnalyze(context);
           },
         ),
       ),
@@ -431,7 +427,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           ),
           body: Container(
             decoration: BoxDecoration(image: DecorationImage(image: AssetImage("static/images/bg.png"), fit: BoxFit.cover), ),
-            child: bodyColumn(),
+            child: userInfo == null ? showLoadingAnimeB(context) : bodyColumn(),
           ),
           bottomNavigationBar: bottomBar()
         ),

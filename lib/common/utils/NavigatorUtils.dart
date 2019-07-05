@@ -1,16 +1,20 @@
 
 import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
+import 'package:case_manager/page/analyze/analyzePage.dart';
 import 'package:case_manager/page/assign/AssignDetailPage.dart';
 import 'package:case_manager/page/assign/AssignPage.dart';
 import 'package:case_manager/page/assign/DPAssignDetailPage.dart';
 import 'package:case_manager/page/assign/DPAssignPage.dart';
 import 'package:case_manager/page/file/FileDetailPage.dart';
 import 'package:case_manager/page/file/FilePage.dart';
+import 'package:case_manager/page/fixInsert/fixInsertPage.dart';
 import 'package:case_manager/page/maint/DPMaintDetailPage.dart';
 import 'package:case_manager/page/maint/DPMaintPage.dart';
 import 'package:case_manager/page/maint/MaintDetailPage.dart';
 import 'package:case_manager/page/maint/MaintPage.dart';
+import 'package:case_manager/page/sales/SalesMaintDetailPage.dart';
+import 'package:case_manager/page/sales/SalesMaintPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -89,4 +93,25 @@ class NavigatorUtils {
   static goFileDettail(BuildContext context, String custCode, String userId, String caseId, String statusName, String fromFunc) {
      NavigatorRouter(context, FileDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName, fromFunc: fromFunc,));
   }
+  ///裝機問題通知列表
+  static goSalesMaint(BuildContext context, String accName) {
+     NavigatorRouter(context, SalesMaintPage(accName: accName));
+  }
+  ///裝機問題通知詳情
+  static goSalesMaintDetail(BuildContext context, String custCode, String userId, String caseId, String statusName) {
+    NavigatorRouter(context, SalesMaintDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName));
+  }
+  ///維修插單列表
+  static goFixInsert(BuildContext context, String accName) {
+    NavigatorRouter(context, FixInsertPage(accName: accName));
+  }
+  ///維修插單詳情
+  static goFixInsertDetail(BuildContext context, String custCode, String userId, String caseId, String statusName) {
+    NavigatorRouter(context, SalesMaintDetailPage(custCode: custCode, userId: userId, caseId: caseId, statusName: statusName));
+  }
+  ///案件分析列表
+  static goAnalyze(BuildContext context) {
+    NavigatorRouter(context, AnalyzePage());
+  }
+  
 }

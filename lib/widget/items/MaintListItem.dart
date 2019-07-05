@@ -316,6 +316,8 @@ class MaintListItem extends StatelessWidget with BaseWidget{
               case 'DPMaintClose':
                 NavigatorUtils.goFileDettail(context, model.custNO, userId, model.caseID, model.statusName, 'DPMaintClose');
                 break;
+              case 'SalesMaint':
+                NavigatorUtils.goSalesMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
             }
           },
         )

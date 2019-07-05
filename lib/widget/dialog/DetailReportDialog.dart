@@ -94,6 +94,9 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
     if (widget.fromFunc == "DPMaint") {
       getApiData();
     }
+    else if (widget.fromFunc == "FixInsert") {
+      getAssignEmplData("4");
+    } 
   }
 
   getApiData() async {
@@ -139,6 +142,9 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
         break;
       case 'DPMaint':
         await DPMaintDao.didDPMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField, deptId: pDeptId, pUserId: pUserId);
+        break;
+      case 'FixInsert':
+        await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
         break;
     }
   }
@@ -278,6 +284,26 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
             break;
         }
         break;
+      case 'FixInsert' :
+      bntArr = [Colors.grey, Colors.grey, Colors.grey,];
+      switch(statusType) {
+        case 0:
+          bntArr[0] = Colors.pink[200];
+          bntArr[1] = Colors.grey;
+          bntArr[2] = Colors.grey;
+          break;
+        case 1:
+          bntArr[0] = Colors.grey;
+          bntArr[1] = Colors.pink[200];
+          bntArr[2] = Colors.grey;
+          break;
+        case 2:
+          bntArr[0] = Colors.grey;
+          bntArr[1] = Colors.grey;
+          bntArr[2] = Colors.pink[200];
+          break;
+      }
+      break;
     }
     Widget body;
     List<Widget> columnList = [];
@@ -561,6 +587,111 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
           ),
         );
         break;
+      case 'FixInsert':
+        columnList.add(
+        Container(
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 5, bottom: 5),
+          color: Color(MyColors.hexFromStr('d0e1f3')),
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: autoTextSize('接案單位:', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: autoTextSize('${widget.deptName}', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: autoTextSize('接案人:', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: autoTextSize('${widget.takeName}', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      columnList.add(
+        Container(
+          height: titleHeight(context) * 2,
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 5, right: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(4),
+                child: RaisedButton(
+                textColor: Colors.white,
+                color: bntArr[0],
+                highlightColor: Colors.pink[200],
+                animationDuration: Duration(milliseconds: 300),
+                child: autoTextSize('新案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                onPressed: () {
+                  setState(() {
+                    statusType = 0;
+                  });
+                },
+              ),
+              ),
+              Container(
+                padding: EdgeInsets.all(4),
+                child: RaisedButton(
+                textColor: Colors.white,
+                color: bntArr[1],
+                highlightColor: Colors.pink[100],
+                child: autoTextSize('接案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                onPressed: () {
+                  setState(() {
+                    statusType = 1;
+                  });
+                },
+              ),
+              ),
+              Container(
+                padding: EdgeInsets.all(4),
+                child: RaisedButton(
+                textColor: Colors.white,
+                color: bntArr[2],
+                highlightColor: Colors.pink[100],
+                child: autoTextSize('單位結案', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
+                onPressed: () {
+                  setState(() {
+                    statusType = 4;
+                  });
+                },
+              ),
+              ),
+            ],
+          ),
+        ),
+      );
+      break;
     }
     columnList.add(
       Center(

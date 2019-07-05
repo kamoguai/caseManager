@@ -8,10 +8,10 @@ import 'package:case_manager/common/net/Api.dart';
 ///Date: 2019-07-01
 class SalesMaintDao {
   ///業務裝機問題列表
-  static getSalesMaintList({userId, deptId}) async {
+  static getSalesMaintList({userId, deptId, searchStatus}) async {
     Map<String, dynamic> mainDataArray = {};
     List<dynamic> dataArray = [];
-    var res = await HttpManager.netFetch(Address.getSalesMaintList(userId, deptId), null, null, null);
+    var res = await HttpManager.netFetch(Address.getSalesMaintList(userId, deptId, searchStatus), null, null, null);
     if (res != null && res.result) {
       if (Config.DEBUG) {
         print("業務裝機問題list resp => " + res.data.toString());
@@ -32,4 +32,5 @@ class SalesMaintDao {
       return new DataResult(null, false);
     }
   }
+ 
 }
