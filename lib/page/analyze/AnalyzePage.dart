@@ -25,9 +25,9 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
   ///是否是今日
   var isThisMonth = false;
   ///各部門title
-  var titleArray = ["業務處","工程處","研發處","行政處","節目部"];
-  ///row的擴展
-  bool _isExpanded = false;
+  var titleArray = ["業務處","工程處","研發處","行政處","節目部","客服中心"];
+  ///row array的擴展
+  List<bool> _isExpandedArray = [false,false,false,false,false,false];
   ///裝data
   List<dynamic> originArray = [];
   List<dynamic> dataArray = [];
@@ -41,6 +41,8 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
   List<dynamic> developArray = [];
   ///節目
   List<dynamic> programArray = [];
+  ///行政
+  List<dynamic> adminArray = [];
 
   @override
   void initState() {
@@ -54,22 +56,37 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
     super.dispose();
   }
 
-  void _toogleExpand() {
+  void _toogleExpand(int index) {
     setState(() {
-      _isExpanded = !_isExpanded;
+      if (_isExpandedArray[index] == false) {
+        _isExpandedArray[index] = true;
+      }
+      else if (_isExpandedArray[index] == true) {
+        _isExpandedArray[index] = false;
+      }
+     
     });
   }
 
   ///取得api資料
   getApiData() async {
     isLoading = true;
-
+    originArray.clear();
+    serviceArray.clear();
+    salesArray.clear();
+    developArray.clear();
+    enginArray.clear();
+    programArray.clear();
     var dSplit = selectDate.split('-');
     var res = await AnalizeDao.getDeptCaseCount(searchYear: dSplit[0], searchMonth: dSplit[1]);
     if (res != null && res.result) {
+      var deptArr = [];
       setState(() {
+      originArray = res.data;    
         for (var dic in originArray) {
-         
+          if (!deptArr.contains(dic['DepartmentName'])) {
+            deptArr.add(dic['DepartmentName']);
+          }
           if (dic['DepartmentName'].toString().contains('客服')) {
             serviceArray.add(dic);
           }
@@ -85,8 +102,10 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
           if (dic['DepartmentName'].toString().contains('節目')) {
             programArray.add(dic);
           }
+          if (dic['DepartmentName'].toString().contains('行政')) {
+            adminArray.add(dic);
+          }
         }
-        originArray = res.data;    
         isLoading = false;
 
       });
@@ -146,10 +165,59 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
 
   List<Widget> dataList() {
     List<Widget> wList = [];
+    int newCount = 0;
+    int noCloseCount = 0;
+    int overCount = 0;
     for (var dic in titleArray) {
+      var index = titleArray.indexOf(dic);
+      switch(dic) {
+        case '業務處':
+          newCount = 0;
+          noCloseCount = 0;
+          overCount = 0;
+          dataArray = salesArray;
+          break;
+        case '工程處':
+          newCount = 0;
+          noCloseCount = 0;
+          overCount = 0;
+          dataArray = enginArray;
+          break;
+        case '研發處':
+          newCount = 0;
+          noCloseCount = 0;
+          overCount = 0;
+          dataArray = developArray;
+          break;
+        case '客服中心':
+          newCount = 0;
+          noCloseCount = 0;
+          overCount = 0;
+          dataArray = serviceArray;
+          break;
+        case '節目部':
+          newCount = 0;
+          noCloseCount = 0;
+          overCount = 0;
+          dataArray = programArray;
+          break;
+        case '行政處':
+          newCount = 0;
+          noCloseCount = 0;
+          overCount = 0;
+          dataArray = adminArray;
+          break;
+      }
+      for (var dis in dataArray) {
+        newCount += int.parse(dis["NewCases"]);
+        noCloseCount += int.parse(dis["TotalUncloseCases"]);
+        overCount += int.parse(dis["OverdueTakeCases"]);
+      }
       wList.add(
         InkWell(
-          onTap: _toogleExpand,
+          onTap: () {
+             _toogleExpand(index);
+          },
           child: Ink(
             decoration: BoxDecoration(color: Colors.white ,border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
             child: Row(
@@ -159,27 +227,31 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
                   height: titleHeight(context),
                   width: deviceWidth5(context) * 2,
                   decoration: BoxDecoration(border: Border(right: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
-                  child: autoTextSize(dic, TextStyle(color: Colors.black), context),
+                  child: autoTextSize(
+                    _isExpandedArray[index] == false ? '▷ $dic' : '▽ $dic', 
+                    TextStyle(color: Colors.black), 
+                    context
+                  ),
                 ),
                 Container(
                   alignment: Alignment.center,
                   height: titleHeight(context),
                   width: deviceWidth5(context),
                   decoration: BoxDecoration(border: Border(right: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
-                  child: autoTextSize('新案', TextStyle(color: Colors.black), context),
+                  child: autoTextSize('$newCount', TextStyle(color: Colors.black), context),
                 ),
                 Container(
                   alignment: Alignment.center,
                   height: titleHeight(context),
                   width: deviceWidth5(context),
                   decoration: BoxDecoration(border: Border(right: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
-                  child: autoTextSize('未結案', TextStyle(color: Colors.black), context),
+                  child: autoTextSize('$noCloseCount', TextStyle(color: Colors.black), context),
                 ),
                 Container(
                   alignment: Alignment.center,
                   height: titleHeight(context),
                   width: deviceWidth5(context),
-                  child: autoTextSize('超常', TextStyle(color: Colors.black), context),
+                  child: autoTextSize('$overCount', TextStyle(color: Colors.black), context),
                 ),
 
               ],
@@ -190,27 +262,32 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
       switch(dic) {
         case '業務處':
           wList.add(
-            listView(salesArray)
+            listView(salesArray, index)
           );
            break;
         case '工程處':
           wList.add(
-            listView(enginArray)
+            listView(enginArray, index)
           );
            break;
         case '研發處':
           wList.add(
-            listView(developArray)
+            listView(developArray, index)
           );
            break;
-        case '行政處':
+        case '客服中心':
           wList.add(
-            listView(serviceArray)
+            listView(serviceArray, index)
           );
            break;
         case '節目部':
           wList.add(
-            listView(programArray)
+            listView(programArray, index)
+          );
+           break;
+        case '行政處':
+          wList.add(
+            listView(adminArray, index)
           );
            break;
       }
@@ -218,17 +295,21 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
     return wList;
   }
  
-  Widget listView(List<dynamic> datas) {
+  Widget listView(List<dynamic> datas, int i) {
     Widget list;
     if (datas.length > 0) {
+      var rowHeight = titleHeight(context) * datas.length;
+      if (datas.length > 4) {
+        rowHeight = titleHeight(context) * 4;
+      }
       list = Container(
-        height: 500,
+        height: _isExpandedArray[i] == true ?  rowHeight : 0,
         child: ListView.builder(
         itemBuilder: (context, index) {
           Widget item;
           model = AnalizeViewModel.forMap(datas[index]);
           item = ExpandedSection(
-            expand: _isExpanded,
+            expand: _isExpandedArray[i],
             child: Container(
               decoration: BoxDecoration(color: Color(MyColors.hexFromStr('f2f2f2')) ,border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
               child: Row(
@@ -279,7 +360,7 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
   ///show body
   Widget bodyView() {
     Widget body;
-    body = isLoading ? showLoadingAnime(context) : Column(
+    body = originArray.length < 1 ? showLoadingAnime(context) : Column(
       children: <Widget>[
         _renderHeader(),
         Expanded(
@@ -371,16 +452,20 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
                 },
               ),
             ),
-            InkWell(
-              child: Ink(
-                width: deviceWidth4(context),
-                height: 30,
-                child: autoTextSize('$selectDate▼', TextStyle(fontSize: MyScreen.homePageFontSize(context)), context),
+            Container(
+              alignment: Alignment.center,
+              child: InkWell(
+                child: Ink(
+                  width: deviceWidth4(context),
+                  height: 30,
+                  child: autoTextSize('$selectDate▼', TextStyle(fontSize: MyScreen.homePageFontSize(context)), context),
+                ),
+                onTap: () {
+                  showSelectorDateSheetController(context);
+                },
               ),
-              onTap: () {
-                showSelectorDateSheetController(context);
-              },
             ),
+            
           ],
         ),
       )
@@ -421,6 +506,7 @@ class _AnalyzePageState extends State<AnalyzePage> with BaseWidget{
           child: Text(formatD, style: TextStyle(fontSize: ScreenUtil().setSp(20)),),
           onPressed: (){
             setState(() {
+             _isExpandedArray = [false,false,false,false,false,false];
              if (i == 0) {
                formatD = formatDate(time, [yyyy,'-',mm]);
                isThisMonth = true;
