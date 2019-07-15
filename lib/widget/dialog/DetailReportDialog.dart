@@ -24,11 +24,13 @@ class DetailReportDialog extends StatefulWidget {
   final String caseId;
   ///由前頁傳入案件狀態名
   final String statusName;
+  ///由前頁傳入案件caseTypeName
+  final String caseTypeName;
   ///由前頁傳入來自功能
   final String fromFunc;
   ///由前頁傳入userInfo
   final UserInfo userInfo;
-  DetailReportDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.fromFunc, this.userInfo});
+  DetailReportDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.caseTypeName, this.fromFunc, this.userInfo});
 
   @override
   _DetailReportDialogState createState() => _DetailReportDialogState();
@@ -41,7 +43,6 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
 
   ///案件狀態，0: 新案，1: 接案，2: 結案，4: 部門結案
   int statusType = 0;
-  int old_statusType = 0;
   ///輸入內文
   String inputText = '';
   ///部門選單
@@ -138,16 +139,74 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
     }
     switch (widget.fromFunc) {
       case 'Maint':
-        await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
+        var res = await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
+        if(res != null && res.result) {
+          if (this.statusType == 2) {
+            if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
+              showChoiceCloseCaseController(context);
+            }
+          }
+        }
         break;
       case 'DPMaint':
-        await DPMaintDao.didDPMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField, deptId: pDeptId, pUserId: pUserId);
+        var res = await DPMaintDao.didDPMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField, deptId: pDeptId, pUserId: pUserId);
+        if(res != null && res.result) {
+          
+        }
         break;
       case 'FixInsert':
-        await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
+        var res = await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
+        if(res != null && res.result) {
+          if (this.statusType == 2) {
+            if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
+              showChoiceCloseCaseController(context);
+            }
+          }
+        }
         break;
     }
   }
+  ///choiceCloseCaseAction
+  List<Widget> choiceCloseCaseAction() {
+    List<Widget> wList = [];
+    var actionTitle = ["已安裝完成","可約裝","請撤銷"];
+    for (var dic in actionTitle) {
+      wList.add(
+         CupertinoActionSheetAction(
+          child: Text(dic, style: TextStyle(fontSize: MyScreen.homePageFontSize(context)),),
+          onPressed: () async {
+            switch (dic) {
+              case '已安裝完成':
+                await MaintDao.didToSalesOk(widget.userId, widget.caseId, "0");
+                break;
+              case '可約裝':
+                await MaintDao.didToSalesOk(widget.userId, widget.caseId, "1");
+                break;
+              case '請撤銷':
+                await MaintDao.didToSalesOk(widget.userId, widget.caseId, "2");
+                break;
+            }
+            Navigator.pop(context);
+          },
+        )
+      );
+    }
+    return wList;
+  }
+  ///只有業務可以選的項目, 沒有取消按鈕，必選三擇一
+  void showChoiceCloseCaseController(BuildContext context) {
+    showCupertinoModalPopup<String>(
+      context: context,
+      builder: (context) {
+        var dialog = CupertinoActionSheet(
+          title: Text('業務通知', style: TextStyle(fontSize: MyScreen.homePageFontSize(context)),),
+          actions: choiceCloseCaseAction(),
+        );
+        return dialog;
+      }
+    );
+  }
+
   ///部門選擇Actions
   List<Widget> deptListActions() {
     List<Widget> wList = [];

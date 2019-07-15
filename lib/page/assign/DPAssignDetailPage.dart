@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DPAssignDao.dart';
-import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/DetailPageDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
@@ -15,7 +14,6 @@ import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:case_manager/widget/DetailFiveBtnWidget.dart';
 import 'package:case_manager/widget/DetailItemWidget.dart';
 import 'package:case_manager/widget/dialog/DPAssignSelectorDialog.dart';
-import 'package:case_manager/widget/dialog/DetailReportDialog.dart';
 import 'package:case_manager/widget/dialog/SignalLogDialog.dart';
 import 'package:case_manager/widget/items/PingItem.dart';
 import 'package:flutter/material.dart';

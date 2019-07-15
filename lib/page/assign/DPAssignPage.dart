@@ -1,9 +1,7 @@
 
 
 
-import 'package:case_manager/common/dao/AssignDao.dart';
 import 'package:case_manager/common/dao/DPAssignDao.dart';
-import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
@@ -11,13 +9,10 @@ import 'package:case_manager/common/redux/SysState.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/MyPullLoadWidget.dart';
-import 'package:case_manager/widget/dialog/DeptSelectorDialog.dart';
-import 'package:case_manager/widget/dialog/SearchDialog.dart';
 import 'package:case_manager/widget/items/MaintListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/widget/MyListState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
 ///
 ///單位指派列表頁面
@@ -94,7 +89,6 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);

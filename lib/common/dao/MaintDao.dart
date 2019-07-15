@@ -130,4 +130,23 @@ class MaintDao{
       return new DataResult(null, false);
     }
   }
+  ///工程結案轉業務回覆目前案件狀態
+  static didToSalesOk(userId, caseId, toSales) async {
+    var res = await HttpManager.netFetch(Address.toSalesOk(userId, caseId, toSales), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("工程結案轉業務回覆目前案件狀態 resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        Fluttertoast.showToast(msg:'回傳資料成功!');
+      }
+      else {
+        Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');
+      }
+      
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
 }

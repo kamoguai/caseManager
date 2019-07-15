@@ -94,7 +94,6 @@ class _SalesMaintPageState extends State<SalesMaintPage> with AutomaticKeepAlive
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);

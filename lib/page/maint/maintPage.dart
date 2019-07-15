@@ -92,7 +92,6 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
@@ -192,7 +191,6 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
@@ -240,7 +238,6 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
@@ -377,7 +374,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth4(),
+              width: deviceWidth6(),
               child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
@@ -389,7 +386,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth4(),
+              width: deviceWidth6(),
               child: autoTextSize('查詢', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: (){
@@ -399,13 +396,26 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               );
             },
           ),
+          Container(
+            alignment: Alignment.center,
+            height: 30,
+            // width: deviceWidth3(context),
+            child: FlatButton.icon(
+              icon: Image.asset('static/images/24.png'),
+              color: Colors.transparent,
+              label: Text(''),
+              onPressed: (){
+                NavigatorUtils.goLogin(context);
+              },
+            ),
+          ),
           GestureDetector(
             child: Container(
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth4(),
-              child: autoTextSize('排序', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              width: deviceWidth7(),
+              child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: (){
 
@@ -417,7 +427,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth4(),
+              width: deviceWidth6(),
               child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {

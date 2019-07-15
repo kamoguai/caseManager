@@ -4,11 +4,8 @@ import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:case_manager/common/config/Config.dart';
-import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/model/SsoLogin.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
-import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 ///
@@ -103,7 +100,6 @@ class _MaintainLogDialogState extends State<MaintainLogDialog> with BaseWidget{
 
   ///loglist item
   Widget _logListItem(BuildContext context, int index) {
-    var count = index + 1;
     var dicIndex = dataArray[index + 1];
     var dic = MaintainViewModel.forMap(dicIndex);
     return GestureDetector(

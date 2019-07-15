@@ -177,10 +177,17 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
         }
         else {
           var pushTime = '${defaultModel.pushTime}';
-          final dft = new DateFormat('yyyy/MM/dd HH:mm');
-          final dft2 = new DateFormat('yy/MM/dd HH:mm');
-          var pTime = dft.parse(pushTime);
-          var pTimeStr = dft2.format(pTime);
+          var pTime;
+          var pTimeStr;
+          if (pushTime.isEmpty) {
+            pTimeStr = "";
+          }
+          else {
+            final dft = new DateFormat('yyyy/MM/dd HH:mm');
+            final dft2 = new DateFormat('yy/MM/dd HH:mm');
+            pTime = dft.parse(pushTime);
+            pTimeStr = dft2.format(pTime);
+          }
           row.add(
             Container(
               alignment: Alignment.center,

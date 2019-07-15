@@ -1,7 +1,6 @@
 
 import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/FileDao.dart';
-import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
@@ -9,8 +8,6 @@ import 'package:case_manager/common/redux/SysState.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/MyPullLoadWidget.dart';
-import 'package:case_manager/widget/dialog/DeptSelectorDialog.dart';
-import 'package:case_manager/widget/dialog/SearchDialog.dart';
 import 'package:case_manager/widget/items/MaintListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/widget/MyListState.dart';
@@ -98,7 +95,6 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);

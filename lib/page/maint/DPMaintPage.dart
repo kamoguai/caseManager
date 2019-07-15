@@ -96,7 +96,6 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
@@ -196,7 +195,6 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
@@ -245,7 +243,6 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);

@@ -394,7 +394,6 @@ class _SignalDialogState extends State<SignalDialog> with BaseWidget {
 
   ///loglist item
   Widget _logListItem(BuildContext context, int index) {
-    var count = index + 1;
     var dicIndex = dataArray[index + 1];
     var dic = SignalViewModel.forMap(dicIndex);
     return GestureDetector(

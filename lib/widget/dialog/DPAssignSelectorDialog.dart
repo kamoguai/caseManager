@@ -1,10 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/dao/AssignInfoDao.dart';
 import 'package:case_manager/common/dao/DPAssignDao.dart';
-import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/DeptInfoDao.dart';
 import 'package:case_manager/common/dao/FileDao.dart';
-import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/widget/BaseWidget.dart';

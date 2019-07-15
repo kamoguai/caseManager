@@ -3,7 +3,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
-import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 /**
  * 基本widget，供重複使用的widget
@@ -88,7 +87,7 @@ mixin BaseWidget{
           children: <Widget>[
             new Container(child: SpinKitCubeGrid(color: Colors.blue[200])),
             new Container(height: 10.0),
-            new Container(child: new Text('資料讀取中..', style: TextStyle(color: Colors.blue[200], fontSize: ScreenUtil().setSp(20.0)))),
+            new Container(child: new Text('資料讀取中..', style: TextStyle(color: Colors.black, fontSize: ScreenUtil().setSp(20.0)))),
           ],
         ),
       )

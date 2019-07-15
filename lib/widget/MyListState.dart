@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
-import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:case_manager/widget/MyPullLoadWidget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 /**

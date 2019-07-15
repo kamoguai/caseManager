@@ -1,6 +1,5 @@
 
 import 'package:case_manager/common/dao/MaintDao.dart';
-import 'package:case_manager/common/dao/SalesMaintDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
@@ -92,7 +91,6 @@ class _FixInsertPageState extends State<FixInsertPage> with AutomaticKeepAliveCl
       }
       List<dynamic> newCount = [];
       List<dynamic> noCount = [];
-      List<dynamic> oCount = [];
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
