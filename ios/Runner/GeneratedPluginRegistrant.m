@@ -5,6 +5,7 @@
 #import "GeneratedPluginRegistrant.h"
 #import <connectivity/ConnectivityPlugin.h>
 #import <device_info/DeviceInfoPlugin.h>
+#import <firebase_messaging/FirebaseMessagingPlugin.h>
 #import <flutter_statusbar/FlutterStatusbarPlugin.h>
 #import <flutter_webview_plugin/FlutterWebviewPlugin.h>
 #import <fluttertoast/FluttertoastPlugin.h>
@@ -18,6 +19,7 @@
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FLTConnectivityPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTConnectivityPlugin"]];
   [FLTDeviceInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlugin"]];
+  [FLTFirebaseMessagingPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseMessagingPlugin"]];
   [FlutterStatusbarPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterStatusbarPlugin"]];
   [FlutterWebviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterWebviewPlugin"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];

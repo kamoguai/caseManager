@@ -143,6 +143,33 @@ class _FileDetailPageState extends State<FileDetailPage> with BaseWidget {
     await FileDao.postFile(userId: widget.userId, caseId: widget.caseId);
   }
 
+   ///由pingItem呼叫此api
+  void _callPingApi() async {
+    if (widget.custCode == null || widget.custCode == '') {
+      Fluttertoast.showToast(msg: '查無資料!');
+      return ;
+    }
+    else {
+      Fluttertoast.showToast(msg: '正在ping資料中...');
+    }
+    var res = await DetailPageDao.getPingSNR(context, custCode: widget.custCode);
+    if (res != null && res.result) {
+      if(mounted) {
+        setState(() {
+          pingArray = res.data;
+          isLoading = false;
+        });
+      }
+    }
+    else {
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
    ///回覆dialog
   Widget detailReportDialog(BuildContext context) {
     return AlertDialog(
@@ -235,7 +262,7 @@ class _FileDetailPageState extends State<FileDetailPage> with BaseWidget {
                 scrollDirection: Axis.vertical,
                 children: <Widget>[
                   DetailItemWidget(defaultModel: model, data: dataArray, fromFunc: 'Maint',),
-                  PingItem(defaultViewModel: pingModel, configData: config,),
+                  PingItem(defaultViewModel: pingModel, configData: config, callPingApi: this._callPingApi,),
                 ],
               ),
             ),

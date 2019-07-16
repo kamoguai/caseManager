@@ -9,6 +9,7 @@ import 'package:case_manager/common/redux/SysState.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -24,6 +25,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with BaseWidget{
+  ///firebase messaging
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   ///使用者account
   var _account = "";
   ///使用者名稱
@@ -75,6 +78,28 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   }
 
   initParam() async {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch: $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume: $message');
+      }
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
+    String fcmToken = await _firebaseMessaging.getToken();
+    if (fcmToken != null) {
+      print('fcmToken => $fcmToken');
+    }
+    else {
+      print('fcmToken is null');
+    }
+    
     _account = await LocalStorage.get(Config.USER_NAME_KEY);
     _getApiData(_account);
     getSnrConfigData();
@@ -391,7 +416,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             alignment: Alignment.center,
             height: 42,
             width: deviceWidth4(context),
-            child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.loginTextFieldFontSize(context)), context),
+            child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.loginTextFieldFontSize(context)), context),
           ),
           Container(
             height: 42,
@@ -406,7 +431,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             alignment: Alignment.center,
             height: 42,
             width: deviceWidth3(context),
-            child: autoTextSize('案件分析', TextStyle(color: Colors.white, fontSize: MyScreen.loginTextFieldFontSize(context)), context),
+            child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.loginTextFieldFontSize(context)), context),
           ),
         ],
       ),

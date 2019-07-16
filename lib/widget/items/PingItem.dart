@@ -11,7 +11,8 @@ class PingItem extends StatelessWidget with BaseWidget {
   
   final PingViewModel defaultViewModel;
   final dynamic configData;
-  PingItem({this.defaultViewModel, this.configData});
+  final Function callPingApi;
+  PingItem({this.defaultViewModel, this.configData, this.callPingApi});
 
   @override
   buildLineHeight(context) {
@@ -252,7 +253,9 @@ class PingItem extends StatelessWidget with BaseWidget {
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     ),
                     child: autoTextSize('PING', TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold), context),
-                    onPressed: (){},
+                    onPressed: (){
+                      this.callPingApi();
+                    },
                   ),
                 ),
               ],

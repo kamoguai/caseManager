@@ -361,7 +361,7 @@ class MyScreen {
     } else {
       fontSize = MyConstant.bigTextSize;
     }
-    return fontSize;
+    return ScreenUtil().setSp(fontSize);
   }
   ///首頁字體大小
   static double homePageFontSize_s(BuildContext context) {
@@ -376,7 +376,7 @@ class MyScreen {
     } else {
       fontSize = MyConstant.normalTextSize;
     }
-    return fontSize;
+    return ScreenUtil().setSp(fontSize);
   }
   ///首頁字體大小
   static double homePageCmtsTableSize(BuildContext context) {
@@ -443,14 +443,14 @@ class MyScreen {
     final deviceHeight = MediaQuery.of(context).size.height;
     double fontSize = 0.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.miniTextSize;
+      fontSize = MyConstant.minTextSize;
     } else if (deviceHeight > 800) {
       fontSize = MyConstant.middleTextSize;
     } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextSize;
+      fontSize = MyConstant.smallTextSize;
     }
     else {
-      fontSize = MyConstant.normalTextSize;
+      fontSize = MyConstant.middleTextSize;
     }
     return ScreenUtil().setSp(fontSize);
   }
@@ -468,7 +468,7 @@ class MyScreen {
     else {
       fontSize = MyConstant.bigTextSize;
     }
-    return fontSize;
+    return ScreenUtil().setSp(fontSize);
   }
   ///通用detailList字體大小s
   static double defaultTableCellFontSize_s(BuildContext context) {

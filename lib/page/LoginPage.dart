@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/config/Config.dart';
@@ -26,9 +27,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  ///firebase messaging
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   var _account = "";
   var _password = "";
-
+  var _fcmToken = "";
   final TextEditingController accountController = new TextEditingController();
   final TextEditingController pwController = new TextEditingController();
 
@@ -42,6 +45,27 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   initParams() async {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch: $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume: $message');
+      }
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
+    _fcmToken = await _firebaseMessaging.getToken();
+    if (_fcmToken != null) {
+      print('fcmToken => $_fcmToken');
+    }
+    else {
+      print('fcmToken is null');
+    }
     _account = await LocalStorage.get(Config.USER_NAME_KEY);
     _password = await LocalStorage.get(Config.PW_KEY);
     accountController.value = new TextEditingValue(text: _account ?? "");
@@ -141,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return;
                                   }
                                   CommonUtils.showLoadingDialog(context);
-                                  UserInfoDao.login(_account.trim(), _password.trim(),store, context).then((res) {                                
+                                  UserInfoDao.login(_account.trim(), _password.trim(), _fcmToken, store, context).then((res) {                                
                                     Navigator.pop(context);
                                     if (res != null && res.result) {                                 
                                       if (res.data.retCode == "14") {

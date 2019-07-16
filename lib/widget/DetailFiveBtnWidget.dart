@@ -1,4 +1,5 @@
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/dao/DaoResult.dart';
 import 'package:case_manager/common/dao/DetailPageDao.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
@@ -37,6 +38,18 @@ class DetailFiveBtnWidget extends StatelessWidget with BaseWidget {
 
   DetailFiveBtnWidget({this.custNoStr, this.custNameStr, this.cmtsStr, this.cmmacStr, this.cwData, this.cpeData, this.flapData});
 
+
+  @override
+  autoTextSize(text, style, context) {
+    var fontSize = MyScreen.defaultTableCellFontSize(context);
+    var fontStyle = TextStyle(fontSize: fontSize);
+    return AutoSizeText(
+      text,
+      style: style.merge(fontStyle),
+      minFontSize: 5.0,
+      textAlign: TextAlign.left,
+    );
+  }
 
   ///呼叫cep api
   getCPEData() async {
@@ -280,8 +293,8 @@ class DetailFiveBtnWidget extends StatelessWidget with BaseWidget {
       bodyView = Container(
         constraints: BoxConstraints.expand(height: 50),
         padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 5.0, right: 5.0),

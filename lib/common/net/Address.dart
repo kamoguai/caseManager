@@ -35,7 +35,7 @@ class Address {
   }
 
   ///登入SSO
-  static ssoLoginAPI(account, password) {
+  static ssoLoginAPI(account, password, tokenId) {
     String deviceType = "";
     try {
       if (Platform.isAndroid) {
@@ -47,12 +47,12 @@ class Address {
     } on PlatformException {
       
     }
-    return "$ssoDomain${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseinformation&tokenType=$deviceType&tokenID=slg;ksl;dc123&packageName=com.dctv.caseinformation&type=$deviceType";
+    return "$ssoDomain${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseManager&tokenType=$deviceType&tokenID=$tokenId&packageName=com.dctv.caseManager&type=$deviceType";
   }
   ///-------------------- caseManager api -------------------- ///
   ///登入取得使用者資訊
   static loginWithCmAccount(account, ssokey) {
-    return "${kCMHostPath}FunctionName=Login2&SYSName=caseinformation&Account=$account&SSOKey=$ssokey";
+    return "${kCMHostPath}FunctionName=Login2&SYSName=caseManager&Account=$account&SSOKey=$ssokey";
   }
 
   ///取得當班主管

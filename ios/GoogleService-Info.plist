@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>221074681200-ihltcn92ad4del27o38fpsv3ad3oru0c.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.221074681200-ihltcn92ad4del27o38fpsv3ad3oru0c</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>221074681200-rese76785is0m8a72obk1cn3u38ffad4.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDLQVTVpZ6b9m7HOnoCi4gEiIefE7ZIvQo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>221074681200</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.dctv.caseinformation</string>
+	<key>PROJECT_ID</key>
+	<string>kamoguai-firebase</string>
+	<key>STORAGE_BUCKET</key>
+	<string>kamoguai-firebase.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:221074681200:ios:f7e3b9f727cd93d4</string>
+	<key>DATABASE_URL</key>
+	<string>https://kamoguai-firebase.firebaseio.com</string>
+</dict>
+</plist>
