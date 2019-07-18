@@ -26,13 +26,15 @@ class FileDetailPage extends StatefulWidget {
   final custCode;
   ///由前頁傳入使用者id
   final userId;
+  ///由前頁傳入部門id
+  final deptId;
   ///由前頁傳入案件id
   final caseId;
   ///由前頁傳入案件狀態
   final statusName;
   ///由前頁傳入來自function
   final fromFunc;
-  FileDetailPage({this.custCode, this.userId, this.caseId, this.statusName, this.fromFunc});
+  FileDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc});
   @override
   _FileDetailPageState createState() => _FileDetailPageState();
 }
@@ -77,8 +79,11 @@ class _FileDetailPageState extends State<FileDetailPage> with BaseWidget {
       });
     }
     getCaseData();
-    getPingData();
     getSnrConfigData();
+    if (widget.deptId == '4' || widget.deptId == '25') {
+      getPingData();
+    }
+    
   }
 
   ///呼叫maintCase api
@@ -103,6 +108,15 @@ class _FileDetailPageState extends State<FileDetailPage> with BaseWidget {
             });
           });
         }
+      }
+      if (widget.deptId != '4' && widget.deptId != '25') {
+       if (mounted) {
+          Future.delayed(const Duration(seconds: 1),() {
+            setState(() {
+              isLoading = false;
+            });
+          });
+       }
       }
     }
   }

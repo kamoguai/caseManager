@@ -9,6 +9,7 @@ import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
 import 'package:case_manager/page/WelcomePage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:redux/redux.dart';
@@ -66,16 +67,16 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, this.child}) : super(key: key);
-
-  final String title;
   final Widget child;
+  MyHomePage({Key key, this.child}) : super(key: key);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
+   ///firebase messaging
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   StreamSubscription stream;
 
   @override
@@ -93,6 +94,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch: $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume: $message');
+      }
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
     stream = Code.eventBus.on<HttpErrorEvent>().listen((event){
       errorHandleFunction(event.code, event.message);
     });
@@ -124,7 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
         Fluttertoast.showToast(msg: '請求超時');
         break;
       default:
-        Fluttertoast.showToast(msg: '請求異常' + " " + message);
+        if (message.toString().contains('Socket')) {
+          Fluttertoast.showToast(msg: '網路請求異常，請更換網路試試。' + " " + message);
+        }
+        else {
+          Fluttertoast.showToast(msg: '請求異常' + " " + message);
+        }
+        
         break;
     }
   }

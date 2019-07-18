@@ -17,7 +17,7 @@ import 'package:case_manager/common/model/SsoLogin.dart';
 ///
 class UserInfoDao {
 
-  static login(account, password, tokenId, store, context) async {
+  static login(account, password, tokenId, context) async {
     // 先儲存account至手機內存
     await LocalStorage.save(Config.USER_NAME_KEY, account);
     var res = await HttpManager.netFetch(Address.ssoLoginAPI(account, password, tokenId), null, null, new Options(method: "post"));

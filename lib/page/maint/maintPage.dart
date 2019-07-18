@@ -136,7 +136,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: 'Maint',);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'Maint',);
   }
   ///頁面上方head
   _renderHeader() {

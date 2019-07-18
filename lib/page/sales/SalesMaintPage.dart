@@ -133,7 +133,7 @@ class _SalesMaintPageState extends State<SalesMaintPage> with AutomaticKeepAlive
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: 'SalesMaint');
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'SalesMaint');
   }
   ///頁面上方head
   _renderHeader() {

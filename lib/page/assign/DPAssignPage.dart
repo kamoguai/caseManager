@@ -128,7 +128,7 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: 'DPAssign',);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'DPAssign',);
   }
   ///頁面上方head
   _renderHeader() {

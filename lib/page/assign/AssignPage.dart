@@ -133,7 +133,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: 'AssignEmpl',);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'AssignEmpl',);
   }
   ///頁面上方head
   _renderHeader() {

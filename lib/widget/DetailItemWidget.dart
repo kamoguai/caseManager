@@ -95,7 +95,11 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              autoTextSize('立案:${defaultModel.createrName} $createTimeStr', TextStyle(color: Colors.grey[600]), context),
+              Container(
+                alignment: Alignment.center,
+                child: autoTextSize('立案:${defaultModel.createrName} $createTimeStr', TextStyle(color: Colors.grey[600]), context),
+              ),
+              
             ],
           ),
         ),
@@ -109,7 +113,10 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              autoTextSizeLeft('類別:${defaultModel.caseTypeName}', TextStyle(color: Colors.blueAccent[400], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+              Container(
+                alignment: Alignment.center,
+                child: autoTextSizeLeft('類別:${defaultModel.caseTypeName}', TextStyle(color: Colors.blueAccent[400], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+              ),
             ],
           ),
         ),
@@ -623,11 +630,12 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
           right: 10.0,
           bottom: 3,
           child: GestureDetector(
-            child: Container(
-              padding: EdgeInsets.all(3.0),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(width: 1.0, color: Colors.indigo, style: BorderStyle.solid)),
-              child: Text('轉追蹤', style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: MyScreen.defaultTableCellFontSize_s(context)),),
-            ),
+            child: Container(),
+            // child: Container(
+            //   padding: EdgeInsets.all(3.0),
+            //   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(width: 1.0, color: Colors.indigo, style: BorderStyle.solid)),
+            //   child: Text('轉追蹤', style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: MyScreen.defaultTableCellFontSize_s(context)),),
+            // ),
           ),
         )
       ],

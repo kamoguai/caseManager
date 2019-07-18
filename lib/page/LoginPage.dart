@@ -21,7 +21,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 ///
 class LoginPage extends StatefulWidget {
   static final String sName = "login";
-
+  final bool isAutoLogin;
+  LoginPage({this.isAutoLogin});
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -70,6 +71,9 @@ class _LoginPageState extends State<LoginPage> {
     _password = await LocalStorage.get(Config.PW_KEY);
     accountController.value = new TextEditingValue(text: _account ?? "");
     pwController.value = new TextEditingValue(text: _password ?? "");
+    if (widget.isAutoLogin != null && widget.isAutoLogin != false) {
+      NavigatorUtils.goHome(context);
+    }
   }
 
   ///版號顯示
@@ -82,6 +86,35 @@ class _LoginPageState extends State<LoginPage> {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
+  }
+  ///呼叫登入api
+  callLoginApi(store) async {
+    UserInfoDao.login(_account.trim(), _password.trim(), _fcmToken, context).then((res) {                                
+      Navigator.pop(context);
+      if (res != null && res.result) {                                 
+        if (res.data.retCode == "14") {
+            UserInfoDao.updateDummyApp(context, res.data.blankURL);
+        }
+        else if (res.data.retCode == "00"){
+            CommonUtils.showLoadingDialog(context);
+            UserInfoDao.getUserInfo(res.data.ssoKey, _account, _password, store).then((res) {
+              Navigator.pop(context);
+              if (res != null && res.result) {
+                print('登入成功 res => ${res.data}');
+                  new Future.delayed(const Duration(seconds: 1),() {
+                    NavigatorUtils.goHome(context);
+                    return true;
+                  });
+              }
+            });
+        }
+        else {
+          Fluttertoast.showToast(msg: res.data.retMSG);
+        }                                     
+      } else {
+        print("holy 喵喵喵");
+      }
+    });
   }
 
   @override
@@ -112,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       new Padding(padding: new EdgeInsets.all(10.0)),
                       new Text(
-                        '案件聯繫2.0',
+                        '案件聯繫3.0',
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(20.0) 
                         ),  
@@ -165,32 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return;
                                   }
                                   CommonUtils.showLoadingDialog(context);
-                                  UserInfoDao.login(_account.trim(), _password.trim(), _fcmToken, store, context).then((res) {                                
-                                    Navigator.pop(context);
-                                    if (res != null && res.result) {                                 
-                                      if (res.data.retCode == "14") {
-                                          UserInfoDao.updateDummyApp(context, res.data.blankURL);
-                                      }
-                                      else if (res.data.retCode == "00"){
-                                          CommonUtils.showLoadingDialog(context);
-                                          UserInfoDao.getUserInfo(res.data.ssoKey, _account, _password, store).then((res) {
-                                            Navigator.pop(context);
-                                            if (res != null && res.result) {
-                                              print('登入成功 res => ${res.data}');
-                                                new Future.delayed(const Duration(seconds: 1),() {
-                                                  NavigatorUtils.goHome(context);
-                                                  return true;
-                                                });
-                                            }
-                                          });
-                                      }
-                                      else {
-                                        Fluttertoast.showToast(msg: res.data.retMSG);
-                                      }                                     
-                                    } else {
-                                      print("holy 喵喵喵");
-                                    }
-                                  });
+                                  callLoginApi(store);
                                 },
                               ),
                               new Padding(padding: new EdgeInsets.all(10.0)),

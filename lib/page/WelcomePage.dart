@@ -55,7 +55,7 @@ class _WelcomePageState extends State<WelcomePage> {
           // 將使用者信息去store查詢
           if (res != null && res.result) {
             // NavigatorUtils.goHome(context);
-            NavigatorUtils.goLogin(context);
+            NavigatorUtils.goLogin(context, isAutoLogin: true);
           }
           else {
             NavigatorUtils.goLogin(context);

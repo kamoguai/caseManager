@@ -15,6 +15,8 @@ class MaintListItem extends StatelessWidget with BaseWidget{
   final MaintListModel model;
   ///使用者id
   final userId;
+  ///由前頁傳入部門id
+  final deptId;
   ///來自功能
   final fromFunc;
   ///callApi
@@ -23,7 +25,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
   final Function addCaseIdFunc;
   ///裝填所選caseId
   final List<String> pickCaseIdArray;
-  MaintListItem({this.model, this.userId, this.fromFunc, this.callApiData, this.pickCaseIdArray, this.addCaseIdFunc});
+  MaintListItem({this.model, this.userId, this.deptId, this.fromFunc, this.callApiData, this.pickCaseIdArray, this.addCaseIdFunc});
 
   ///選定check改變icon圖示
   Icon changeCheckIcon(context) {
@@ -299,25 +301,25 @@ class MaintListItem extends StatelessWidget with BaseWidget{
           onTap: (){
             switch (fromFunc) {
               case 'Maint':
-                NavigatorUtils.goMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                NavigatorUtils.goMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
                 break;
               case 'AssignEmpl':
-                NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
                 break;
               case 'DPMaint':
-                NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
                 break;
               case 'DPAssign':
-                NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
                 break;
               case 'File':
-                NavigatorUtils.goFileDettail(context, model.custNO, userId, model.caseID, model.statusName, 'File');
+                NavigatorUtils.goFileDettail(context, model.custNO, userId, deptId, model.caseID, model.statusName, 'File');
                 break;
               case 'DPMaintClose':
-                NavigatorUtils.goFileDettail(context, model.custNO, userId, model.caseID, model.statusName, 'DPMaintClose');
+                NavigatorUtils.goFileDettail(context, model.custNO, userId, deptId, model.caseID, model.statusName, 'DPMaintClose');
                 break;
               case 'SalesMaint':
-                NavigatorUtils.goSalesMaintDetail(context, model.custNO, userId, model.caseID, model.statusName);
+                NavigatorUtils.goSalesMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
             }
           },
         )

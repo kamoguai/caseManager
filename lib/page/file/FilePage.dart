@@ -134,7 +134,7 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: userTitle == '案件歸檔' ? 'File' : 'DPMaintClose', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: userTitle == '案件歸檔' ? 'File' : 'DPMaintClose', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
   }
   ///頁面上方head
   _renderHeader() {

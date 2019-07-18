@@ -140,7 +140,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, fromFunc: 'DPMaint', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'DPMaint', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
   }
   ///頁面上方head
   _renderHeader() {
