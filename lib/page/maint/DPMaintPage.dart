@@ -309,7 +309,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
   ///取得api資料
   getApiData() async {
     
-    var res = await MaintDao.getMaintList(userId: userInfo.userData.UserID, deptId: deptId);
+    var res = await DPMaintDao.getDPMaintList(iType: null, userId: userInfo.userData.UserID, searchFunit: deptId);
     return res;
   }
   ///部門選擇dialog
