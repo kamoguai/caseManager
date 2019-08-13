@@ -15,7 +15,7 @@ class Address {
   static const String getVersion = "ValidataVersion/json/index!checkVersion.action?";
   static const String loginAPI = "WorkOrder/json/wok!login.action?";
   static final String bundleID = "com.dctv.caseManager";
-  static final String verNo = "3.0.0805";
+  static final String verNo = "3.0.0811";
 
 
   ///檢查是否有更新app

@@ -129,9 +129,8 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
 
   ///送出按鈕action
   sendAction(inputField, caseId, newStatus, pUserId, pDeptId) async {
-    print(inputField);
-    ///舊按為新案，轉接案
-    if (!(widget.statusName == '新案' && widget.statusName == '接案')) {
+    ///0:新案，1:接案，2:結案
+    if (newStatus == 2) {
       if (inputField == '') {
         Fluttertoast.showToast(msg: '輸入內容無資料!');
         return;
