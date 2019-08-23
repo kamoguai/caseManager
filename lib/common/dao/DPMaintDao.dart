@@ -39,6 +39,7 @@ class DPMaintDao {
     if (res != null && res.result) {
       if (res.data['Response']['ReturnCode'] == "00") {
         Fluttertoast.showToast(msg: '單位結案成功');
+        return new DataResult(null, true);
       }
       else {
          Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');
@@ -80,6 +81,7 @@ class DPMaintDao {
       } 
       if (res.data['Response']['ReturnCode'] == "00") {
         Fluttertoast.showToast(msg:'回覆成功');
+        return new DataResult(null, true);
       }
       else {
         Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');

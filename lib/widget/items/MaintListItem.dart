@@ -15,6 +15,8 @@ class MaintListItem extends StatelessWidget with BaseWidget{
   final MaintListModel model;
   ///使用者id
   final userId;
+  ///使用者名稱
+  final accName;
   ///由前頁傳入部門id
   final deptId;
   ///來自功能
@@ -25,7 +27,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
   final Function addCaseIdFunc;
   ///裝填所選caseId
   final List<String> pickCaseIdArray;
-  MaintListItem({this.model, this.userId, this.deptId, this.fromFunc, this.callApiData, this.pickCaseIdArray, this.addCaseIdFunc});
+  MaintListItem({this.model, this.userId, this.accName, this.deptId, this.fromFunc, this.callApiData, this.pickCaseIdArray, this.addCaseIdFunc});
 
   ///選定check改變icon圖示
   Icon changeCheckIcon(context) {
@@ -307,7 +309,7 @@ class MaintListItem extends StatelessWidget with BaseWidget{
                 NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
                 break;
               case 'DPMaint':
-                NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
+                NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
                 break;
               case 'DPAssign':
                 NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);

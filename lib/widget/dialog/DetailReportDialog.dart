@@ -6,6 +6,7 @@ import 'package:case_manager/common/dao/DeptInfoDao.dart';
 import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,9 @@ class DetailReportDialog extends StatefulWidget {
   final String fromFunc;
   ///由前頁傳入userInfo
   final UserInfo userInfo;
-  DetailReportDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.caseTypeName, this.fromFunc, this.userInfo});
+  ///由前頁傳入accName
+  final String accName;
+  DetailReportDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.caseTypeName, this.fromFunc, this.userInfo, this.accName});
 
   @override
   _DetailReportDialogState createState() => _DetailReportDialogState();
@@ -144,13 +147,18 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
             if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
               showChoiceCloseCaseController(context);
             }
+            else {
+              
+            }
           }
         }
         break;
       case 'DPMaint':
         var res = await DPMaintDao.didDPMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField, deptId: pDeptId, pUserId: pUserId);
-        if(res != null && res.result) {
-          
+        if(res.result) {
+          new Future.delayed(const Duration(seconds: 1),() {
+            NavigatorUtils.goDPMaint(context, widget.accName);
+          });
         }
         break;
       case 'FixInsert':
@@ -159,6 +167,9 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
           if (this.statusType == 2) {
             if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
               showChoiceCloseCaseController(context);
+            }
+            else {
+
             }
           }
         }

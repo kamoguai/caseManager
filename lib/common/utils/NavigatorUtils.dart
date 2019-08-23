@@ -79,8 +79,8 @@ class NavigatorUtils {
     NavigatorRouter(context, DPMaintPage(accName: accName));
   }
   ///單位案件處理詳情頁面
-  static goDPMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName) {
-    NavigatorRouter(context, DPMaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName));
+  static goDPMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
+    NavigatorRouter(context, DPMaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName,));
   }
   ///單位指派列表頁面
   static goDPAssign(BuildContext context, String accName) {

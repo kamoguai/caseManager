@@ -140,7 +140,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'DPMaint', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, accName: widget.accName, deptId: deptId, fromFunc: 'DPMaint', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
   }
   ///頁面上方head
   _renderHeader() {
@@ -478,14 +478,18 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
                       FlatButton(
                         child: autoTextSize('取消', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize(context))),
                         onPressed: () {
+                          showRefreshLoading();
                           Navigator.pop(context);
                         },
                       ),
                       FlatButton(
                         child: autoTextSize('確定', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context))),
                         onPressed: () async {
-                          await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
-                          Navigator.pop(context);
+                          var res = await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
+                          if (res.result) {
+                            showRefreshLoading();
+                            Navigator.pop(context);
+                          }
                         },
                       ),
                     ],
@@ -516,7 +520,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-              Navigator.of(context).pop();
+              NavigatorUtils.goHome(context);
             },
           ),
           
