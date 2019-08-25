@@ -133,7 +133,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'AssignEmpl',);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'AssignEmpl', accName: widget.accName,);
   }
   ///頁面上方head
   _renderHeader() {
@@ -226,7 +226,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
-        child: DeptSelectorDialog(isClickDeptSelect: isClickDeptSelect, fromFunc: 'AssignEmpl', callApiData: _callApiData,),
+        child: DeptSelectorDialog(isClickDeptSelect: isClickDeptSelect, fromFunc: 'AssignEmpl', callApiData: _callApiData),
       )
     );
   }
@@ -337,7 +337,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
               child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-              Navigator.of(context).pop();
+              NavigatorUtils.goHome(context);
             },
           ),
           

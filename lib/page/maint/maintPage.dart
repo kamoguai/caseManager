@@ -136,7 +136,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'Maint',);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'Maint', accName: widget.accName,);
   }
   ///頁面上方head
   _renderHeader() {
@@ -431,7 +431,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
               child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-              Navigator.of(context).pop();
+               NavigatorUtils.goHome(context);
             },
           ),
           

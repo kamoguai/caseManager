@@ -142,15 +142,17 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
     switch (widget.fromFunc) {
       case 'Maint':
         var res = await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
-        if(res != null && res.result) {
+        if(res.result) {
           if (this.statusType == 2) {
             if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
               showChoiceCloseCaseController(context);
             }
-            else {
-              
-            }
           }
+           else {
+              new Future.delayed(const Duration(seconds: 1),() {
+                NavigatorUtils.goMaint(context, widget.accName);
+              });
+            }
         }
         break;
       case 'DPMaint':
@@ -163,14 +165,16 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
         break;
       case 'FixInsert':
         var res = await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
-        if(res != null && res.result) {
+        if(res.result) {
           if (this.statusType == 2) {
             if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
               showChoiceCloseCaseController(context);
-            }
-            else {
-
-            }
+            }           
+          }
+          else {
+            new Future.delayed(const Duration(seconds: 1),() {
+              NavigatorUtils.goFixInsert(context, widget.accName);
+            });
           }
         }
         break;

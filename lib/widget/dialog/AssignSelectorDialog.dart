@@ -5,6 +5,7 @@ import 'package:case_manager/common/dao/AssignInfoDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,9 @@ class AssignSelectorDialog extends StatefulWidget {
   final fromFunc;
   ///呼叫function給主頁使用
   final Function callApiData;
-  AssignSelectorDialog({this.deptId, this.fromFunc, this.callApiData});
+  ///由前頁傳入來自accName
+  final accName;
+  AssignSelectorDialog({this.deptId, this.fromFunc, this.callApiData, this.accName});
   @override
   _AssignSelectorDialogState createState() => _AssignSelectorDialogState();
 }
@@ -82,8 +85,10 @@ class _AssignSelectorDialogState extends State<AssignSelectorDialog> with BaseWi
   ///執行指派動作api
   postAssignEmpl() async {
     var res = await AssignDao.didAssignEmpl();
-    if (res != null && res.result) {
-
+    if (res.result) {
+      new Future.delayed(const Duration(seconds: 1),() {
+        NavigatorUtils.goAssign(context, widget.accName);
+      });
     }
   }
   ///widget list item

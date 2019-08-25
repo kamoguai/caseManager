@@ -95,6 +95,7 @@ class MaintDao{
       } 
       if (res.data['Response']['ReturnCode'] == "00") {
         Fluttertoast.showToast(msg:'回覆成功');
+        return DataResult(null, true);
       }
       else {
         Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');

@@ -35,7 +35,9 @@ class AssignDetailPage extends StatefulWidget {
   final statusName;
   ///由前頁傳入來自function
   final fromFunc;
-  AssignDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc});
+  ///由前頁傳入來自accName
+  final accName;
+  AssignDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc, this.accName});
   @override
   _AssignDetailPageState createState() => _AssignDetailPageState();
 }
@@ -137,7 +139,12 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
   ///由dialog呼叫此api
   void _callPostApi(Map<String, dynamic> map) async {
     print('post param: {userId: ${widget.userId}, caseId: ${widget.caseId} pUserId: ${map['UserID']}}');
-    await AssignDao.didAssignEmpl(userId: widget.userId, caseId: widget.caseId, pUser: '${map['UserID']}');
+    var res = await AssignDao.didAssignEmpl(userId: widget.userId, caseId: widget.caseId, pUser: '${map['UserID']}');
+    if (res.result) {
+      new Future.delayed(const Duration(seconds: 1),() {
+        NavigatorUtils.goAssign(context, widget.accName);
+      });
+    }
   }
 
   ///由pingItem呼叫此api
@@ -177,7 +184,7 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-        child: AssignSelectorDialog(deptId: userInfo.userData.DeptID, callApiData: _callPostApi,)
+        child: AssignSelectorDialog(deptId: userInfo.userData.DeptID, callApiData: _callPostApi, accName: widget.accName,)
       )
     );
   }

@@ -303,10 +303,10 @@ class MaintListItem extends StatelessWidget with BaseWidget{
           onTap: (){
             switch (fromFunc) {
               case 'Maint':
-                NavigatorUtils.goMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
+                NavigatorUtils.goMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
                 break;
               case 'AssignEmpl':
-                NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
+                NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
                 break;
               case 'DPMaint':
                 NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);

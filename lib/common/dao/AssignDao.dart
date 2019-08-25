@@ -68,6 +68,7 @@ class AssignDao {
       } 
       if (res.data['Response']['ReturnCode'] == "00") {
         Fluttertoast.showToast(msg:'指派成功');
+        return new DataResult(null, true);
       }
       else {
         Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');

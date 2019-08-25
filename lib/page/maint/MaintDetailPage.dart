@@ -35,7 +35,9 @@ class MaintDetailPage extends StatefulWidget {
   final statusName;
   ///由前頁傳入來自function
   final fromFunc;
-  MaintDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc});
+  ///由前頁傳入來自accName
+  final accName;
+  MaintDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc, this.accName});
   @override
   MaintDetailPageState createState() => MaintDetailPageState();
 }
@@ -182,7 +184,7 @@ class MaintDetailPageState extends State<MaintDetailPage> with BaseWidget{
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-        child: DetailReportDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName, caseTypeName: model.caseTypeName, fromFunc: 'Maint', userInfo: userInfo,)
+        child: DetailReportDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName, caseTypeName: model.caseTypeName, fromFunc: 'Maint', userInfo: userInfo, accName: widget.accName,)
       )
     );
   }
