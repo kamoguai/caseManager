@@ -33,7 +33,10 @@ class DetailReportDialog extends StatefulWidget {
   final UserInfo userInfo;
   ///由前頁傳入accName
   final String accName;
-  DetailReportDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.caseTypeName, this.fromFunc, this.userInfo, this.accName});
+  ///由前頁傳入deptId
+  final String deptId;
+  
+  DetailReportDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.caseTypeName, this.fromFunc, this.userInfo, this.accName, this.deptId});
 
   @override
   _DetailReportDialogState createState() => _DetailReportDialogState();
@@ -141,6 +144,7 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
     }
     switch (widget.fromFunc) {
       case 'Maint':
+       
         var res = await MaintDao.didMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField);
         if(res.result) {
           if (this.statusType == 2) {
@@ -150,16 +154,17 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
           }
            else {
               new Future.delayed(const Duration(seconds: 1),() {
-                NavigatorUtils.goMaint(context, widget.accName);
+                NavigatorUtils.goMaint(context, widget.accName, deptId: widget.deptId);
               });
             }
         }
         break;
       case 'DPMaint':
+      
         var res = await DPMaintDao.didDPMaint(userId: widget.userId, caseId: caseId, newStatus: newStatus, newAData: inputField, deptId: pDeptId, pUserId: pUserId);
         if(res.result) {
           new Future.delayed(const Duration(seconds: 1),() {
-            NavigatorUtils.goDPMaint(context, widget.accName);
+            NavigatorUtils.goDPMaint(context, widget.accName, deptId: widget.deptId);
           });
         }
         break;
@@ -173,7 +178,7 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
           }
           else {
             new Future.delayed(const Duration(seconds: 1),() {
-              NavigatorUtils.goFixInsert(context, widget.accName);
+              NavigatorUtils.goFixInsert(context, widget.accName, deptId: widget.deptId);
             });
           }
         }

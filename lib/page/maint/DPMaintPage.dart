@@ -22,7 +22,8 @@ import 'package:redux/redux.dart';
 ///Date: 2019-06-27
 class DPMaintPage extends StatefulWidget {
   final String accName;
-  DPMaintPage({this.accName});
+  final String deptId;
+  DPMaintPage({this.accName, this.deptId});
   @override
   _DPMaintPageState createState() => _DPMaintPageState();
 }
@@ -129,12 +130,17 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
         userInfo = userInfoData.data;
       });
     }
-    Future.delayed(const Duration(milliseconds: 50),(){
-      showDialog(
-      context: context,
-      builder: (BuildContext context) => deptSelectorDialog(context)
-      );
-    });
+    if (widget.deptId != null) {
+      getFirstTimeApiData(widget.deptId);
+    }
+    else {
+      Future.delayed(const Duration(milliseconds: 50),(){
+        showDialog(
+        context: context,
+        builder: (BuildContext context) => deptSelectorDialog(context)
+        );
+      });
+    }
   }
   ///列表顯示物件
   _renderItem(index) {
@@ -184,37 +190,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
       deptId = map["DeptID"];
     });
     
-    var res = await DPMaintDao.getDPMaintList(iType: null, userId: userInfo.userData.UserID, searchFunit: deptId);
-    if (res != null && res.result) {
-      List<MaintTableCell> list = new List();
-      dataArray.addAll(res.data);
-      if (dataArray.length > 0) {
-        for (var dic in dataArray) {
-          list.add(MaintTableCell.fromJson(dic));
-        }
-      }
-      List<dynamic> newCount = [];
-      List<dynamic> noCount = [];
-      for (var dic in res.data) {
-        if (dic["StatusName"] == '新案') {
-          newCount.add(dic);
-        }
-        else if (dic["StatusName"] == '接案') {
-          noCount.add(dic);
-        }
-      }
-      if(mounted) {
-        setState(() {
-          totalCount = res.data.length;
-          newCaseCount = newCount.length;
-          noCloseCount = noCount.length;
-          isLoading = false;
-          pullLoadWidgetControl.dataList.clear();
-          pullLoadWidgetControl.dataList.addAll(list);
-          pullLoadWidgetControl.needLoadMore = false;
-        });
-      }
-    }
+    await getFirstTimeApiData(widget.deptId);
   }
   ///function給DeptSelectorDialog呼叫並把值帶回，多個條件
   void _callApiDataExt(Map<String, dynamic> map) async {
@@ -305,6 +281,40 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
       });
     }
     
+  }
+  ///第一次進入取得的資料
+  getFirstTimeApiData(String deptId) async {
+    var res = await DPMaintDao.getDPMaintList(iType: null, userId: userInfo.userData.UserID, searchFunit: deptId);
+    if (res != null && res.result) {
+      List<MaintTableCell> list = new List();
+      dataArray.addAll(res.data);
+      if (dataArray.length > 0) {
+        for (var dic in dataArray) {
+          list.add(MaintTableCell.fromJson(dic));
+        }
+      }
+      List<dynamic> newCount = [];
+      List<dynamic> noCount = [];
+      for (var dic in res.data) {
+        if (dic["StatusName"] == '新案') {
+          newCount.add(dic);
+        }
+        else if (dic["StatusName"] == '接案') {
+          noCount.add(dic);
+        }
+      }
+      if(mounted) {
+        setState(() {
+          totalCount = res.data.length;
+          newCaseCount = newCount.length;
+          noCloseCount = noCount.length;
+          isLoading = false;
+          pullLoadWidgetControl.dataList.clear();
+          pullLoadWidgetControl.dataList.addAll(list);
+          pullLoadWidgetControl.needLoadMore = false;
+        });
+      }
+    }
   }
   ///取得api資料
   getApiData() async {

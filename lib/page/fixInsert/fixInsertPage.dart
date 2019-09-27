@@ -20,7 +20,8 @@ import 'package:redux/redux.dart';
 class FixInsertPage extends StatefulWidget {
 
   final String accName;
-  FixInsertPage({this.accName});
+  final String deptId;
+  FixInsertPage({this.accName, this.deptId});
 
   @override
   _FixInsertPageState createState() => _FixInsertPageState();

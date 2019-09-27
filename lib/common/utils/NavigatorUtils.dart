@@ -59,24 +59,24 @@ class NavigatorUtils {
     Navigator.pushReplacementNamed(context, HomePage.sName);
   }
   ///個人案件處理列表頁面
-  static goMaint(BuildContext context, String accName) {
-    NavigatorRouter(context, MaintPage(accName: accName));
+  static goMaint(BuildContext context, String accName, {String deptId}) {
+    NavigatorRouter(context, MaintPage(accName: accName, deptId: deptId));
   }
   ///個人案件處理詳情頁面
   static goMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
     NavigatorRouter(context, MaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName));
   }
   ///指派個人列表頁面
-  static goAssign(BuildContext context, String accName) {
-    NavigatorRouter(context, AssignPage(accName: accName));
+  static goAssign(BuildContext context, String accName, {String deptId}) {
+    NavigatorRouter(context, AssignPage(accName: accName, deptId: deptId,));
   }
   ///指派個人案件處理詳情頁面
   static goAssignEmplDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
     NavigatorRouter(context, AssignDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName,));
   }
   ///單位案件處理列表頁面
-  static goDPMaint(BuildContext context, String accName) {
-    NavigatorRouter(context, DPMaintPage(accName: accName));
+  static goDPMaint(BuildContext context, String accName, {String deptId}) {
+    NavigatorRouter(context, DPMaintPage(accName: accName, deptId: deptId,));
   }
   ///單位案件處理詳情頁面
   static goDPMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
@@ -107,8 +107,8 @@ class NavigatorUtils {
     NavigatorRouter(context, SalesMaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName));
   }
   ///維修插單列表
-  static goFixInsert(BuildContext context, String accName) {
-    NavigatorRouter(context, FixInsertPage(accName: accName));
+  static goFixInsert(BuildContext context, String accName, {String deptId}) {
+    NavigatorRouter(context, FixInsertPage(accName: accName, deptId: deptId,));
   }
   ///維修插單詳情
   static goFixInsertDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName) {

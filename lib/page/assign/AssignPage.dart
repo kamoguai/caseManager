@@ -19,7 +19,8 @@ import 'package:redux/redux.dart';
 ///Date: 2019-06-24
 class AssignPage extends StatefulWidget {
   final String accName;
-  AssignPage({this.accName});
+  final String deptId;
+  AssignPage({this.accName, this.deptId});
   @override
   _AssignPageState createState() => _AssignPageState();
 }
@@ -122,12 +123,17 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
         userInfo = userInfoData.data;
       });
     }
-    Future.delayed(const Duration(milliseconds: 50),(){
-      showDialog(
-      context: context,
-      builder: (BuildContext context) => deptSelectorDialog(context)
-      );
-    });
+    if (widget.deptId != null) {
+      getFirstTimeApiData(widget.deptId);
+    }
+    else {
+      Future.delayed(const Duration(milliseconds: 50),(){
+        showDialog(
+        context: context,
+        builder: (BuildContext context) => deptSelectorDialog(context)
+        );
+      });
+    }
   }
   ///列表顯示物件
   _renderItem(index) {
@@ -177,6 +183,10 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
       deptId = map["DeptID"];
     });
     
+    await getFirstTimeApiData(deptId);
+  }
+  ///第一次進入取得的資料
+  getFirstTimeApiData(String deptId) async {
     var res = await AssignDao.getAssignEmplList(userId: userInfo.userData.UserID, deptId: deptId);
     if (res != null && res.result) {
       List<MaintTableCell> list = new List();
@@ -209,7 +219,6 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
       }
     }
   }
-  
   ///取得api資料
   getApiData() async {
     

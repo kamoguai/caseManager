@@ -87,7 +87,7 @@ class _AssignSelectorDialogState extends State<AssignSelectorDialog> with BaseWi
     var res = await AssignDao.didAssignEmpl();
     if (res.result) {
       new Future.delayed(const Duration(seconds: 1),() {
-        NavigatorUtils.goAssign(context, widget.accName);
+        NavigatorUtils.goAssign(context, widget.accName, deptId: widget.deptId);
       });
     }
   }
