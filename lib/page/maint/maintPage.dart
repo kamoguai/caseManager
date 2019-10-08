@@ -187,7 +187,7 @@ class _MaintPageState extends State<MaintPage> with AutomaticKeepAliveClientMixi
       userTitle = map["DeptName"];
       deptId = map["DeptID"];
     });
-   await getFirstTimeApiData(deptId);
+   await getFirstTimeApiData(map["DeptID"]);
     
   }
   ///function給DeptSelectorDialog呼叫並把值帶回，多個條件

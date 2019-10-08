@@ -190,7 +190,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
       deptId = map["DeptID"];
     });
     
-    await getFirstTimeApiData(widget.deptId);
+    await getFirstTimeApiData(map["DeptID"]);
   }
   ///function給DeptSelectorDialog呼叫並把值帶回，多個條件
   void _callApiDataExt(Map<String, dynamic> map) async {

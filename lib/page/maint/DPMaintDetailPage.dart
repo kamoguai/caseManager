@@ -183,7 +183,7 @@ class _DPMaintDetailPageState extends State<DPMaintDetailPage> with BaseWidget{
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-        child: DetailReportDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName, caseTypeName: model.caseTypeName, fromFunc: 'DPMaint', userInfo: userInfo, accName: widget.accName,)
+        child: DetailReportDialog(deptName: userInfo.userData.DeptName, takeName: userInfo.userData.UserName, userId: userInfo.userData.UserID, caseId: widget.caseId, statusName: model.statusName, caseTypeName: model.caseTypeName, fromFunc: 'DPMaint', userInfo: userInfo, accName: widget.accName, deptId: widget.deptId,)
       )
     );
   }

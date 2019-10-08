@@ -183,7 +183,7 @@ class _AssignPageState extends State<AssignPage> with AutomaticKeepAliveClientMi
       deptId = map["DeptID"];
     });
     
-    await getFirstTimeApiData(deptId);
+    await getFirstTimeApiData(map["DeptID"]);
   }
   ///第一次進入取得的資料
   getFirstTimeApiData(String deptId) async {
