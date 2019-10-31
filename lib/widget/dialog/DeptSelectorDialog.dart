@@ -25,9 +25,12 @@ class DeptSelectorDialog extends StatefulWidget {
 class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget {
   ///裝載api list
   final List<dynamic> dataArray = [];
+  final List<dynamic> originArray = [];
   Map<String, dynamic> pickData = {};
   ///userInfo model
   UserInfo userInfo;
+  ///textFieldController
+  TextEditingController editingController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -72,6 +75,7 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
             setState(() {
               isLoading = false;
               dataArray.addAll(res.data);
+              originArray.addAll(res.data);
               if (dataArray.length > 0 && dataArray.length < 2) {
                 pickData = dataArray[0];
                 widget.callApiData(pickData);
@@ -93,6 +97,7 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
             setState(() {
               isLoading = false;
               dataArray.addAll(res.data);
+              originArray.addAll(res.data);
               if (dataArray.length > 0 && dataArray.length < 2) {
                 pickData = dataArray[0];
                 widget.callApiData(pickData);
@@ -117,6 +122,7 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
             setState(() {
               isLoading = false;
               dataArray.addAll(res.data);
+              originArray.addAll(res.data);
               if (dataArray.length > 0 && dataArray.length < 2) {
                 pickData = dataArray[0];
                 widget.callApiData(pickData);
@@ -142,6 +148,7 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
           setState(() {
             isLoading = false;
             dataArray.addAll(res.data);
+            originArray.addAll(res.data);
             if (dataArray.length > 0 && dataArray.length < 2) {
               pickData = dataArray[0];
               widget.callApiData(pickData);
@@ -160,7 +167,53 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
       }
     }
   }
+  ///filter功能
+  void filterSearchReasult(String str) {
+    List<dynamic> dummySearchList = List<dynamic>();
+    dummySearchList.addAll(dataArray);
+    if (str.isNotEmpty) {
+      List<dynamic> dummyListData = List<dynamic>();
+      dummySearchList.forEach((item) {
+        if (item['DeptName'].contains(str)) {
+          dummyListData.add(item);
+          setState(() {
+            dataArray.clear();
+            dataArray.addAll(dummyListData);
+          });
+        }
+      });
+      return ;
+    }
+    else {
+      setState(() {
+        dataArray.clear();
+        dataArray.addAll(originArray);
+      });
+    }
 
+  }
+  ///搜尋bar
+  Widget searchTextField() {
+    Widget widget;
+    widget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        onChanged: (value) {
+          filterSearchReasult(value);
+        },
+        controller: editingController,
+        decoration: InputDecoration(
+          labelText: '部門名稱',
+          hintText: '',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0))
+          ),
+        ),
+      ),
+    );
+    return widget;
+  }
   ///widget list item
   Widget listItem(BuildContext context, int index) {
     Widget item;
@@ -221,6 +274,7 @@ class _DeptSelectorDialogState extends State<DeptSelectorDialog> with BaseWidget
              height: titleHeight(context) * 1.5,
              child: Center(child: autoTextSize('選擇部門', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),)
            ),
+           searchTextField(),
            listView(),
            Container(
              height: titleHeight(context) * 1.5,

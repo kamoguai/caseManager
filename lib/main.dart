@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:case_manager/common/delegate/FallbackCupertinoLocalisationsDelegate.dart';
 import 'package:case_manager/common/event/HttpErrorEvent.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/net/Code.dart';
@@ -87,6 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
         return Localizations.override(
           context: context,
           child: widget.child,
+          delegates: [
+            const FallbackCupertinoLocalisationsDelegate(),
+          ],
         );
       }
     );

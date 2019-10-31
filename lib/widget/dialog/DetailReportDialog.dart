@@ -151,6 +151,11 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
             if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
               showChoiceCloseCaseController(context);
             }
+            else {
+              new Future.delayed(const Duration(seconds: 1),() {
+                NavigatorUtils.goMaint(context, widget.accName, deptId: widget.deptId);
+              });
+            }
           }
            else {
               new Future.delayed(const Duration(seconds: 1),() {
@@ -174,7 +179,12 @@ class _DetailReportDialogState extends State<DetailReportDialog> with BaseWidget
           if (this.statusType == 2) {
             if (widget.caseTypeName == "裝機未完工" && (this.selectDeptName == "工程-裝機" || this.selectDeptName == "工程-裝鋪")) {
               showChoiceCloseCaseController(context);
-            }           
+            }  
+            else {
+              new Future.delayed(const Duration(seconds: 1),() {
+                NavigatorUtils.goFixInsert(context, widget.accName, deptId: widget.deptId);
+              });
+            }         
           }
           else {
             new Future.delayed(const Duration(seconds: 1),() {

@@ -29,9 +29,12 @@ class AssignSelectorDialog extends StatefulWidget {
 class _AssignSelectorDialogState extends State<AssignSelectorDialog> with BaseWidget{
   ///裝載api list
   final List<dynamic> dataArray = [];
+  final List<dynamic> originArray = [];
   Map<String, dynamic> pickData = {};
   ///userInfo model
   UserInfo userInfo;
+  ///textFieldController
+  TextEditingController editingController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -73,6 +76,7 @@ class _AssignSelectorDialogState extends State<AssignSelectorDialog> with BaseWi
           setState(() {
             isLoading = false;
             dataArray.addAll(res.data);
+            originArray.addAll(res.data);
           });
         }
     }
@@ -116,6 +120,54 @@ class _AssignSelectorDialogState extends State<AssignSelectorDialog> with BaseWi
     return item;
   }
 
+  ///filter功能
+  void filterSearchReasult(String str) {
+    List<dynamic> dummySearchList = List<dynamic>();
+    dummySearchList.addAll(dataArray);
+    if (str.isNotEmpty) {
+      List<dynamic> dummyListData = List<dynamic>();
+      dummySearchList.forEach((item) {
+        if (item['Name'].contains(str)) {
+          dummyListData.add(item);
+          setState(() {
+            dataArray.clear();
+            dataArray.addAll(dummyListData);
+          });
+        }
+      });
+      return ;
+    }
+    else {
+      setState(() {
+        dataArray.clear();
+        dataArray.addAll(originArray);
+      });
+    }
+
+  }
+  ///搜尋bar
+  Widget searchTextField() {
+    Widget widget;
+    widget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        onChanged: (value) {
+          filterSearchReasult(value);
+        },
+        controller: editingController,
+        decoration: InputDecoration(
+          labelText: '部門名稱',
+          hintText: '',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0))
+          ),
+        ),
+      ),
+    );
+    return widget;
+  }
+
   ///widget list view
   Widget listView() {
     Widget list;
@@ -148,6 +200,7 @@ class _AssignSelectorDialogState extends State<AssignSelectorDialog> with BaseWi
              height: titleHeight(context) * 1.5,
              child: Center(child: autoTextSize('選擇部門員工', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),)
            ),
+           searchTextField(),
            listView(),
            Container(
              height: titleHeight(context) * 1.5,

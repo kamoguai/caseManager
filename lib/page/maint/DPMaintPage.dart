@@ -1,4 +1,5 @@
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/MaintDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
@@ -119,8 +120,16 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
     }
   }
 
-   Store<SysState> _getStore() {
-    return StoreProvider.of(context);
+  
+  _autoTextSize(text, style, context) {
+    // var fontSize = MyScreen.defaultTableCellFontSize(context);
+    // var fontStyle = TextStyle(fontSize: fontSize);
+    return AutoSizeText(
+      text,
+      style: style,
+      minFontSize: 5.0,
+      textAlign: TextAlign.center,
+    );
   }
 
   initParam() async {
@@ -369,7 +378,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
                 alignment: Alignment.center,
                 decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.white)),
                 width: deviceWidth4(),
-                child: autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+                child: _autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
               ),
               onTap: () {
                 setState(() {
@@ -400,7 +409,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               alignment: Alignment.center,
               height: 30,
               width: deviceWidth4(),
-              child: autoTextSize('${widget.accName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: _autoTextSize('${widget.accName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
           ],
         ),
@@ -433,7 +442,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: _autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),
             ),
             onTap: () {
               showRefreshLoading();
@@ -445,7 +454,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize('查詢', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: _autoTextSize('查詢', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),
             ),
             onTap: (){
               showDialog(
@@ -461,7 +470,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               alignment: Alignment.center,
               height: 36,
               // width: deviceWidth5(),
-              child: autoTextSize('單位結案', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: _autoTextSize('單位結案', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)), context),
             ),
             onTap: () {
               if (pickCaseIdArray.length < 1) {
@@ -482,27 +491,70 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
                 builder: (context) {
                   return AlertDialog(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    title: Text(''),
-                    content: autoTextSize('是否要將${pickCaseIdArray.length}筆資料執行單位結案?', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context))),
+                    // title: Text(''),
+                    content: Container(
+                      width: double.maxFinite,
+                      child: _autoTextSize('是否要將${pickCaseIdArray.length}筆資料執行單位結案?', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context) * 1.2),context),
+                    ),
                     actions: <Widget>[
-                      FlatButton(
-                        child: autoTextSize('取消', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize(context))),
-                        onPressed: () {
-                          showRefreshLoading();
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: autoTextSize('確定', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context))),
-                        onPressed: () async {
-                          var res = await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
-                          if (res.result) {
+                      Container(
+                        height: 30,
+                        width: 60,
+                        child: FlatButton(
+                          child: _autoTextSize('取消', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize(context) * 1.2),context),
+                          onPressed: () {
                             showRefreshLoading();
                             Navigator.pop(context);
-                          }
-                        },
+                          },
+                        ),
                       ),
+                      Container(
+                        height: 30,
+                        width: 60,
+                        child: FlatButton(
+                          child: _autoTextSize('確定', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context) * 1.2), context),
+                          onPressed: () async {
+                            var res = await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
+                            if (res.result) {
+                              showRefreshLoading();
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      )
+                      
                     ],
+                    // actions: <Widget>[
+                    //   Container(
+                    //     child: Flex(
+                    //       direction: Axis.horizontal,
+                    //       children: <Widget>[
+                    //         Flexible(
+                    //           child:  FlatButton(
+                    //             child: autoTextSize('取消', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize(context))),
+                    //             onPressed: () {
+                    //               showRefreshLoading();
+                    //               Navigator.pop(context);
+                    //             },
+                    //           ),
+                    //         ),
+                    //         Flexible(
+                    //           child: FlatButton(
+                    //             child: autoTextSize('確定', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context))),
+                    //             onPressed: () async {
+                    //               var res = await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
+                    //               if (res.result) {
+                    //                 showRefreshLoading();
+                    //                 Navigator.pop(context);
+                    //               }
+                    //             },
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   )
+                      
+                    // ],
                   );
                 }
               );
@@ -514,7 +566,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize('全選', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: _autoTextSize('全選', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
             onTap: (){
               addCaseIdAllFunc();
@@ -527,7 +579,7 @@ class _DPMaintPageState extends State<DPMaintPage> with AutomaticKeepAliveClient
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: _autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context)),context),
             ),
             onTap: () {
               NavigatorUtils.goHome(context);

@@ -142,7 +142,7 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
     var res = await AssignDao.didAssignEmpl(userId: widget.userId, caseId: widget.caseId, pUser: '${map['UserID']}');
     if (res.result) {
       new Future.delayed(const Duration(seconds: 1),() {
-        NavigatorUtils.goAssign(context, widget.accName);
+        NavigatorUtils.goAssign(context, widget.accName, deptId: widget.deptId);
       });
     }
   }
@@ -184,7 +184,7 @@ class _AssignDetailPageState extends State<AssignDetailPage> with BaseWidget{
           color: Colors.white,
         ),
         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
-        child: AssignSelectorDialog(deptId: userInfo.userData.DeptID, callApiData: _callPostApi, accName: widget.accName,)
+        child: AssignSelectorDialog(deptId: widget.deptId, callApiData: _callPostApi, accName: widget.accName,)
       )
     );
   }
