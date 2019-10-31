@@ -5,6 +5,7 @@ import 'package:case_manager/common/dao/HomeDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
+import 'package:case_manager/common/net/Address.dart';
 import 'package:case_manager/common/redux/SysState.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
@@ -12,6 +13,7 @@ import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 ///
 ///首頁
@@ -80,6 +82,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     _account = await LocalStorage.get(Config.USER_NAME_KEY);
     _getApiData(_account);
     getSnrConfigData();
+    _checkServerMode();
     var userInfoData = await UserInfoDao.getUserInfoLocal();
     if (mounted) {
       setState(() {  
@@ -95,6 +98,19 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         isFile = userInfo.authorityData.File == "Y" ? true : false;
         isAreaBug = userInfo.authorityData.AreaBug == "Y" ? true : false;
       });
+    }
+  }
+
+  ///確認呼叫server路徑
+  _checkServerMode() async {
+    var text = await LocalStorage.get(Config.SERVERMODE);
+    if (text != null && text != "prod") {
+      if(mounted) {
+        setState(() {
+          Address.isEnterTest = true;
+          Fluttertoast.showToast(msg: '歡迎使用測試機');
+        });
+      }
     }
   }
 

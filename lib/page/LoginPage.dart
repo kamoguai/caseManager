@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   var _account = "";
   var _password = "";
   var _fcmToken = "";
+  String _serverMode = "prod";
   final TextEditingController accountController = new TextEditingController();
   final TextEditingController pwController = new TextEditingController();
 
@@ -71,9 +72,26 @@ class _LoginPageState extends State<LoginPage> {
     _password = await LocalStorage.get(Config.PW_KEY);
     accountController.value = new TextEditingValue(text: _account ?? "");
     pwController.value = new TextEditingValue(text: _password ?? "");
+    _serverMode = await LocalStorage.get(Config.SERVERMODE);  
     if (widget.isAutoLogin != null && widget.isAutoLogin != false) {
       NavigatorUtils.goHome(context);
     }
+  }
+  ///切換server site
+  void _changeTaped() {
+    setState(() {
+      if (_serverMode == null || _serverMode == "prod") {
+        Fluttertoast.showToast(msg: '切換成測試機');
+        _serverMode = "test";
+        Address.isEnterTest = true;
+      }
+      else {
+        Fluttertoast.showToast(msg: '切換成正式機');
+        _serverMode = "prod";
+        Address.isEnterTest = false;
+      }
+      LocalStorage.save(Config.SERVERMODE, _serverMode);
+    });
   }
 
   ///版號顯示
@@ -144,12 +162,18 @@ class _LoginPageState extends State<LoginPage> {
                             image: new AssetImage('static/images/logo.png')),
                       ),
                       new Padding(padding: new EdgeInsets.all(10.0)),
-                      new Text(
-                        '案件聯繫3.0',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(20.0) 
-                        ),  
+                      GestureDetector(
+                        child: new Text(
+                          '案件聯繫3.0',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(20.0) 
+                          ),  
+                        ),
+                        onTap: (){
+                          _changeTaped();
+                        },
                       ),
+                      
                       new Padding(padding: new EdgeInsets.all(10.0)),
                       new Card(
                         elevation: 5.0,
