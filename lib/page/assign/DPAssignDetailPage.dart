@@ -35,7 +35,9 @@ class DPAssignDetailPage extends StatefulWidget {
   final statusName;
   ///由前頁傳入來自function
   final fromFunc;
-  DPAssignDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc});
+  ///由前頁傳入來自使用者name
+  final accName;
+  DPAssignDetailPage({this.custCode, this.userId, this.deptId, this.caseId, this.statusName, this.fromFunc, this.accName});
   @override
   _DPAssignDetailPageState createState() => _DPAssignDetailPageState();
 }

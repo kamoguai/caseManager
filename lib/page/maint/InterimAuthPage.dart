@@ -1,7 +1,6 @@
 
 
-
-import 'package:case_manager/common/dao/DPAssignDao.dart';
+import 'package:case_manager/common/dao/InterimAuthDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
@@ -13,20 +12,23 @@ import 'package:case_manager/widget/items/MaintListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/widget/MyListState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
 ///
-///單位指派列表頁面
-///Date: 2019-06-28
-class DPAssignPage extends StatefulWidget {
+///個人案件處理list頁面
+///Date: 2019-06-11
+///
+class InterimAuthPage extends StatefulWidget {
   final String accName;
-  DPAssignPage({this.accName});
+  final String deptId;
+  InterimAuthPage({this.accName, this.deptId});
   @override
-  _DPAssignPageState createState() => _DPAssignPageState();
+  _InterimAuthPageState createState() => _InterimAuthPageState();
 }
 
-class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClientMixin<DPAssignPage>, MyListState<DPAssignPage>{
+class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAliveClientMixin<InterimAuthPage>, MyListState<InterimAuthPage>{
   ///app bar左邊title
-  var userTitle = "單位指派";
+  var userTitle = "二次臨時授權";
   ///部門id
   var deptId = "";
   ///新案count
@@ -37,12 +39,16 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
   var overCount = 0;
   ///全部筆數
   var totalCount = 0;
-  ///是否點擊部門下拉選單
-  var isClickDeptSelect = false;
   ///userInfo model
   UserInfo userInfo;
   ///數據資料arr
   final List<dynamic> dataArray = [];
+  ///變更輸入/列表畫面
+  bool isChangedView = false;
+  ///textField controller
+  TextEditingController _editingController = TextEditingController();
+  ///node
+  FocusNode _node =  FocusNode();
 
   @override
   void initState() {
@@ -53,8 +59,11 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
 
   @override
   void dispose() {
-    super.dispose();
     clearData();
+    this._editingController.clear();
+    this._node.dispose();
+    super.dispose();
+
   }
 
   @override
@@ -116,19 +125,21 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
   }
 
   initParam() async {
+    /// new node
+    this._node = FocusNode();
     var userInfoData = await UserInfoDao.getUserInfoLocal();
     if (mounted) {
       setState(() {
         userInfo = userInfoData.data;
+        this.getFirstTimeApiData();
       });
-     showRefreshLoading();
     }
   }
   ///列表顯示物件
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'DPAssign',);
+    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: 'InterimAuth', accName: widget.accName,);
   }
   ///頁面上方head
   _renderHeader() {
@@ -159,12 +170,57 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
         refreshKey: refreshIndicatorKey,
     );
   }
-  
+ 
+  ///第一次進入取得的資料
+  getFirstTimeApiData() async {
+    var res = await InterimAuthDao.getInterimAuthList(userId: userInfo.userData.UserID);
+    if (res != null && res.result) {
+      List<MaintTableCell> list = new List();
+      dataArray.addAll(res.data);
+      if (dataArray.length > 0) {
+        for (var dic in dataArray) {
+          list.add(MaintTableCell.fromJson(dic));
+        }
+      }
+      List<dynamic> newCount = [];
+      List<dynamic> noCount = [];
+      for (var dic in res.data) {
+        if (dic["StatusName"] == '新案') {
+          newCount.add(dic);
+        }
+        else if (dic["StatusName"] == '接案') {
+          noCount.add(dic);
+        }
+      }
+      if(mounted) {
+        setState(() {
+          totalCount = res.data.length;
+          newCaseCount = newCount.length;
+          noCloseCount = noCount.length;
+          isLoading = false;
+          pullLoadWidgetControl.dataList.clear();
+          pullLoadWidgetControl.dataList.addAll(list);
+          pullLoadWidgetControl.needLoadMore = false;
+        });
+      }
+    }
+  }
+
   ///取得api資料
   getApiData() async {
     
-    var res = await DPAssignDao.getDPAssignList(userId: userInfo.userData.UserID);
+    var res = await InterimAuthDao.getInterimAuthList(userId: userInfo.userData.UserID);
     return res;
+  }
+
+  void updateChangedView(v) {
+    setState(() {
+      this.isChangedView = v;
+      if (v) {
+        FocusScope.of(context).requestFocus(_node);
+        _editingController.text = "";
+      }
+    });
   }
   
   /// app bar action按鈕
@@ -180,7 +236,7 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
                 height: 38,
                 alignment: Alignment.center,
                 width: deviceWidth4(),
-                child: autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+                child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
               ),
               onTap: () {
                 
@@ -203,7 +259,7 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
               alignment: Alignment.center,
               height: 30,
               width: deviceWidth4(),
-              child: autoTextSize('${widget.accName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize('${_getStore().state.userInfo.userData?.UserName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
           ],
         ),
@@ -213,13 +269,75 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
   }
   Widget bodyView() {
     Widget body;
-    body = isLoading ? showLoadingAnime(context) : Column(
-      children: <Widget>[
-        _renderHeader(),
+    List<Widget> columnList = [];
+    columnList.add(
+      _renderHeader()
+    );
+    if (!this.isChangedView) {
+      columnList.add(
         Expanded(
           child: _renderBody(),
         )
-      ],
+      );
+    }
+    else {
+      columnList.add(
+        Expanded(
+          child: Column(
+            children: <Widget>[
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: TextField(
+                  controller: _editingController,
+                  textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.number,
+                  maxLines: 1,
+                  maxLength: 10,
+                  style: TextStyle(color: Colors.black, fontSize: MyScreen.defaultTableCellFontSize(context)),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: '客編',
+                    hintText: '請輸入二次授權之客編',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2),
+                      borderSide: BorderSide(color: Colors.black, width: 1.0, style: BorderStyle.solid)
+                    ),
+                  ),
+                  onSubmitted: (v) {
+                   
+                  },
+                ),
+              ),
+              Center(
+                child: Container(
+                  child: FlatButton(
+                    color: Colors.blue[300],
+                    child: autoTextSize('授權', TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      print(this._editingController.text);
+                      if (this._editingController.text.length < 10) {
+                        Fluttertoast.showToast(msg: '請輸入完整客編！');
+                        return;
+                      }
+                      else {
+                        Fluttertoast.showToast(msg: '成功！');
+                        return;
+                      }
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
+      );
+    }
+    body = isLoading ? showLoadingAnime(context) : Column(
+      children:  columnList
     );
     return body;
   }
@@ -235,11 +353,24 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth4(),
+              width: deviceWidth6(),
               child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
               showRefreshLoading();
+            },
+          ),
+          GestureDetector(
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              alignment: Alignment.center,
+              height: 42,
+              width: deviceWidth6(),
+              child: autoTextSize( this.isChangedView ? '列表' : '輸入', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+            ),
+            onTap: (){
+               var v = !this.isChangedView;
+               this.updateChangedView(v);
             },
           ),
           Container(
@@ -255,17 +386,29 @@ class _DPAssignPageState extends State<DPAssignPage> with AutomaticKeepAliveClie
               },
             ),
           ),
+          GestureDetector(
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              alignment: Alignment.center,
+              height: 42,
+              width: deviceWidth7(),
+              child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+            ),
+            onTap: () {
+              
+            },
+          ),
           
           GestureDetector(
             child: Container(
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
-              width: deviceWidth4(),
+              width: deviceWidth6(),
               child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-              NavigatorUtils.goHome(context);
+               NavigatorUtils.goHome(context);
             },
           ),
           

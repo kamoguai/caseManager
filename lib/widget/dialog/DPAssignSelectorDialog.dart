@@ -5,12 +5,13 @@ import 'package:case_manager/common/dao/DeptInfoDao.dart';
 import 'package:case_manager/common/dao/FileDao.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
+import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 ///
 ///單位指派dialog
+///
 class DPAssignSelectorDialog extends StatefulWidget {
 
   ///由前頁傳入部門名
@@ -27,7 +28,9 @@ class DPAssignSelectorDialog extends StatefulWidget {
   final String fromFunc;
   ///由前頁傳入userInfo
   final UserInfo userInfo;
-  DPAssignSelectorDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.fromFunc, this.userInfo});
+  ///由前頁傳入來自使用者name
+  final accName;
+  DPAssignSelectorDialog({this.deptName, this.takeName, this.userId, this.caseId, this.statusName, this.fromFunc, this.userInfo, this.accName});
 
   @override
   _DPAssignSelectorDialogState createState() => _DPAssignSelectorDialogState();
@@ -103,6 +106,9 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
   ///post指派api
   postDPAssignApi(userId, inputField, caseId, pUserId, pDeptId) async {
     await DPAssignDao.didDPAssignCase(userId: userId, caseId: caseId, funit: pDeptId, pUserId: pUserId);
+    Future.delayed( Duration(seconds: 1),() {
+      NavigatorUtils.goDPAssign(context, widget.accName);
+    });
   }
   ///post歸檔api
   postFileApi(userId, caseId) async {
@@ -326,15 +332,18 @@ class _DPAssignSelectorDialogState extends State<DPAssignSelectorDialog> with Ba
                 color: Colors.blue,
                 child: autoTextSize('送出', TextStyle(fontSize: MyScreen.homePageFontSize(context)),context),
                 onPressed: () {
-                  if (selectPuserName == '請選擇') {
-                    Fluttertoast.showToast(msg: '請選擇接案人');
-                    return;
-                  }
+                  // if (selectPuserName == '請選擇') {
+                  //   Fluttertoast.showToast(msg: '請選擇接案人');
+                  //   return;
+                  // }
                   if (selectPuserId == '') {
                     selectPuserId = widget.userId;
                   }
                   if (selectDeptId == '') {
                     selectDeptId = widget.userInfo.userData.DeptID;
+                  }
+                  if (inputText == null) {
+                    inputText = "";
                   }
                   sendAction(widget.userId, inputText, widget.caseId, selectPuserId, selectDeptId);
                 },

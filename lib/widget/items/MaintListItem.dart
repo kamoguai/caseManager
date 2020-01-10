@@ -89,7 +89,12 @@ class MaintListItem extends StatelessWidget with BaseWidget{
       row.add(
         Expanded(
           flex: 4,
-          child: autoTextSizeLeft('${model.pUserName}', TextStyle(color: Colors.grey[600]), context),
+          child: Row(
+            children: <Widget>[
+              autoTextSize('立案人:', TextStyle(color: Colors.black), context),
+              autoTextSizeLeft('${model.createrName}', TextStyle(color: Colors.grey[600]), context),    
+            ],
+          )
         ),
       );
       return row;
@@ -208,17 +213,18 @@ class MaintListItem extends StatelessWidget with BaseWidget{
         else {
           w = autoTextSize('新案', TextStyle(color: Colors.red), context);
         }
-        row.add(
-          Expanded(
-            flex: 5,
-            child: Row(
-              children: <Widget>[
-                autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
-                w,
-              ],
-            ),
-          )
-        );
+        if (fromFunc != 'InterimAuth') 
+          row.add(
+            Expanded(
+              flex: 5,
+              child: Row(
+                children: <Widget>[
+                  autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
+                  w,
+                ],
+              ),
+            )
+          ); 
       }
       else {
         row.add(
@@ -232,17 +238,18 @@ class MaintListItem extends StatelessWidget with BaseWidget{
             ),
           )
         );
-        row.add(
-          Expanded(
-            flex: 5,
-            child: Row(
-              children: <Widget>[
-                autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
-                autoTextSize('${model.statusName}', TextStyle(color: statusColor), context)
-              ],
-            ),
-          )
-        );
+        if (fromFunc != 'InterimAuth')
+          row.add(
+            Expanded(
+              flex: 5,
+              child: Row(
+                children: <Widget>[
+                  autoTextSize('狀態: ', TextStyle(color: Colors.black), context),
+                  autoTextSize('${model.statusName}', TextStyle(color: statusColor), context)
+                ],
+              ),
+            )
+          );
       }
       return row;
     }
@@ -294,39 +301,60 @@ class MaintListItem extends StatelessWidget with BaseWidget{
 
     List<Widget> wList = [];
     wList.add(content);
-    wList.add(
-      Positioned(
-        right: 5.0,
-        bottom: -8.0,
-        child: GestureDetector(
-          child: Image.asset('static/images/detail.png', width: 50, height: 50),
-          onTap: (){
-            switch (fromFunc) {
-              case 'Maint':
-                NavigatorUtils.goMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
-                break;
-              case 'AssignEmpl':
-                NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
-                break;
-              case 'DPMaint':
-                NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
-                break;
-              case 'DPAssign':
-                NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
-                break;
-              case 'File':
-                NavigatorUtils.goFileDettail(context, model.custNO, userId, deptId, model.caseID, model.statusName, 'File');
-                break;
-              case 'DPMaintClose':
-                NavigatorUtils.goFileDettail(context, model.custNO, userId, deptId, model.caseID, model.statusName, 'DPMaintClose');
-                break;
-              case 'SalesMaint':
-                NavigatorUtils.goSalesMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
-            }
-          },
-        )
-      ),
-    );
+    if (fromFunc != "InterimAuth") {
+      wList.add(
+        Positioned(
+          right: 5.0,
+          bottom: -8.0,
+          child: GestureDetector(
+            child: Image.asset('static/images/detail.png', width: 50, height: 50),
+            onTap: (){
+              switch (fromFunc) {
+                case 'Maint':
+                  NavigatorUtils.goMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
+                  break;
+                case 'AssignEmpl':
+                  NavigatorUtils.goAssignEmplDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
+                  break;
+                case 'DPMaint':
+                  NavigatorUtils.goDPMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
+                  break;
+                case 'DPAssign':
+                  NavigatorUtils.goDPAssignDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName, accName);
+                  break;
+                case 'File':
+                  NavigatorUtils.goFileDettail(context, model.custNO, userId, deptId, model.caseID, model.statusName, 'File');
+                  break;
+                case 'DPMaintClose':
+                  NavigatorUtils.goFileDettail(context, model.custNO, userId, deptId, model.caseID, model.statusName, 'DPMaintClose');
+                  break;
+                case 'SalesMaint':
+                  NavigatorUtils.goSalesMaintDetail(context, model.custNO, userId, deptId, model.caseID, model.statusName);
+              }
+            },
+          )
+        ),
+      );
+    }
+    else {
+      wList.add(
+        Positioned(
+          right: 5.0,
+          bottom: 10.0,
+          child: GestureDetector(
+            child: FlatButton(
+              child: autoTextSize('授權', TextStyle(color: Colors.white), context),
+              color: Colors.blue[300],
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+              onPressed: () {
+
+              },
+            )
+          )
+        ),
+      );
+    }
+    
     if ((fromFunc == 'DPMaint' && model.statusName == '結案') || fromFunc == 'File' || fromFunc == 'DPMaintClose') {
       wList.add(
         Positioned(

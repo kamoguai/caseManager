@@ -15,7 +15,7 @@ class Address {
   static const String getVersion = "ValidataVersion/json/index!checkVersion.action?";
   static const String loginAPI = "WorkOrder/json/wok!login.action?";
   static final String bundleID = "com.dctv.caseManager";
-  static final String verNo = "3.0.1006";
+  static final String verNo = "3.0.1111";
   static bool isEnterTest = false;
 
   ///檢查是否有更新app
@@ -164,6 +164,11 @@ class Address {
       str += "&$searchStatus";
     }
     return str;
+  }
+  ///取得二次授權清單
+  static didGetInterimAuthList(userId) {
+    changeEnterTest();
+    return "${kCMHostPath}FunctionName=InterimAuthList&UserID=$userId";
   }
   ///取得個人案件處理清單，條件查詢
   static didGetMaintListExt(itype, userId, deptId, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial) {

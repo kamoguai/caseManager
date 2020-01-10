@@ -11,6 +11,7 @@ import 'package:case_manager/page/file/FilePage.dart';
 import 'package:case_manager/page/fixInsert/fixInsertPage.dart';
 import 'package:case_manager/page/maint/DPMaintDetailPage.dart';
 import 'package:case_manager/page/maint/DPMaintPage.dart';
+import 'package:case_manager/page/maint/InterimAuthPage.dart';
 import 'package:case_manager/page/maint/MaintDetailPage.dart';
 import 'package:case_manager/page/maint/MaintPage.dart';
 import 'package:case_manager/page/sales/SalesMaintDetailPage.dart';
@@ -87,8 +88,8 @@ class NavigatorUtils {
     NavigatorRouter(context, DPAssignPage(accName: accName));
   }
   ///單位指派詳情頁面
-  static goDPAssignDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName) {
-    NavigatorRouter(context, DPAssignDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName));
+  static goDPAssignDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
+    NavigatorRouter(context, DPAssignDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName,));
   }
   ///案件歸檔/單位結案列表
   static goFileList(BuildContext context, String accName) {
@@ -117,6 +118,10 @@ class NavigatorUtils {
   ///案件分析列表
   static goAnalyze(BuildContext context) {
     NavigatorRouter(context, AnalyzePage());
+  }
+  ///二次臨時授權
+  static goInterimAuth(BuildContext context) {
+    NavigatorRouter(context, InterimAuthPage());
   }
   
 }

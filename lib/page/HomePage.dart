@@ -59,6 +59,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   var isFile = false;
   ///使用按鈕權限，區障使用權
   var isAreaBug = false;
+  ///scroll
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -228,6 +230,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
 
     Widget body;
     List<Widget> columnList = [];
+    List<Widget> columnList2 = [];
     columnList.add(
       Container(
         padding: EdgeInsets.only(top: 5.0),
@@ -258,7 +261,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       ),
     );
     if (userInfo.userData.DeptID == '4' || userInfo.userData.Position == '2') {
-      columnList.add(
+      columnList2.add(
         Container(
           padding: EdgeInsets.only(top: 5.0),   
           width: _buildButtonWidth(),       
@@ -273,7 +276,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       );
     }
-    columnList.add(
+    columnList2.add(
       Container(
         padding: EdgeInsets.only(top: 5.0),   
         width: _buildButtonWidth(),       
@@ -288,7 +291,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       ),
     );
     if (isMaint) {
-      columnList.add(
+      columnList2.add(
         Container(
           padding: EdgeInsets.only(top: 5.0),   
           width: _buildButtonWidth(),       
@@ -306,7 +309,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       );
     }
     if (isAssignEmpl) {
-      columnList.add(
+      columnList2.add(
         Container(  
           padding: EdgeInsets.only(top: 5.0),
           width: _buildButtonWidth(),              
@@ -324,7 +327,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       );
     }
     if (isDPMaint) {
-      columnList.add(
+      columnList2.add(
         Container(  
           padding: EdgeInsets.only(top: 5.0),
           width: _buildButtonWidth(),      
@@ -342,7 +345,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       );
     }
     if (isAssignDept) {
-      columnList.add(
+      columnList2.add(
         Container(  
           padding: EdgeInsets.only(top: 5.0),
           width: _buildButtonWidth(),      
@@ -359,7 +362,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       );
     }
-    columnList.add(
+    columnList2.add(
       Container(  
         padding: EdgeInsets.only(top: 5.0),
         width: _buildButtonWidth(),      
@@ -373,8 +376,22 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       ),
     );
+    columnList2.add(
+      Container(  
+        padding: EdgeInsets.only(top: 5.0),
+        width: _buildButtonWidth(),      
+        child: RaisedButton(
+          disabledTextColor: Colors.grey,
+          child: autoTextSize('二次臨時授權', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          onPressed: () {
+            NavigatorUtils.goInterimAuth(context);
+          },
+        ),
+      ),
+    );
     if (isFile) {
-      columnList.add(
+      columnList2.add(
         Container( 
           padding: EdgeInsets.only(top: 5.0), 
           width: _buildButtonWidth(),      
@@ -391,7 +408,25 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       );
     }
-    body = Column(
+    columnList.add(
+      Expanded(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          controller: _scrollController,
+          child: Column(
+            children: columnList2,
+          ),
+        ),
+      )
+    );
+    body = Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: columnList,
+      ),
+    );
+    
+    Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: columnList
     );
