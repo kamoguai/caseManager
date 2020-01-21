@@ -179,6 +179,9 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
         showRefreshLoading();
       }
     }
+    else {
+      Navigator.pop(context);
+    }
   }
  
   ///第一次進入取得的資料

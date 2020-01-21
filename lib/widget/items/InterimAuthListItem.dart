@@ -138,7 +138,6 @@ class InterimAuhtListItem extends StatelessWidget with BaseWidget{
             color: Colors.blue[300],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
             onPressed: () {
-              Fluttertoast.showToast(msg: 'custCode: ${model.custCode}; id: ${model.id}');
               callApiData(model);
             },
           )
