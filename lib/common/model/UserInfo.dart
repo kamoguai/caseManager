@@ -59,6 +59,7 @@ class AuthorityData {
   String DeptClose; // 部門關閉權限
   String File; // 檔案權限
   String AreaBug; // 區障權限
+  String InterimAuth; // 二次授權權限
   AuthorityData(
     this.CreateCase,
     this.AssignDept,
@@ -68,6 +69,7 @@ class AuthorityData {
     this.DeptClose,
     this.File,
     this.AreaBug,
+    this.InterimAuth,
   );
   // 反序列化
   factory AuthorityData.fromJson(Map<String, dynamic> json) => _$AuthorityDataFromJson(json);

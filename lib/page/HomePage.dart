@@ -2,6 +2,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/HomeDao.dart';
+import 'package:case_manager/common/dao/InterimAuthDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
@@ -14,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:redux/redux.dart';
 ///
 ///首頁
 ///Date: 2019-06-05
@@ -59,6 +60,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   var isFile = false;
   ///使用按鈕權限，區障使用權
   var isAreaBug = false;
+  ///使用按鈕權限，授權使用權
+  var isInterimAuth = false;
+  ///二次授權list count
+  var iaCount = 0;
   ///scroll
   ScrollController _scrollController = ScrollController();
 
@@ -78,7 +83,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     super.autoTextSize(text, style, context);
     return AutoSizeText(text, style: style, minFontSize: 5.0,);
   }
-
+  
   initParam() async {
     
     _account = await LocalStorage.get(Config.USER_NAME_KEY);
@@ -99,8 +104,14 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         isDeptClose = userInfo.authorityData.DeptClose == "Y" ? true : false;
         isFile = userInfo.authorityData.File == "Y" ? true : false;
         isAreaBug = userInfo.authorityData.AreaBug == "Y" ? true : false;
+        isInterimAuth = userInfo.authorityData.InterimAuth == "Y" ? true : false;
+        getInterimAuthCount();
       });
     }
+  }
+
+   Store<SysState> _getStore() {
+    return StoreProvider.of(context);
   }
 
   ///確認呼叫server路徑
@@ -131,6 +142,20 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   ///取得snr config
   getSnrConfigData() async {
      await HomeDao.getSnrConfigAPI();
+  }
+
+  ///取得二次授權list
+  getInterimAuthCount() async {
+    if (isInterimAuth) {
+      var res = await InterimAuthDao.getInterimAuthList(userId: userInfo.userData.UserID);
+      if (res != null && res.result) {
+        if (mounted) {
+          setState(() {
+            this.iaCount = res.data.length;
+          });
+        }
+      }
+    }
   }
 
   ///區域dialog, ios樣式
@@ -183,6 +208,24 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     return width;
   }
+  ///button寬度配置
+  _buildButtonHeight() {
+    double height = 0.0;
+    final deviceHeight = MediaQuery.of(context).size.height; 
+    if (deviceHeight < 570) {
+      height = titleHeight(context) * 1.5;
+    } else if (deviceHeight > 590 && deviceHeight < 720) {
+      height = titleHeight(context) * 1.2;
+    } else if (deviceHeight >= 720 && deviceHeight < 800) {
+      height = titleHeight(context) * 1.3;
+    } else if (deviceHeight >= 800 && deviceHeight < 900) {
+      height = titleHeight(context) * 1.4;
+    } else {
+      height = titleHeight(context) * 1.5;
+    }
+    
+    return height;
+  }
   /// app bar action按鈕
   List<Widget> actions() {
     List<Widget> list = [
@@ -231,6 +274,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     Widget body;
     List<Widget> columnList = [];
     List<Widget> columnList2 = [];
+    List<Widget> inderimAuthList = [];
     columnList.add(
       Container(
         padding: EdgeInsets.only(top: 5.0),
@@ -249,21 +293,22 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          autoTextSize('新案: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-          autoTextSize('$_newCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          autoTextSize('新案: ', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
+          autoTextSize('$_newCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
           Container(padding: EdgeInsets.only(left: 5.0),),
-          autoTextSize('未結案: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-          autoTextSize('$_takeCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          autoTextSize('未結案: ', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
+          autoTextSize('$_takeCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
           Container(padding: EdgeInsets.only(left: 5.0),),
-          autoTextSize('超常: ', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
-          autoTextSize('$_overCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize_s(context)), context),
+          autoTextSize('超常: ', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
+          autoTextSize('$_overCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
         ],
       ),
     );
     if (userInfo.userData.DeptID == '4' || userInfo.userData.Position == '2') {
       columnList2.add(
         Container(
-          padding: EdgeInsets.only(top: 5.0),   
+          padding: EdgeInsets.only(top: 15.0),   
+          height: _buildButtonHeight(),
           width: _buildButtonWidth(),       
           child: RaisedButton(
             disabledTextColor: Colors.grey,
@@ -278,7 +323,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     columnList2.add(
       Container(
-        padding: EdgeInsets.only(top: 5.0),   
+        padding: EdgeInsets.only(top: 15.0),   
+        height: _buildButtonHeight(),
         width: _buildButtonWidth(),       
         child: RaisedButton(
           disabledTextColor: Colors.grey,
@@ -293,7 +339,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     if (isMaint) {
       columnList2.add(
         Container(
-          padding: EdgeInsets.only(top: 5.0),   
+          padding: EdgeInsets.only(top: 15.0),   
+          height: _buildButtonHeight(),
           width: _buildButtonWidth(),       
           child: RaisedButton(
             disabledTextColor: Colors.grey,
@@ -311,7 +358,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     if (isAssignEmpl) {
       columnList2.add(
         Container(  
-          padding: EdgeInsets.only(top: 5.0),
+          padding: EdgeInsets.only(top: 15.0),
+          height: _buildButtonHeight(),
           width: _buildButtonWidth(),              
           child: RaisedButton(
             disabledTextColor: Colors.grey,
@@ -329,7 +377,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     if (isDPMaint) {
       columnList2.add(
         Container(  
-          padding: EdgeInsets.only(top: 5.0),
+          padding: EdgeInsets.only(top: 15.0),
+          height: _buildButtonHeight(),
           width: _buildButtonWidth(),      
           child: RaisedButton(
             disabledTextColor: Colors.grey,
@@ -347,7 +396,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     if (isAssignDept) {
       columnList2.add(
         Container(  
-          padding: EdgeInsets.only(top: 5.0),
+          padding: EdgeInsets.only(top: 15.0),
+          height: _buildButtonHeight(),
           width: _buildButtonWidth(),      
           child: RaisedButton(
             disabledTextColor: Colors.grey,
@@ -364,7 +414,8 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     columnList2.add(
       Container(  
-        padding: EdgeInsets.only(top: 5.0),
+        padding: EdgeInsets.only(top: 15.0),
+        height: _buildButtonHeight(),
         width: _buildButtonWidth(),      
         child: RaisedButton(
           disabledTextColor: Colors.grey,
@@ -376,24 +427,11 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       ),
     );
-    columnList2.add(
-      Container(  
-        padding: EdgeInsets.only(top: 5.0),
-        width: _buildButtonWidth(),      
-        child: RaisedButton(
-          disabledTextColor: Colors.grey,
-          child: autoTextSize('二次臨時授權', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          onPressed: () {
-            NavigatorUtils.goInterimAuth(context);
-          },
-        ),
-      ),
-    );
     if (isFile) {
       columnList2.add(
         Container( 
-          padding: EdgeInsets.only(top: 5.0), 
+          padding: EdgeInsets.only(top: 15.0), 
+          height: _buildButtonHeight(),
           width: _buildButtonWidth(),      
           child: RaisedButton(
             disabledTextColor: Colors.grey,
@@ -406,6 +444,45 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             },
           ),
         ),
+      );
+    }
+    
+    if (isInterimAuth) {
+      inderimAuthList.add(
+        Container(
+          height: _buildButtonHeight(),
+          padding: EdgeInsets.only(top: 15.0),
+          width: _buildButtonWidth(),      
+          child: RaisedButton(
+            disabledTextColor: Colors.grey,
+            child: autoTextSize('二次臨時授權', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            onPressed: () {
+              bool f = this.iaCount > 0;
+              NavigatorUtils.goInterimAuth(context, f);
+            },
+          ),
+        ),
+      );
+      if (this.iaCount > 0) {
+        inderimAuthList.add(
+          Positioned(
+            top: 10,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.red),
+              width: 30,
+              height: 30,
+              alignment: Alignment.center,
+              child: autoTextSize('$iaCount', TextStyle(color: Colors.white), context),
+            ),
+          )
+        );
+      }
+      columnList2.add(
+        Stack(
+          children: inderimAuthList
+        )
       );
     }
     columnList.add(

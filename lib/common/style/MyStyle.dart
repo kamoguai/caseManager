@@ -71,163 +71,168 @@ class MyConstant {
   static const String app_default_share_url =
       "https://github.com/CarGuo/MyGithubAppFlutter";
 
-  static const lagerTextSize = 30.0;
-  static const bigTextSize = 20.0;
-  static const normalTextSize = 18.0;
-  static const middleTextSize = 16.0;
-  static const smallTextSize = 14.0;
-  static const minTextSize = 12.0;
-  static const miniTextSize = 10.0;
-  static const tinyTextSize = 8.0;
+  static const textSize_40 = 40.0;
+  static const textSize_30 = 30.0;
+  static const textSize_28 = 28.0;
+  static const textSize_26 = 26.0;
+  static const textSize_24 = 24.0;
+  static const textSize_22 = 22.0;
+  static const textSize_20 = 20.0;
+  static const textSize_18 = 18.0;
+  static const textSize_16 = 16.0;
+  static const textSize_14 = 14.0;
+  static const textSize_12 = 12.0;
+  static const textSize_10 = 10.0;
+  static const textSize_8 = 8.0;
 
   static const minText = TextStyle(
     color: Color(MyColors.subLightTextColor),
-    fontSize: minTextSize,
+    fontSize: textSize_12,
   );
 
   static const smallTextWhite = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
   );
 
   static const smallText = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
   );
 
   static const smallTextBold = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
     fontWeight: FontWeight.bold,
   );
 
   static const smallSubLightText = TextStyle(
     color: Color(MyColors.subLightTextColor),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
   );
 
   static const smallActionLightText = TextStyle(
     color: Color(MyColors.actionBlue),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
   );
 
   static const smallMiLightText = TextStyle(
     color: Color(MyColors.miWhite),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
   );
 
   static const smallSubText = TextStyle(
     color: Color(MyColors.subTextColor),
-    fontSize: smallTextSize,
+    fontSize: textSize_14,
   );
 
   static const middleText = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
   );
 
   static const middleTextWhite = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
   );
 
   static const middleSubText = TextStyle(
     color: Color(MyColors.subTextColor),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
   );
 
   static const middleSubLightText = TextStyle(
     color: Color(MyColors.subLightTextColor),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
   );
 
   static const middleTextBold = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
     fontWeight: FontWeight.bold,
   );
 
   static const middleTextWhiteBold = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
     fontWeight: FontWeight.bold,
   );
 
   static const middleSubTextBold = TextStyle(
     color: Color(MyColors.subTextColor),
-    fontSize: middleTextSize,
+    fontSize: textSize_16,
     fontWeight: FontWeight.bold,
   );
 
   static const normalText = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
   );
 
   static const normalTextBold = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
     fontWeight: FontWeight.bold,
   );
 
   static const normalSubText = TextStyle(
     color: Color(MyColors.subTextColor),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
   );
 
   static const normalTextWhite = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
   );
 
   static const normalTextMitWhiteBold = TextStyle(
     color: Color(MyColors.miWhite),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
     fontWeight: FontWeight.bold,
   );
 
   static const normalTextActionWhiteBold = TextStyle(
     color: Color(MyColors.actionBlue),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
     fontWeight: FontWeight.bold,
   );
 
   static const normalTextLight = TextStyle(
     color: Color(MyColors.primaryLightValue),
-    fontSize: normalTextSize,
+    fontSize: textSize_18,
   );
 
   static const largeText = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: bigTextSize,
+    fontSize: textSize_20,
   );
 
   static const largeTextBold = TextStyle(
     color: Color(MyColors.mainTextColor),
-    fontSize: bigTextSize,
+    fontSize: textSize_20,
     fontWeight: FontWeight.bold,
   );
 
   static const largeTextWhite = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: bigTextSize,
+    fontSize: textSize_20,
   );
 
   static const largeTextWhiteBold = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: bigTextSize,
+    fontSize: textSize_20,
     fontWeight: FontWeight.bold,
   );
 
   static const largeLargeTextWhite = TextStyle(
     color: Color(MyColors.textColorWhite),
-    fontSize: lagerTextSize,
+    fontSize: textSize_22,
     fontWeight: FontWeight.bold,
   );
 
   static const largeLargeText = TextStyle(
     color: Color(MyColors.primaryValue),
-    fontSize: lagerTextSize,
+    fontSize: textSize_22,
     fontWeight: FontWeight.bold,
   );
 }
@@ -323,18 +328,17 @@ class MyScreen {
     final deviceHeight = MediaQuery.of(context).size.height;
     var fontSize = 12.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.middleTextSize;
+      fontSize = MyConstant.textSize_20;
+    } else if (deviceHeight > 570 && deviceHeight < 720) {
+      fontSize = MyConstant.textSize_22;
+    } else if (deviceHeight >= 720 && deviceHeight < 800) {
+      fontSize = MyConstant.textSize_24;
+    } else if (deviceHeight >= 800 && deviceHeight < 900) {
+      fontSize = MyConstant.textSize_26;
+    } else {
+      fontSize = MyConstant.textSize_30;
     }
-    else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.normalTextSize;
-    }
-    else if (deviceHeight > 800) {
-      fontSize = MyConstant.normalTextSize;
-    }
-    else {
-      fontSize = MyConstant.bigTextSize;
-    }
-    return fontSize;
+    return ScreenUtil.getInstance().setSp(fontSize);
   }
 
 
@@ -343,46 +347,36 @@ class MyScreen {
     final deviceHeight = MediaQuery.of(context).size.height;
     double fontSize = 0.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.normalTextSize;
-    } else if (deviceHeight > 800) {
-      fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.normalTextSize;
+      fontSize = MyConstant.textSize_18;
+    } else if (deviceHeight > 570 && deviceHeight < 720) {
+      fontSize = MyConstant.textSize_20;
+    } else if (deviceHeight >= 720 && deviceHeight < 800) {
+      fontSize = MyConstant.textSize_22;
+    } else if (deviceHeight >= 800 && deviceHeight < 900) {
+      fontSize = MyConstant.textSize_24;
     } else {
-      fontSize = MyConstant.bigTextSize;
+      fontSize = MyConstant.textSize_30;
     }
-    return ScreenUtil().setSp(fontSize);
+    return ScreenUtil.getInstance().setSp(fontSize);
   }
-  ///首頁字體大小
-  static double homePageFontSize_s(BuildContext context) {
-    final deviceHeight = MediaQuery.of(context).size.height;
-    double fontSize = 0.0;
-    if (deviceHeight < 570) {
-      fontSize = MyConstant.middleTextSize;
-    } else if (deviceHeight > 800) {
-      fontSize = MyConstant.normalTextSize;
-    } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextSize;
-    } else {
-      fontSize = MyConstant.normalTextSize;
-    }
-    return ScreenUtil().setSp(fontSize);
-  }
+  
 
-  ///卡板字體大小
+  ///一般大小
   static double normalPageFontSize(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     double fontSize = 0.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.normalTextSize;
-    } else if (deviceHeight > 800) {
-      fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.normalTextSize;
+      fontSize = MyConstant.textSize_16;
+    } else if (deviceHeight > 570 && deviceHeight < 720) {
+      fontSize = MyConstant.textSize_18;
+    } else if (deviceHeight >= 720 && deviceHeight < 800) {
+      fontSize = MyConstant.textSize_20;
+    } else if (deviceHeight >= 800 && deviceHeight < 900) {
+      fontSize = MyConstant.textSize_20;
     } else {
-      fontSize = MyConstant.bigTextSize;
+      fontSize = MyConstant.textSize_30;
     }
-    return ScreenUtil().setSp(fontSize);
+    return ScreenUtil.getInstance().setSp(fontSize);
   }
 
   ///通用detailList字體大小
@@ -390,48 +384,35 @@ class MyScreen {
     final deviceHeight = MediaQuery.of(context).size.height;
     double fontSize = 0.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.middleTextSize;
-    } else if (deviceHeight > 800) {
-      fontSize = MyConstant.normalTextSize;
-    } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.middleTextSize;
+      fontSize = MyConstant.textSize_16;
+    } else if (deviceHeight > 570 && deviceHeight < 720) {
+      fontSize = MyConstant.textSize_18;
+    } else if (deviceHeight >= 720 && deviceHeight < 800) {
+      fontSize = MyConstant.textSize_20;
+    } else if (deviceHeight >= 800 && deviceHeight < 900) {
+      fontSize = MyConstant.textSize_22;
+    } else {
+      fontSize = MyConstant.textSize_30;
     }
-    else {
-      fontSize = MyConstant.bigTextSize;
-    }
-    return ScreenUtil().setSp(fontSize);
+    return ScreenUtil.getInstance().setSp(fontSize);
   }
-  ///通用detailList字體大小s
-  static double defaultTableCellFontSize_s(BuildContext context) {
-    final deviceHeight = MediaQuery.of(context).size.height;
-    double fontSize = 0.0;
-    if (deviceHeight < 570) {
-      fontSize = MyConstant.smallTextSize ;
-    } else if (deviceHeight > 800) {
-      fontSize = MyConstant.smallTextSize;
-    } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.minTextSize;
-    }
-    else {
-      fontSize = MyConstant.smallTextSize;
-    }
-    return ScreenUtil().setSp(fontSize);
-  }
+ 
   
   ///appbar button size
   static double appBarFontSize(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     double fontSize = 0.0;
     if (deviceHeight < 570) {
-      fontSize = MyConstant.smallTextSize;
-    } else if (deviceHeight > 800) {
-      fontSize = MyConstant.bigTextSize;
-    } else if (deviceHeight > 570 && deviceHeight < 800) {
-      fontSize = MyConstant.normalTextSize;
+      fontSize = MyConstant.textSize_14;
+    } else if (deviceHeight > 570 && deviceHeight < 720) {
+      fontSize = MyConstant.textSize_16;
+    } else if (deviceHeight >= 720 && deviceHeight < 800) {
+      fontSize = MyConstant.textSize_18;
+    } else if (deviceHeight >= 800 && deviceHeight < 900) {
+      fontSize = MyConstant.textSize_20;
+    } else {
+      fontSize = MyConstant.textSize_30;
     }
-    else {
-      fontSize = MyConstant.bigTextSize;
-    }
-    return ScreenUtil().setSp(fontSize);
+    return ScreenUtil.getInstance().setSp(fontSize);
   }
 }

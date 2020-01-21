@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   var _account = "";
   var _password = "";
   var _fcmToken = "";
+  var tapCount = 0;
   String _serverMode = "prod";
   final TextEditingController accountController = new TextEditingController();
   final TextEditingController pwController = new TextEditingController();
@@ -79,6 +80,8 @@ class _LoginPageState extends State<LoginPage> {
   }
   ///切換server site
   void _changeTaped() {
+    tapCount++;
+    if (tapCount % 3 == 0 )
     setState(() {
       if (_serverMode == null || _serverMode == "prod") {
         Fluttertoast.showToast(msg: '切換成測試機');
@@ -155,25 +158,24 @@ class _LoginPageState extends State<LoginPage> {
                 child: SingleChildScrollView(
                   child: new Column(
                     children: <Widget>[
-                      new Padding(
-                        padding: new EdgeInsets.only(
-                            left: 30.0, top: 0.0, right: 30.0, bottom: 0.0),
-                        child: new Image(
-                            image: new AssetImage('static/images/logo.png')),
-                      ),
-                      new Padding(padding: new EdgeInsets.all(10.0)),
                       GestureDetector(
-                        child: new Text(
-                          '案件聯繫3.0',
-                          style: TextStyle(
-                            fontSize: ScreenUtil().setSp(20.0) 
-                          ),  
+                        child: new Padding(
+                          padding: new EdgeInsets.only(
+                              left: 30.0, top: 0.0, right: 30.0, bottom: 0.0),
+                          child: new Image(
+                              image: new AssetImage('static/images/logo.png')),
                         ),
-                        onTap: (){
-                          _changeTaped();
+                        onTap: () {
+                          this._changeTaped();
                         },
                       ),
-                      
+                      new Padding(padding: new EdgeInsets.all(10.0)),
+                      new Text(
+                        '案件聯繫3.0',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(20.0) 
+                        ),  
+                      ),
                       new Padding(padding: new EdgeInsets.all(10.0)),
                       new Card(
                         elevation: 5.0,

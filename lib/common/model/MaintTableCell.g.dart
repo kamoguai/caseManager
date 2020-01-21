@@ -8,28 +8,29 @@ part of 'MaintTableCell.dart';
 
 MaintTableCell _$MaintTableCellFromJson(Map<String, dynamic> json) {
   return MaintTableCell(
-      json['CaseID'] as String,
-      json['CaseNO'] as String,
-      json['DataTime'] as String,
-      json['DataTime2'] as String,
-      json['CloseDataTime'] as String,
-      json['CloseDataTime2'] as String,
-      json['Subject'] as String,
-      json['CaseTypeName'] as String,
-      json['Area'] as String,
-      json['CustNO'] as String,
-      json['CustName'] as String,
-      json['StatusName'] as String,
-      json['FUnitName'] as String,
-      json['PDeptName'] as String,
-      json['PUserName'] as String,
-      json['PushTime'] as String,
-      json['TakeTime'] as String,
-      json['PushTimeDiff'] as String,
-      json['TakeTimeDiff'] as String,
-      json['PushTimeDiffStatus'] as String,
-      json['TakeTimeDiffStatus'] as String,
-      json['CreaterName'] as String);
+    json['CaseID'] as String,
+    json['CaseNO'] as String,
+    json['DataTime'] as String,
+    json['DataTime2'] as String,
+    json['CloseDataTime'] as String,
+    json['CloseDataTime2'] as String,
+    json['Subject'] as String,
+    json['CaseTypeName'] as String,
+    json['Area'] as String,
+    json['CustNO'] as String,
+    json['CustName'] as String,
+    json['StatusName'] as String,
+    json['FUnitName'] as String,
+    json['PDeptName'] as String,
+    json['PUserName'] as String,
+    json['PushTime'] as String,
+    json['TakeTime'] as String,
+    json['PushTimeDiff'] as String,
+    json['TakeTimeDiff'] as String,
+    json['PushTimeDiffStatus'] as String,
+    json['TakeTimeDiffStatus'] as String,
+    json['CreaterName'] as String,
+  );
 }
 
 Map<String, dynamic> _$MaintTableCellToJson(MaintTableCell instance) =>
@@ -55,5 +56,5 @@ Map<String, dynamic> _$MaintTableCellToJson(MaintTableCell instance) =>
       'TakeTimeDiff': instance.TakeTimeDiff,
       'PushTimeDiffStatus': instance.PushTimeDiffStatus,
       'TakeTimeDiffStatus': instance.TakeTimeDiffStatus,
-      'CreaterName': instance.CreaterName
+      'CreaterName': instance.CreaterName,
     };

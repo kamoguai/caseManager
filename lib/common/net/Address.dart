@@ -15,7 +15,9 @@ class Address {
   static const String getVersion = "ValidataVersion/json/index!checkVersion.action?";
   static const String loginAPI = "WorkOrder/json/wok!login.action?";
   static final String bundleID = "com.dctv.caseManager";
-  static final String verNo = "3.0.1111";
+  static const String labeidDomainName = "http://labedi.dctv.net.tw:8080/WorkInstall/";
+  static String workInstallDomainName = "http://wos.dctv.net.tw:8083/WorkInstall/";
+  static final String verNo = "3.20.0120";
   static bool isEnterTest = false;
 
   ///檢查是否有更新app
@@ -52,7 +54,8 @@ class Address {
   ///-------------------- caseManager api -------------------- ///
   ///登入取得使用者資訊
   static loginWithCmAccount(account, ssokey) {
-    kCMHostPath = "http://msg.dctv.net.tw/api/Q2/?";
+    // kCMHostPath = "http://msg.dctv.net.tw/api/Q2/?";
+    changeEnterTest();
     return "${kCMHostPath}FunctionName=Login2&SYSName=caseManager&Account=$account&SSOKey=$ssokey";
   }
 
@@ -169,6 +172,17 @@ class Address {
   static didGetInterimAuthList(userId) {
     changeEnterTest();
     return "${kCMHostPath}FunctionName=InterimAuthList&UserID=$userId";
+  }
+  ///二次授權post
+  static postTempAuthorize(custCode, userID) {
+    changeEnterTest();
+    return "${workInstallDomainName}tempAuthorize?customerCode=$custCode&accepAcc=$userID";
+
+  }
+  ///二次授權更新db
+  static updateTempAuthorize(userId, id, acceptAccNo) {
+    changeEnterTest();
+    return "${kCMHostPath}FunctionName=InterimAuthUpdate&UserID=$userId&ID=$id&AuthType=Y&UpdateBy=$acceptAccNo";
   }
   ///取得個人案件處理清單，條件查詢
   static didGetMaintListExt(itype, userId, deptId, searchStatus, searchCaseType, searchSubject, searchCustNo, searchSerial) {
@@ -400,6 +414,15 @@ class Address {
     return appendUrl;
   }
 
+
+  ///-------------------- workInstall api -------------------- ///
+  ///二次授權
+  static queryTempAuthorizableProducts(code, accNo) {
+    changeEnterTest();
+    var str = "$workInstallDomainName/queryTempAuthorizableProducts?customerCode=$code&acceptAcc=$accNo";
+    return str;
+  }
+
   //----------------------------------
   ///切換測/正式機路徑
   static changeEnterTest() async {
@@ -408,12 +431,14 @@ class Address {
       kCMHostPath = "http://case.dctv.tw:8090/api/Q2/?";
       kDHostPath = "http://case.dctv.tw:8090/OnDuty/?";
       kAreaHostPath = "http://case.dctv.tw:8090/api/AreaBugData?";
+      workInstallDomainName = labeidDomainName;
     }
     else {
 
       kCMHostPath = "http://msg.dctv.net.tw/api/Q2/?";
       kDHostPath = "http://msg.dctv.net.tw/api/OnDuty/?";
       kAreaHostPath = "http://msg.dctv.net.tw/api/AreaBugData?";
+      workInstallDomainName = "http://wos.dctv.net.tw:8083/WorkInstall/";
 
     }
   }

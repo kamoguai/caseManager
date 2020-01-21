@@ -115,7 +115,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
-                child: autoTextSizeLeft('類別:${defaultModel.caseTypeName}', TextStyle(color: Colors.blueAccent[400], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+                child: autoTextSizeLeft('類別:${defaultModel.caseTypeName}', TextStyle(color: Colors.blueAccent[400], fontSize: MyScreen.appBarFontSize(context)), context),
               ),
             ],
           ),
@@ -511,7 +511,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
           flex: 1,
           child: Container(
             alignment: Alignment.topCenter,
-            child: autoTextSizeLeft('說明:', TextStyle(color: Colors.grey[600], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+            child: autoTextSizeLeft('說明:', TextStyle(color: Colors.grey[600], fontSize: MyScreen.appBarFontSize(context)), context),
           )
           
         ),
@@ -519,7 +519,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
       row.add(
         Expanded(
           flex: 6,
-          child: autoTextSizeLeft('${defaultModel.qData}', TextStyle(color: Colors.grey[600], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+          child: autoTextSizeLeft('${defaultModel.qData}', TextStyle(color: Colors.grey[600], fontSize: MyScreen.appBarFontSize(context)), context),
         )
       );
       return row;
@@ -532,7 +532,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
           flex: 1,
           child: Container(
             alignment: Alignment.topCenter,
-            child: autoTextSizeLeft('處理:', TextStyle(color: Colors.grey[600], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+            child: autoTextSizeLeft('處理:', TextStyle(color: Colors.grey[600], fontSize: MyScreen.appBarFontSize(context)), context),
           ),
           
         )
@@ -555,7 +555,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
         row.add(
           Expanded(
             flex: 6,
-            child: autoTextSizeLeft('$appendStr', TextStyle(color: Colors.grey[600], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+            child: autoTextSizeLeft('$appendStr', TextStyle(color: Colors.grey[600], fontSize: MyScreen.appBarFontSize(context)), context),
           )
         );
       }
@@ -563,7 +563,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
         row.add(
           Expanded(
             flex: 6,
-            child: autoTextSizeLeft('尚無資料', TextStyle(color: Colors.grey[600], fontSize: MyScreen.defaultTableCellFontSize_s(context)), context),
+            child: autoTextSizeLeft('尚無資料', TextStyle(color: Colors.grey[600], fontSize: MyScreen.appBarFontSize(context)), context),
           )
         );
       }
@@ -634,7 +634,7 @@ class DetailItemWidget extends StatelessWidget with BaseWidget{
             // child: Container(
             //   padding: EdgeInsets.all(3.0),
             //   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(width: 1.0, color: Colors.indigo, style: BorderStyle.solid)),
-            //   child: Text('轉追蹤', style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: MyScreen.defaultTableCellFontSize_s(context)),),
+            //   child: Text('轉追蹤', style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: MyScreen.appBarFontSize(context)),),
             // ),
           ),
         )

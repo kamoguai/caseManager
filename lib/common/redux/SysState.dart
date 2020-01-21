@@ -1,3 +1,4 @@
+import 'package:case_manager/common/model/InterimAuthModel.dart';
 import 'package:case_manager/common/model/MaintTableCell.dart';
 import 'package:case_manager/common/model/UserInfo.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,9 @@ class SysState {
 
   ///個人案件列表
   List<MaintTableCell> maintList = new List();
+
+  ///二次授權列表
+  List<InterimAuthModel> interimAuthList = new List();
 
   ///構造方法
   SysState({this.userInfo, this.themeData});

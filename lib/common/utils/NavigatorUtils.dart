@@ -120,8 +120,8 @@ class NavigatorUtils {
     NavigatorRouter(context, AnalyzePage());
   }
   ///二次臨時授權
-  static goInterimAuth(BuildContext context) {
-    NavigatorRouter(context, InterimAuthPage());
+  static goInterimAuth(BuildContext context, bool f) {
+    NavigatorRouter(context, InterimAuthPage(isHasData: f,));
   }
   
 }

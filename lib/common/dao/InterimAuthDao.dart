@@ -2,6 +2,7 @@ import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DaoResult.dart';
 import 'package:case_manager/common/net/Address.dart';
 import 'package:case_manager/common/net/Api.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 ///
 /// 二次授權相關
@@ -33,10 +34,50 @@ class InterimAuthDao {
       return new DataResult(null, false);
     }
   }
+  
 
-  ///二次授權post
-  static postInterimAuth() async {
-    
+  /// 二次授權post
+  static postInterimAuth({custCode, userId}) async {
+    var res = await HttpManager.netFetch(Address.postTempAuthorize(custCode, userId), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("二次授權 resp => " + res.data.toString());
+      } 
+      if (res.data['retCode'] == "00") {
+        var data = res.data["data"];
+        if (data["RtnCD"] == "00") {
+          Fluttertoast.showToast(msg:'授權成功');
+          return new DataResult(null, true);
+        }
+        else {
+          Fluttertoast.showToast(msg:'${data['RtnMsg']}');
+          return new DataResult(data, false);
+        }
+      }
+      else {
+        Fluttertoast.showToast(msg:'${res.data['retName']}');
+        return new DataResult(res.data, false);
+      }
+    }
   }
 
+  /// 二次授權更新db狀態
+  static interimAuthUpdate({userId, id, acceptAccNo}) async {
+    var res = await HttpManager.netFetch(Address.updateTempAuthorize(userId, id, acceptAccNo), null, null, null);
+    if (res != null && res.result) {
+      if (Config.DEBUG) {
+        print("二次授權更新db狀態 resp => " + res.data.toString());
+      } 
+      if (res.data['Response']['ReturnCode'] == "00") {
+        Fluttertoast.showToast(msg:'授權成功');
+      }
+      else {
+        Fluttertoast.showToast(msg:'${res.data['Response']['MSG']}');
+      }
+      return new DataResult(null, true);
+    }
+    else {
+      return new DataResult(null, false);
+    }
+  }
 }
