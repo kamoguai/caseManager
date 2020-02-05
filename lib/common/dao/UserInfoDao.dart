@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:device_info/device_info.dart';
 import 'package:redux/redux.dart';
 import 'package:case_manager/common/local/LocalStorage.dart';
 import 'package:case_manager/common/config/Config.dart';
@@ -20,7 +22,17 @@ class UserInfoDao {
   static login(account, password, tokenId, context) async {
     // 先儲存account至手機內存
     await LocalStorage.save(Config.USER_NAME_KEY, account);
-    var res = await HttpManager.netFetch(Address.ssoLoginAPI(account, password, tokenId), null, null, new Options(method: "post"));
+    String serialStr = "";
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      serialStr = androidInfo.androidId;
+    }
+    else if  (Platform.isIOS){
+      IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
+      serialStr = iosDeviceInfo.identifierForVendor;
+    }
+    var res = await HttpManager.netFetch(Address.ssoLoginAPI(account, password, tokenId, serialStr), null, null, new Options(method: "post"));
     
     if (res != null && res.result) {
       if (Config.DEBUG) {

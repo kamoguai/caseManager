@@ -17,7 +17,7 @@ class Address {
   static final String bundleID = "com.dctv.caseManager";
   static const String labeidDomainName = "http://labedi.dctv.net.tw:8080/WorkInstall/";
   static String workInstallDomainName = "http://wos.dctv.net.tw:8083/WorkInstall/";
-  static final String verNo = "3.20.0120";
+  static final String verNo = "3.20.0205";
   static bool isEnterTest = false;
 
   ///檢查是否有更新app
@@ -37,7 +37,7 @@ class Address {
   }
 
   ///登入SSO
-  static ssoLoginAPI(account, password, tokenId) {
+  static ssoLoginAPI(account, password, tokenId, serialID) {
     String deviceType = "";
     try {
       if (Platform.isAndroid) {
@@ -49,7 +49,7 @@ class Address {
     } on PlatformException {
       
     }
-    return "$ssoDomain${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=12343234&sysName=caseManager&tokenType=$deviceType&tokenID=$tokenId&packageName=com.dctv.caseManager&type=$deviceType";
+    return "$ssoDomain${getSsoKey}function=login&accNo=$account&passWord=$password&uniqueCode=$serialID&sysName=caseManager&tokenType=$deviceType&tokenID=$tokenId&packageName=com.dctv.caseManager&type=$deviceType";
   }
   ///-------------------- caseManager api -------------------- ///
   ///登入取得使用者資訊
