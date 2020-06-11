@@ -202,6 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                               new Padding(padding: new EdgeInsets.all(10.0)),
                               new MyInputWidget(
                                 textStyle: TextStyle(fontSize: ScreenUtil().setSp(MyScreen.loginTextFieldFontSize(context))),
+                                obscureText: true,
                                 hintText: '請輸入密碼',
                                 textTitle: '密碼',
                                 onChanged: (String value) {
