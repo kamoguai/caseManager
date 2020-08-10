@@ -9,6 +9,7 @@ import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/MyPullLoadWidget.dart';
+import 'package:case_manager/widget/dialog/ProdItemSelectorDialog.dart';
 import 'package:case_manager/widget/items/InterimAuthListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/widget/MyListState.dart';
@@ -53,6 +54,8 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
   TextEditingController _editingController = TextEditingController();
   ///node
   FocusNode _node =  FocusNode();
+  ///產品arr
+  List<dynamic> prodItems = [];
 
   @override
   void initState() {
@@ -219,10 +222,18 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
     CommonUtils.showLoadingDialog(context);
     var res = await InterimAuthDao.postInterimAuth(custCode: _editingController.text, userId: userInfo.userData.Account);
     if (res.result){
-      setState(() {
-        this.resMsg = '授權成功';
-        Navigator.pop(context);
-      });
+      if (res.data != null) {
+        setState(() {
+          this.prodItems = res.data;
+          Navigator.pop(context);
+        });
+      }
+      else {
+        setState(() {
+          this.resMsg = '授權成功';
+          Navigator.pop(context);
+        });
+      }
     }
     else {
       setState(() {
@@ -337,7 +348,7 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
                   child: FlatButton(
                     color: Colors.blue[300],
                     child: autoTextSize('授權', TextStyle(color: Colors.white)),
-                    onPressed: () {
+                    onPressed: () async {
                       FocusScope.of(context).unfocus();
                       print(this._editingController.text);
                       if (this._editingController.text.length < 10) {
@@ -345,7 +356,15 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
                         return;
                       }
                       else {
-                        this.postApiData();
+                        await this.postApiData();
+                        if (prodItems.length > 0) {
+                          Future.delayed(const Duration(milliseconds: 50),(){
+                            showDialog(
+                            context: context,
+                            builder: (BuildContext context) => prodItemSelectorDialog(context, prodItems)
+                            );
+                          });
+                        }
                         return;
                       }
                     },
@@ -461,6 +480,21 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
         body: bodyView(),
         bottomNavigationBar: bottomBar()
       ),
+    );
+  }
+
+  ///二授產品選擇dialog
+  Widget prodItemSelectorDialog(BuildContext context, items) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+        child: ProdItemSelectorDialog(dataArray: items),
+      )
     );
   }
 }

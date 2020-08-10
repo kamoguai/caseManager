@@ -193,9 +193,14 @@ class Address {
   }
 
   ///二次授權post
-  static postTempAuthorize(custCode, userID) {
+  static postTempAuthorize(custCode, userID, {prodItems}) {
     changeEnterTest();
-    return "${workInstallDomainName}tempAuthorize?customerCode=$custCode&accepAcc=$userID";
+    String url = "${workInstallDomainName}tempAuthorize?customerCode=$custCode&accepAcc=$userID";
+    if (prodItems != null) {
+      url = "&prodCodes=$prodItems";
+
+    }
+    return url;
   }
 
   ///二次授權更新db

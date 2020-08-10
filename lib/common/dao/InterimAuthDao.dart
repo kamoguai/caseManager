@@ -37,8 +37,10 @@ class InterimAuthDao {
   
 
   /// 二次授權post
-  static postInterimAuth({custCode, userId}) async {
+  static postInterimAuth({custCode, userId, prodItems, }) async {
     var res = await HttpManager.netFetch(Address.postTempAuthorize(custCode, userId), null, null, null);
+    Map<String, dynamic> mainDataArray = {};
+    List<dynamic> dataArray = [];
     if (res != null && res.result) {
       if (Config.DEBUG) {
         print("二次授權 resp => " + res.data.toString());
@@ -48,6 +50,10 @@ class InterimAuthDao {
         if (data["RtnCD"] == "00") {
           Fluttertoast.showToast(msg:'授權成功');
           return new DataResult(null, true);
+        }
+        else if (data["RtnCD"] == "01") {
+          dataArray = data["productInfos"];
+          return new DataResult(dataArray, true);
         }
         else {
           Fluttertoast.showToast(msg:'${data['RtnMsg']}');
