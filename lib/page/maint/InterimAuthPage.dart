@@ -1,5 +1,3 @@
-
-
 import 'package:case_manager/common/dao/InterimAuthDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
 import 'package:case_manager/common/model/InterimAuthModel.dart';
@@ -16,6 +14,7 @@ import 'package:case_manager/widget/MyListState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
+
 ///
 ///個人案件處理list頁面
 ///Date: 2019-06-11
@@ -29,31 +28,46 @@ class InterimAuthPage extends StatefulWidget {
   _InterimAuthPageState createState() => _InterimAuthPageState();
 }
 
-class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAliveClientMixin<InterimAuthPage>, MyListState<InterimAuthPage>{
+class _InterimAuthPageState extends State<InterimAuthPage>
+    with
+        AutomaticKeepAliveClientMixin<InterimAuthPage>,
+        MyListState<InterimAuthPage> {
   ///app bar左邊title
   var userTitle = "二次臨時授權";
+
   ///部門id
   var deptId = "";
+
   ///新案count
   var newCaseCount = 0;
+
   ///未結count
   var noCloseCount = 0;
+
   ///超常count
   var overCount = 0;
+
   ///全部筆數
   var totalCount = 0;
+
   ///userInfo model
   UserInfo userInfo;
+
   ///數據資料arr
   final List<dynamic> dataArray = [];
+
   ///返回msg
   var resMsg = "";
+
   ///變更輸入/列表畫面
   bool isChangedView = false;
+
   ///textField controller
   TextEditingController _editingController = TextEditingController();
+
   ///node
-  FocusNode _node =  FocusNode();
+  FocusNode _node = FocusNode();
+
   ///產品arr
   List<dynamic> prodItems = [];
 
@@ -70,7 +84,6 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
     this._editingController.clear();
     this._node.dispose();
     super.dispose();
-
   }
 
   @override
@@ -85,6 +98,7 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
   requestLoadMore() async {
     return null;
   }
+
   //透過override pullcontroller裡面的handleRefresh覆寫數據
   @override
   Future<Null> handleRefresh() async {
@@ -108,12 +122,11 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
-        }
-        else if (dic["StatusName"] == '接案') {
+        } else if (dic["StatusName"] == '接案') {
           noCount.add(dic);
         }
       }
-      if(mounted) {
+      if (mounted) {
         setState(() {
           totalCount = res.data.length;
           newCaseCount = newCount.length;
@@ -127,12 +140,13 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
     }
   }
 
-   Store<SysState> _getStore() {
+  Store<SysState> _getStore() {
     return StoreProvider.of(context);
   }
 
   initParam() async {
     this.isChangedView = widget.isHasData;
+
     /// new node
     this._node = FocusNode();
     var userInfoData = await UserInfoDao.getUserInfoLocal();
@@ -143,53 +157,123 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
       });
     }
   }
+
   ///列表顯示物件
   _renderItem(index) {
     InterimAuthModel mtc = pullLoadWidgetControl.dataList[index];
     IAModel model = IAModel.forMap(mtc);
-    return InterimAuhtListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, callApiData: this._callApiData,);
+    return InterimAuhtListItem(
+      model: model,
+      userId: userInfo.userData.UserID,
+      deptId: deptId,
+      callApiData: this._callApiData,
+    );
   }
+
   ///頁面上方head
   _renderHeader() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      height: titleHeight(),
-      decoration: BoxDecoration(color: Color(MyColors.hexFromStr('#eeffec')),border: Border(top: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid), bottom: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
-      child: Center(
-        child: autoTextSize('尚未授權有 ${dataArray.length} 筆', TextStyle(color: Colors.black)),
-      )
-    );
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        height: titleHeight(),
+        decoration: BoxDecoration(
+            color: Color(MyColors.hexFromStr('#eeffec')),
+            border: Border(
+                top: BorderSide(
+                    width: 1.0, color: Colors.grey, style: BorderStyle.solid),
+                bottom: BorderSide(
+                    width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
+        child: Center(
+          child: autoTextSize(
+              '尚未授權有 ${dataArray.length} 筆', TextStyle(color: Colors.black)),
+        ));
   }
 
   ///產生body列表
   _renderBody() {
     return MyPullLoadWidget(
-        pullLoadWidgetControl,
-        (BuildContext context, int index) => _renderItem(index),
-        handleRefresh,
-        onLoadMore,
-        refreshKey: refreshIndicatorKey,
+      pullLoadWidgetControl,
+      (BuildContext context, int index) => _renderItem(index),
+      handleRefresh,
+      onLoadMore,
+      refreshKey: refreshIndicatorKey,
     );
   }
 
+  ///由list呼叫此
   void _callApiData(model) async {
     CommonUtils.showLoadingDialog(context);
-    var resp = await InterimAuthDao.postInterimAuth(custCode: model.custCode, userId: userInfo.userData.Account);
+    var resp = await InterimAuthDao.postInterimAuth(
+        custCode: model.custCode, userId: userInfo.userData.Account);
     if (resp.result) {
-      Navigator.pop(context);
-      var res = await InterimAuthDao.interimAuthUpdate(userId: userInfo.userData.UserID, id: model.id, acceptAccNo: userInfo.userData.Account);
-      if (res.result) {
-        showRefreshLoading();
+      if (resp.data != null) {
+        setState(() {
+          this.prodItems = resp.data;
+          Navigator.pop(context);
+          Future.delayed(const Duration(milliseconds: 500), () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => prodItemSelectorDialog(
+                    context,
+                    prodItems,
+                    model.custCode,
+                    "list",
+                    this._excuteTempAuthorize,
+                    listID: model.id));
+          });
+        });
+      } else {
+        setState(() {
+          this.resMsg = '授權成功';
+          Navigator.pop(context);
+        });
+        var res = await InterimAuthDao.interimAuthUpdate(
+            userId: userInfo.userData.UserID,
+            id: model.id,
+            acceptAccNo: userInfo.userData.Account);
+        if (res.result) {
+          showRefreshLoading();
+        }
       }
-    }
-    else {
+    } else {
       Navigator.pop(context);
     }
   }
- 
+
+  ///執行二次授權
+  void _excuteTempAuthorize(prodCodes, custCode, pageType, {listID}) async {
+    print(
+        "call back excute -> $prodCodes \n custCode -> $custCode \n pageType -> $pageType");
+    CommonUtils.showLoadingDialog(context);
+    var resp = await InterimAuthDao.postInterimAuth(
+        custCode: custCode,
+        userId: userInfo.userData.Account,
+        prodItems: prodCodes);
+    if (resp.result) {
+      if (pageType == 'input') {
+        setState(() {
+          this.resMsg = '授權成功';
+          Navigator.pop(context);
+        });
+      } else if (pageType == 'list') {
+        setState(() {
+          this.resMsg = '授權成功';
+          Navigator.pop(context);
+        });
+        var res = await InterimAuthDao.interimAuthUpdate(
+            userId: userInfo.userData.UserID,
+            id: listID,
+            acceptAccNo: userInfo.userData.Account);
+        if (res.result) {
+          showRefreshLoading();
+        }
+      }
+    }
+  }
+
   ///第一次進入取得的資料
   getFirstTimeApiData() async {
-    var res = await InterimAuthDao.getInterimAuthList(userId: userInfo.userData.UserID);
+    var res = await InterimAuthDao.getInterimAuthList(
+        userId: userInfo.userData.UserID);
     if (res != null && res.result) {
       List<InterimAuthModel> list = new List();
       dataArray.addAll(res.data);
@@ -198,7 +282,7 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
           list.add(InterimAuthModel.fromJson(dic));
         }
       }
-      if(mounted) {
+      if (mounted) {
         setState(() {
           totalCount = res.data.length;
           isLoading = false;
@@ -212,37 +296,35 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
 
   ///取得api資料
   getApiData() async {
-    
-    var res = await InterimAuthDao.getInterimAuthList(userId: userInfo.userData.UserID);
+    var res = await InterimAuthDao.getInterimAuthList(
+        userId: userInfo.userData.UserID);
     return res;
   }
 
   ///post二次授權
   postApiData() async {
     CommonUtils.showLoadingDialog(context);
-    var res = await InterimAuthDao.postInterimAuth(custCode: _editingController.text, userId: userInfo.userData.Account);
-    if (res.result){
+    var res = await InterimAuthDao.postInterimAuth(
+        custCode: _editingController.text, userId: userInfo.userData.Account);
+    if (res.result) {
       if (res.data != null) {
         setState(() {
           this.prodItems = res.data;
           Navigator.pop(context);
         });
-      }
-      else {
+      } else {
         setState(() {
           this.resMsg = '授權成功';
           Navigator.pop(context);
         });
       }
-    }
-    else {
+    } else {
       setState(() {
-        
-        this.resMsg = '${res.data['retName'] == null ? res.data['RtnMsg'] : res.data['retName']}';
+        this.resMsg =
+            '${res.data['retName'] == null ? res.data['RtnMsg'] : res.data['retName']}';
         Navigator.pop(context);
       });
     }
-    
   }
 
   void updateChangedView(v) {
@@ -254,7 +336,7 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
       }
     });
   }
-  
+
   /// app bar action按鈕
   List<Widget> actions() {
     List<Widget> list = [
@@ -268,11 +350,13 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
                 height: 38,
                 alignment: Alignment.center,
                 width: deviceWidth4(),
-                child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+                child: autoTextSize(
+                    '',
+                    TextStyle(
+                        color: Colors.white,
+                        fontSize: MyScreen.homePageFontSize(context))),
               ),
-              onTap: () {
-                
-              },
+              onTap: () {},
             ),
             Container(
               alignment: Alignment.center,
@@ -282,7 +366,7 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
                 icon: Image.asset('static/images/24.png'),
                 color: Colors.transparent,
                 label: Text(''),
-                onPressed: (){
+                onPressed: () {
                   NavigatorUtils.goLogin(context);
                 },
               ),
@@ -291,7 +375,11 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
               alignment: Alignment.center,
               height: 30,
               width: deviceWidth4(),
-              child: autoTextSize('${_getStore().state.userInfo.userData?.UserName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '${_getStore().state.userInfo.userData?.UserName} $totalCount',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
           ],
         ),
@@ -299,96 +387,98 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
     ];
     return list;
   }
+
   Widget bodyView() {
     Widget body;
     List<Widget> columnList = [];
-    columnList.add(
-      _renderHeader()
-    );
+    columnList.add(_renderHeader());
     if (this.isChangedView) {
-      columnList.add(
-        Expanded(
-          child: _renderBody(),
-        )
-      );
-    }
-    else {
-      columnList.add(
-        Expanded(
-          child: Column(
-            children: <Widget>[
-
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: TextField(
-                  controller: _editingController,
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.number,
-                  maxLines: 1,
-                  maxLength: 10,
-                  style: TextStyle(color: Colors.black, fontSize: MyScreen.defaultTableCellFontSize(context)),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: '客編',
-                    hintText: '請輸入二次授權之客編',
-                    labelStyle: TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(
+      columnList.add(Expanded(
+        child: _renderBody(),
+      ));
+    } else {
+      columnList.add(Expanded(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: TextField(
+                controller: _editingController,
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.number,
+                maxLines: 1,
+                maxLength: 10,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: MyScreen.defaultTableCellFontSize(context)),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: '客編',
+                  hintText: '請輸入二次授權之客編',
+                  labelStyle: TextStyle(color: Colors.grey),
+                  border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(2),
-                      borderSide: BorderSide(color: Colors.black, width: 1.0, style: BorderStyle.solid)
-                    ),
-                  ),
-                  onSubmitted: (v) {
-                   
+                      borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 1.0,
+                          style: BorderStyle.solid)),
+                ),
+                onSubmitted: (v) {},
+              ),
+            ),
+            Center(
+              child: Container(
+                child: FlatButton(
+                  color: Colors.blue[300],
+                  child: autoTextSize('授權', TextStyle(color: Colors.white)),
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    print(this._editingController.text);
+                    if (this._editingController.text.length < 10) {
+                      Fluttertoast.showToast(msg: '請輸入完整客編！');
+                      return;
+                    } else {
+                      await this.postApiData();
+                      if (prodItems.length > 0) {
+                        Future.delayed(const Duration(milliseconds: 50), () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  prodItemSelectorDialog(
+                                      context,
+                                      prodItems,
+                                      _editingController.text,
+                                      "input",
+                                      this._excuteTempAuthorize));
+                        });
+                      }
+                      return;
+                    }
                   },
                 ),
               ),
-              Center(
-                child: Container(
-                  child: FlatButton(
-                    color: Colors.blue[300],
-                    child: autoTextSize('授權', TextStyle(color: Colors.white)),
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      print(this._editingController.text);
-                      if (this._editingController.text.length < 10) {
-                        Fluttertoast.showToast(msg: '請輸入完整客編！');
-                        return;
-                      }
-                      else {
-                        await this.postApiData();
-                        if (prodItems.length > 0) {
-                          Future.delayed(const Duration(milliseconds: 50),(){
-                            showDialog(
-                            context: context,
-                            builder: (BuildContext context) => prodItemSelectorDialog(context, prodItems)
-                            );
-                          });
-                        }
-                        return;
-                      }
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Center(
-                child: Container(
-                 child: Text(this.resMsg, style: TextStyle(color: Colors.red, fontSize: MyScreen.loginTextFieldFontSize(context)),)
-                ),
-              )
-            ],
-          ),
-        )
-      );
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Center(
+              child: Container(
+                  child: Text(
+                this.resMsg,
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: MyScreen.loginTextFieldFontSize(context)),
+              )),
+            )
+          ],
+        ),
+      ));
     }
-    body = isLoading ? showLoadingAnime(context) : Column(
-      children:  columnList
-    );
+    body = isLoading ? showLoadingAnime(context) : Column(children: columnList);
     return body;
   }
+
   ///bottomNavigationBar 按鈕
   Widget bottomBar() {
     Widget bottom = Material(
@@ -402,7 +492,11 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '刷新',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
               showRefreshLoading();
@@ -414,11 +508,15 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize( this.isChangedView ? '輸入' : '列表', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  this.isChangedView ? '輸入' : '列表',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: (){
-               var v = !this.isChangedView;
-               this.updateChangedView(v);
+            onTap: () {
+              var v = !this.isChangedView;
+              this.updateChangedView(v);
             },
           ),
           Container(
@@ -429,7 +527,7 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
               icon: Image.asset('static/images/24.png'),
               color: Colors.transparent,
               label: Text(''),
-              onPressed: (){
+              onPressed: () {
                 NavigatorUtils.goLogin(context);
               },
             ),
@@ -440,26 +538,30 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth7(),
-              child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: () {
-              
-            },
+            onTap: () {},
           ),
-          
           GestureDetector(
             child: Container(
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth6(),
-              child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '返回',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-               NavigatorUtils.goHome(context);
+              NavigatorUtils.goHome(context);
             },
           ),
-          
         ],
       ),
     );
@@ -471,30 +573,36 @@ class _InterimAuthPageState extends State<InterimAuthPage> with AutomaticKeepAli
     return SafeArea(
       top: false,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          leading: Container(),
-          elevation: 0.0,
-          actions: actions(),
-        ),
-        body: bodyView(),
-        bottomNavigationBar: bottomBar()
-      ),
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            leading: Container(),
+            elevation: 0.0,
+            actions: actions(),
+          ),
+          body: bodyView(),
+          bottomNavigationBar: bottomBar()),
     );
   }
 
   ///二授產品選擇dialog
-  Widget prodItemSelectorDialog(BuildContext context, items) {
+  Widget prodItemSelectorDialog(
+      BuildContext context, items, customerCode, pageType, func,
+      {listID}) {
     return Material(
-      type: MaterialType.transparency,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.white,
-        ),
-        margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
-        child: ProdItemSelectorDialog(dataArray: items),
-      )
-    );
+        type: MaterialType.transparency,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Colors.white,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+          child: ProdItemSelectorDialog(
+            dataArray: items,
+            customerCode: customerCode,
+            pageType: pageType,
+            excuteTempAuthProds: func,
+            listID: listID,
+          ),
+        ));
   }
 }

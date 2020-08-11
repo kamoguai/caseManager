@@ -195,11 +195,19 @@ class Address {
   ///二次授權post
   static postTempAuthorize(custCode, userID, {prodItems}) {
     changeEnterTest();
-    String url = "${workInstallDomainName}tempAuthorize?customerCode=$custCode&accepAcc=$userID";
+    String url =
+        "${workInstallDomainName}tempAuthorize?customerCode=$custCode&accepAcc=$userID";
     if (prodItems != null) {
-      url = "&prodCodes=$prodItems";
-
+      String append = "";
+      int count = 0;
+      for (var dic in prodItems) {
+        count++;
+        append += dic;
+        if (prodItems.length > count) append += ",";
+      }
+      url += "&prodCodes=$append";
     }
+    print(url);
     return url;
   }
 
