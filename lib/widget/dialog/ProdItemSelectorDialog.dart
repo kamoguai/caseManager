@@ -2,7 +2,6 @@ import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/CommonUtils.dart';
 import 'package:case_manager/widget/BaseWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 ///
 ///二次授權產品選擇器
@@ -181,6 +180,7 @@ class _ProdItemSelectorDialogState extends State<ProdItemSelectorDialog>
                           Future.delayed(const Duration(milliseconds: 1000),
                               () {
                             Navigator.pop(context);
+                            Navigator.pop(context);
                           });
                         },
                       ),
@@ -193,6 +193,7 @@ class _ProdItemSelectorDialogState extends State<ProdItemSelectorDialog>
     );
   }
 
+  ///將傳入data分成可選data
   void _analizeData() {
     var items = widget.dataArray;
     for (var dic in items) {
@@ -212,21 +213,32 @@ class _ProdItemSelectorDialogState extends State<ProdItemSelectorDialog>
     this.map = {};
   }
 
+  ///送出產品code
   void _sendProdCodes(custCode) {
     var originData = widget.dataArray;
     this.originItems = [];
     for (var dic in originData) {
       var isSuspend = dic["isSuspend"].toString();
       var isSecond = dic["isSecondAuthorize"].toString();
+
+      ///將可二授權的產品分出並add在originItems裡面
       if (isSuspend == "1" && isSecond == "1") {
         var prodCode = dic["code"].toString();
         this.originItems.add(prodCode);
       }
     }
+
+    ///將所選code和originItems合在一起
     this.originItems.addAll(this.pickData);
-    print('客戶編號 -> $custCode');
-    print('final prodCodes -> $originItems');
-    widget.excuteTempAuthProds(this.originItems, custCode, widget.pageType);
+
+    ///如果是列表頁送出
+    if (widget.pageType == 'list') {
+      widget.excuteTempAuthProds(this.originItems, custCode, widget.pageType,
+          listID: widget.listID);
+    } else {
+      ///如果是輸入頁送出
+      widget.excuteTempAuthProds(this.originItems, custCode, widget.pageType);
+    }
   }
 }
 

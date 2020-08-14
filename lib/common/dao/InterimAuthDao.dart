@@ -2,6 +2,7 @@ import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/DaoResult.dart';
 import 'package:case_manager/common/net/Address.dart';
 import 'package:case_manager/common/net/Api.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 ///
@@ -51,7 +52,11 @@ class InterimAuthDao {
       if (res.data['retCode'] == "00") {
         var data = res.data["data"];
         if (data["RtnCD"] == "00") {
-          Fluttertoast.showToast(msg: '授權成功');
+          Fluttertoast.showToast(
+              msg: '授權成功',
+              timeInSecForIos: 2,
+              backgroundColor: Colors.black,
+              textColor: Colors.white);
           return new DataResult(null, true);
         } else if (data["RtnCD"] == "01") {
           dataArray = data["productInfos"];
@@ -76,7 +81,11 @@ class InterimAuthDao {
         print("二次授權更新db狀態 resp => " + res.data.toString());
       }
       if (res.data['Response']['ReturnCode'] == "00") {
-        Fluttertoast.showToast(msg: '授權成功');
+        Fluttertoast.showToast(
+            msg: '授權成功',
+            timeInSecForIos: 2,
+            backgroundColor: Colors.black,
+            textColor: Colors.white);
       } else {
         Fluttertoast.showToast(msg: '${res.data['Response']['MSG']}');
       }

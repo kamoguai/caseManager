@@ -329,6 +329,7 @@ class _InterimAuthPageState extends State<InterimAuthPage>
 
   void updateChangedView(v) {
     setState(() {
+      this.resMsg = '';
       this.isChangedView = v;
       if (v) {
         FocusScope.of(context).requestFocus(_node);
