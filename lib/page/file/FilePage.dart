@@ -1,4 +1,3 @@
-
 import 'package:case_manager/common/dao/DPMaintDao.dart';
 import 'package:case_manager/common/dao/FileDao.dart';
 import 'package:case_manager/common/dao/UserInfoDao.dart';
@@ -8,6 +7,7 @@ import 'package:case_manager/common/redux/SysState.dart';
 import 'package:case_manager/common/style/MyStyle.dart';
 import 'package:case_manager/common/utils/NavigatorUtils.dart';
 import 'package:case_manager/widget/MyPullLoadWidget.dart';
+import 'package:case_manager/widget/dialog/FilterCaseTypeDialog.dart';
 import 'package:case_manager/widget/items/MaintListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:case_manager/widget/MyListState.dart';
@@ -19,34 +19,47 @@ import 'package:redux/redux.dart';
 ///歸檔案件列表/單位結案列表
 ///Date: 2019-07-01
 class FilePage extends StatefulWidget {
-
   final String accName;
   FilePage({this.accName});
   @override
   _FilePageState createState() => _FilePageState();
 }
 
-class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<FilePage>, MyListState<FilePage> {
+class _FilePageState extends State<FilePage>
+    with AutomaticKeepAliveClientMixin<FilePage>, MyListState<FilePage> {
   ///app bar左邊title
   var userTitle = "案件歸檔";
+
   ///部門id
   var deptId = "";
+
   ///新案count
   var newCaseCount = 0;
+
   ///未結count
   var noCloseCount = 0;
+
   ///超常count
   var overCount = 0;
+
   ///全部筆數
   var totalCount = 0;
+
   ///是否點擊部門下拉選單
   var isClickDeptSelect = false;
+
   ///是否點擊全選，0:未選，大於0:已選
   var isCheckAll = 0;
+
   ///userInfo model
   UserInfo userInfo;
+
   ///數據資料arr
   final List<dynamic> dataArray = [];
+
+  ///原始數據arr
+  final List<dynamic> originArray = [];
+
   ///所選caseId
   List<String> pickCaseIdArray = [];
 
@@ -75,10 +88,12 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
   requestLoadMore() async {
     return null;
   }
+
   //透過override pullcontroller裡面的handleRefresh覆寫數據
   @override
   Future<Null> handleRefresh() async {
     dataArray.clear();
+    originArray.clear();
     if (isLoading) {
       return null;
     }
@@ -87,10 +102,27 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
     var res = await getApiData();
     if (res != null && res.result) {
       List<MaintTableCell> list = new List();
+
+      ///將工程會勘排進此list
+      List<MaintTableCell> listAs = new List();
       dataArray.addAll(res.data);
+      originArray.addAll(res.data);
       if (dataArray.length > 0) {
         for (var dic in dataArray) {
+          ///先排除工程會勘
+          if (dic["CaseTypeName"] == "工程會勘") {
+            listAs.add(MaintTableCell.fromJson(dic));
+            continue;
+          }
           list.add(MaintTableCell.fromJson(dic));
+        }
+
+        ///如果有工程會勘資料
+        if (listAs.length > 0) {
+          ///將工程會勘資料排在第一筆
+          for (var dic in listAs) {
+            list.insert(0, dic);
+          }
         }
       }
       List<dynamic> newCount = [];
@@ -98,12 +130,11 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
       for (var dic in res.data) {
         if (dic["StatusName"] == '新案') {
           newCount.add(dic);
-        }
-        else if (dic["StatusName"] == '接案') {
+        } else if (dic["StatusName"] == '接案') {
           noCount.add(dic);
         }
       }
-      if(mounted) {
+      if (mounted) {
         setState(() {
           totalCount = res.data.length;
           newCaseCount = newCount.length;
@@ -117,7 +148,7 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
     }
   }
 
-   Store<SysState> _getStore() {
+  Store<SysState> _getStore() {
     return StoreProvider.of(context);
   }
 
@@ -130,25 +161,44 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
     }
     showRefreshLoading();
   }
+
   ///列表顯示物件
   _renderItem(index) {
     MaintTableCell mtc = pullLoadWidgetControl.dataList[index];
     MaintListModel model = MaintListModel.forMap(mtc);
-    return MaintListItem(model: model, userId: userInfo.userData.UserID, deptId: deptId, fromFunc: userTitle == '案件歸檔' ? 'File' : 'DPMaintClose', pickCaseIdArray: pickCaseIdArray, addCaseIdFunc: addCaseIdFunc,);
+    return MaintListItem(
+      model: model,
+      userId: userInfo.userData.UserID,
+      deptId: deptId,
+      fromFunc: userTitle == '案件歸檔' ? 'File' : 'DPMaintClose',
+      pickCaseIdArray: pickCaseIdArray,
+      addCaseIdFunc: addCaseIdFunc,
+    );
   }
+
   ///頁面上方head
   _renderHeader() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
       height: titleHeight(),
-      decoration: BoxDecoration(color: Color(MyColors.hexFromStr('#eeffec')),border: Border(top: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid), bottom: BorderSide(width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
+      decoration: BoxDecoration(
+          color: Color(MyColors.hexFromStr('#eeffec')),
+          border: Border(
+              top: BorderSide(
+                  width: 1.0, color: Colors.grey, style: BorderStyle.solid),
+              bottom: BorderSide(
+                  width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           autoTextSize('新案: $newCaseCount', TextStyle(color: Colors.black)),
-          SizedBox(width: 5.0,),
+          SizedBox(
+            width: 5.0,
+          ),
           autoTextSize('未結: $noCloseCount', TextStyle(color: Colors.black)),
-          SizedBox(width: 5.0,),
+          SizedBox(
+            width: 5.0,
+          ),
           autoTextSize('超常: $overCount', TextStyle(color: Colors.black)),
         ],
       ),
@@ -158,26 +208,26 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
   ///產生body列表
   _renderBody() {
     return MyPullLoadWidget(
-        pullLoadWidgetControl,
-        (BuildContext context, int index) => _renderItem(index),
-        handleRefresh,
-        onLoadMore,
-        refreshKey: refreshIndicatorKey,
+      pullLoadWidgetControl,
+      (BuildContext context, int index) => _renderItem(index),
+      handleRefresh,
+      onLoadMore,
+      refreshKey: refreshIndicatorKey,
     );
   }
- 
+
   ///添加結案caseId function
   void addCaseIdFunc(caseId) {
     setState(() {
       if (pickCaseIdArray.contains(caseId)) {
         var index = pickCaseIdArray.indexOf(caseId);
         pickCaseIdArray.removeAt(index);
-      }
-      else {
+      } else {
         pickCaseIdArray.add(caseId);
       }
     });
   }
+
   ///全選caseId function
   void addCaseIdAllFunc() {
     if (dataArray.length < 1) {
@@ -195,8 +245,7 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
       setState(() {
         isCheckAll += 1;
       });
-    }
-    else {
+    } else {
       for (var dic in dataArray) {
         if (dic['StatusName'] == '結案' || dic['StatusName'] == '單位結案') {
           addCaseIdFunc(dic['CaseID']);
@@ -206,8 +255,8 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
         isCheckAll = 0;
       });
     }
-    
   }
+
   ///取得api資料
   getApiData() async {
     switch (userTitle) {
@@ -216,12 +265,13 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
         return res;
         break;
       case '單位結案':
-        var res = await DPMaintDao.getDPMaintCloseList(userId: userInfo.userData.UserID, deptId: userInfo.userData.DeptID);
+        var res = await DPMaintDao.getDPMaintCloseList(
+            userId: userInfo.userData.UserID, deptId: userInfo.userData.DeptID);
         return res;
-        break; 
-    }  
-    
+        break;
+    }
   }
+
   /// app bar action按鈕
   List<Widget> actions() {
     List<Widget> list = [
@@ -235,11 +285,13 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
                 height: 38,
                 alignment: Alignment.center,
                 width: deviceWidth4(),
-                child: autoTextSize('$userTitle', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+                child: autoTextSize(
+                    '$userTitle',
+                    TextStyle(
+                        color: Colors.white,
+                        fontSize: MyScreen.homePageFontSize(context))),
               ),
-              onTap: () {
-                
-              },
+              onTap: () {},
             ),
             Container(
               alignment: Alignment.center,
@@ -249,7 +301,7 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
                 icon: Image.asset('static/images/24.png'),
                 color: Colors.transparent,
                 label: Text(''),
-                onPressed: (){
+                onPressed: () {
                   NavigatorUtils.goLogin(context);
                 },
               ),
@@ -258,7 +310,11 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
               alignment: Alignment.center,
               height: 30,
               width: deviceWidth4(),
-              child: autoTextSize('${widget.accName} $totalCount', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '${widget.accName} $totalCount',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
           ],
         ),
@@ -266,18 +322,22 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
     ];
     return list;
   }
+
   Widget bodyView() {
     Widget body;
-    body = isLoading ? showLoadingAnime(context) : Column(
-      children: <Widget>[
-        _renderHeader(),
-        Expanded(
-          child: _renderBody(),
-        )
-      ],
-    );
+    body = isLoading
+        ? showLoadingAnime(context)
+        : Column(
+            children: <Widget>[
+              _renderHeader(),
+              Expanded(
+                child: _renderBody(),
+              )
+            ],
+          );
     return body;
   }
+
   ///bottomNavigationBar 按鈕
   Widget bottomBar() {
     Widget bottom = Material(
@@ -291,10 +351,19 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth7(),
-              child: autoTextSize('刷新', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '篩選',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
-              showRefreshLoading();
+              Future.delayed(const Duration(milliseconds: 50), () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        caseTypeSelectorDialog(context));
+              });
             },
           ),
           GestureDetector(
@@ -303,9 +372,13 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth5(),
-              child: autoTextSize(userTitle == '案件歸檔' ? '單位結案' : '案件歸檔', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  userTitle == '案件歸檔' ? '單位結案' : '案件歸檔',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: (){
+            onTap: () {
               setState(() {
                 if (pickCaseIdArray.length > 0) {
                   pickCaseIdArray.clear();
@@ -324,59 +397,86 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
           ),
           GestureDetector(
             child: Container(
-              decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(5.0), border: Border.all(width: 1.0, color: Colors.black, style: BorderStyle.solid)),
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(5.0),
+                  border: Border.all(
+                      width: 1.0,
+                      color: Colors.black,
+                      style: BorderStyle.solid)),
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 36,
               width: deviceWidth4(),
-              child: autoTextSize(userTitle, TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  userTitle,
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
               if (pickCaseIdArray.length < 1) {
                 Fluttertoast.showToast(msg: '尚未選擇欲結案資料');
-                return ;
+                return;
               }
               var appendStr = "";
               for (var i = 0; i < pickCaseIdArray.length; i++) {
                 if (i == pickCaseIdArray.length - 1) {
                   appendStr += "${pickCaseIdArray[i]}";
-                }
-                else {
+                } else {
                   appendStr += "${pickCaseIdArray[i]},";
                 }
               }
               showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    title: Text(''),
-                    content: autoTextSize('是否要將${pickCaseIdArray.length}筆資料執行$userTitle?', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context))),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: autoTextSize('取消', TextStyle(color: Colors.red, fontSize: MyScreen.homePageFontSize(context))),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: autoTextSize('確定', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context))),
-                        onPressed: () async {
-                          switch (userTitle) {
-                            case '案件歸檔':
-                              await FileDao.postFile(userId: userInfo.userData.UserID, caseId: appendStr);
-                              break;
-                            case '單位結案':
-                              await DPMaintDao.postDPMaintClose(userId: userInfo.userData.UserID, caseId: appendStr);
-                              break;
-                          }
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                }
-              );
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      title: Text(''),
+                      content: autoTextSize(
+                          '是否要將${pickCaseIdArray.length}筆資料執行$userTitle?',
+                          TextStyle(
+                              color: Colors.black,
+                              fontSize: MyScreen.homePageFontSize(context))),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: autoTextSize(
+                              '取消',
+                              TextStyle(
+                                  color: Colors.red,
+                                  fontSize:
+                                      MyScreen.homePageFontSize(context))),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: autoTextSize(
+                              '確定',
+                              TextStyle(
+                                  color: Colors.blue,
+                                  fontSize:
+                                      MyScreen.homePageFontSize(context))),
+                          onPressed: () async {
+                            switch (userTitle) {
+                              case '案件歸檔':
+                                await FileDao.postFile(
+                                    userId: userInfo.userData.UserID,
+                                    caseId: appendStr);
+                                break;
+                              case '單位結案':
+                                await DPMaintDao.postDPMaintClose(
+                                    userId: userInfo.userData.UserID,
+                                    caseId: appendStr);
+                                break;
+                            }
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  });
             },
           ),
           GestureDetector(
@@ -385,30 +485,70 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth7(),
-              child: autoTextSize('全選', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '全選',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: (){
+            onTap: () {
               addCaseIdAllFunc();
             },
           ),
-          
           GestureDetector(
             child: Container(
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.center,
               height: 42,
               width: deviceWidth7(),
-              child: autoTextSize('返回', TextStyle(color: Colors.white, fontSize: MyScreen.homePageFontSize(context))),
+              child: autoTextSize(
+                  '返回',
+                  TextStyle(
+                      color: Colors.white,
+                      fontSize: MyScreen.homePageFontSize(context))),
             ),
             onTap: () {
               Navigator.of(context).pop();
             },
           ),
-          
         ],
       ),
     );
     return bottom;
+  }
+
+  ///function給DeptSelectorDialog呼叫並把值帶回，多個條件
+  void _callApiData(List<dynamic> list) {
+    // dataArray.clear();
+
+    if (mounted) {
+      setState(() {
+        totalCount = list.length;
+        isLoading = false;
+        pullLoadWidgetControl.dataList.clear();
+        pullLoadWidgetControl.dataList.addAll(list);
+        pullLoadWidgetControl.needLoadMore = false;
+      });
+    }
+  }
+
+  ///部門選擇dialog
+  Widget caseTypeSelectorDialog(BuildContext context) {
+    return Material(
+        type: MaterialType.transparency,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Colors.white,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+          child: FilterCaseTypeDialog(
+            dataArray: this.dataArray,
+            originArray: this.originArray,
+            isClickDeptSelect: isClickDeptSelect,
+            callApiData: _callApiData,
+          ),
+        ));
   }
 
   @override
@@ -416,15 +556,14 @@ class _FilePageState extends State<FilePage> with AutomaticKeepAliveClientMixin<
     return SafeArea(
       top: false,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          leading: Container(),
-          elevation: 0.0,
-          actions: actions(),
-        ),
-        body: bodyView(),
-        bottomNavigationBar: bottomBar()
-      ),
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            leading: Container(),
+            elevation: 0.0,
+            actions: actions(),
+          ),
+          body: bodyView(),
+          bottomNavigationBar: bottomBar()),
     );
   }
 }
