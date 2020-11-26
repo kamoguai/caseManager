@@ -414,7 +414,7 @@ class _FilePageState extends State<FilePage>
                       color: Colors.white,
                       fontSize: MyScreen.homePageFontSize(context))),
             ),
-            onTap: () {
+            onTap: () async {
               if (pickCaseIdArray.length < 1) {
                 Fluttertoast.showToast(msg: '尚未選擇欲結案資料');
                 return;
@@ -427,56 +427,14 @@ class _FilePageState extends State<FilePage>
                   appendStr += "${pickCaseIdArray[i]},";
                 }
               }
-              showDialog(
+              bool isSuccessReload = await showDialog<bool>(
                   context: context,
                   builder: (context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      title: Text(''),
-                      content: autoTextSize(
-                          '是否要將${pickCaseIdArray.length}筆資料執行$userTitle?',
-                          TextStyle(
-                              color: Colors.black,
-                              fontSize: MyScreen.homePageFontSize(context))),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: autoTextSize(
-                              '取消',
-                              TextStyle(
-                                  color: Colors.red,
-                                  fontSize:
-                                      MyScreen.homePageFontSize(context))),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: autoTextSize(
-                              '確定',
-                              TextStyle(
-                                  color: Colors.blue,
-                                  fontSize:
-                                      MyScreen.homePageFontSize(context))),
-                          onPressed: () async {
-                            switch (userTitle) {
-                              case '案件歸檔':
-                                await FileDao.postFile(
-                                    userId: userInfo.userData.UserID,
-                                    caseId: appendStr);
-                                break;
-                              case '單位結案':
-                                await DPMaintDao.postDPMaintClose(
-                                    userId: userInfo.userData.UserID,
-                                    caseId: appendStr);
-                                break;
-                            }
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    );
+                    return this.excuteDailog(context, appendStr);
                   });
+              if (isSuccessReload) {
+                this.showRefreshLoading();
+              }
             },
           ),
           GestureDetector(
@@ -549,6 +507,96 @@ class _FilePageState extends State<FilePage>
             callApiData: _callApiData,
           ),
         ));
+  }
+
+  ///執行檔案歸檔or案件結案
+  Widget excuteDailog(BuildContext context, appendStr) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      title: Text("温馨提示"),
+      //title 的内边距，默认 left: 24.0,top: 24.0, right 24.0
+      //默认底部边距 如果 content 不为null 则底部内边距为0
+      //            如果 content 为 null 则底部内边距为20
+      titlePadding: EdgeInsets.all(10),
+      //标题文本样式
+      titleTextStyle: TextStyle(color: Colors.black87, fontSize: 16),
+      //中间显示的内容
+      content: RichText(
+        text: TextSpan(children: <TextSpan>[
+          TextSpan(
+              text: '是否要將',
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: MyScreen.homePageFontSize(context))),
+          TextSpan(
+              text: '${pickCaseIdArray.length}',
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.homePageFontSize(context))),
+          TextSpan(
+              text: '筆資料執行$userTitle?',
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: MyScreen.homePageFontSize(context)))
+        ]),
+      ),
+      // Text('是否要將${pickCaseIdArray.length}筆資料執行$userTitle?'),
+      //中间显示的内容边距
+      //默认 EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0)
+      contentPadding: EdgeInsets.all(10),
+      //中间显示内容的文本样式
+      contentTextStyle: TextStyle(
+          color: Colors.black54, fontSize: MyScreen.homePageFontSize(context)),
+      //底部按钮区域
+      actions: <Widget>[
+        FlatButton(
+          child: Text('取消',
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.homePageFontSize(context))),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+        FlatButton(
+          child: Text('確定',
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: MyScreen.homePageFontSize(context))),
+          onPressed: () async {
+            switch (userTitle) {
+              case '案件歸檔':
+                var res = await FileDao.postFile(
+                    userId: userInfo.userData.UserID, caseId: appendStr);
+                if (res != null) {
+                  if (res.result) {
+                    Fluttertoast.showToast(msg: '歸檔成功');
+                    Navigator.of(context).pop(true);
+                  } else {
+                    Fluttertoast.showToast(msg: '${res.data['MSG']}');
+                    Navigator.of(context).pop(false);
+                  }
+                }
+
+                break;
+              case '單位結案':
+                var res = await DPMaintDao.postDPMaintClose(
+                    userId: userInfo.userData.UserID, caseId: appendStr);
+                if (res != null) {
+                  if (res.result) {
+                    Fluttertoast.showToast(msg: '單位結案成功');
+                    Navigator.of(context).pop(true);
+                  } else {
+                    Fluttertoast.showToast(msg: '${res.data['MSG']}');
+                    Navigator.of(context).pop(false);
+                  }
+                }
+                break;
+            }
+          },
+        ),
+      ],
+    );
   }
 
   @override

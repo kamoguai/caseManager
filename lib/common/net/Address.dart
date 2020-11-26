@@ -22,7 +22,7 @@ class Address {
       "http://labedi.dctv.net.tw:80/WorkInstall/";
   static String workInstallDomainName =
       "http://wos.dctv.net.tw:8083/WorkInstall/";
-  static final String verNo = "3.20.1120";
+  static final String verNo = "3.20.1126";
   static bool isEnterTest = false;
 
   ///檢查是否有更新app
