@@ -1,4 +1,3 @@
-
 import 'package:case_manager/page/HomePage.dart';
 import 'package:case_manager/page/LoginPage.dart';
 import 'package:case_manager/page/analyze/analyzePage.dart';
@@ -12,6 +11,7 @@ import 'package:case_manager/page/fixInsert/fixInsertPage.dart';
 import 'package:case_manager/page/maint/DPMaintDetailPage.dart';
 import 'package:case_manager/page/maint/DPMaintPage.dart';
 import 'package:case_manager/page/maint/InterimAuthPage.dart';
+import 'package:case_manager/page/maint/InvestigatePage.dart';
 import 'package:case_manager/page/maint/MaintDetailPage.dart';
 import 'package:case_manager/page/maint/MaintPage.dart';
 import 'package:case_manager/page/sales/SalesMaintDetailPage.dart';
@@ -33,95 +33,215 @@ class NavigatorUtils {
   static pushNamed(BuildContext context, String routeName) {
     Navigator.pushNamed(context, routeName);
   }
+
   ///一般跳轉頁面
   static NavigatorRouter(BuildContext context, Widget widget) {
-    return Navigator.push(context, new CupertinoPageRoute(builder: (context) => widget));
+    return Navigator.push(
+        context, new CupertinoPageRoute(builder: (context) => widget));
   }
+
   ///跳轉至頁面並移除上一頁
   static NavigatorRemoveRouter(BuildContext context, Widget widget) {
-    Navigator.pushAndRemoveUntil(context, new CupertinoPageRoute(builder: (context) => widget), null);
+    Navigator.pushAndRemoveUntil(
+        context, new CupertinoPageRoute(builder: (context) => widget), null);
   }
+
   ///登入頁
   static goLogin(BuildContext context, {isAutoLogin}) {
-    if (isAutoLogin != null  && isAutoLogin != false) {
+    if (isAutoLogin != null && isAutoLogin != false) {
       NavigatorRouter(context, LoginPage(isAutoLogin: isAutoLogin));
-    }
-    else {
+    } else {
       Navigator.pushReplacementNamed(context, LoginPage.sName);
     }
   }
+
   ///跳回登入頁
   static goTopLogin(BuildContext context) {
     NavigatorRemoveRouter(context, LoginPage());
   }
+
   ///首頁
   ///pushReplacementNamed需要由main.dart做導航
   static goHome(BuildContext context) {
     Navigator.pushReplacementNamed(context, HomePage.sName);
   }
+
   ///個人案件處理列表頁面
   static goMaint(BuildContext context, String accName, {String deptId}) {
     NavigatorRouter(context, MaintPage(accName: accName, deptId: deptId));
   }
+
   ///個人案件處理詳情頁面
-  static goMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
-    NavigatorRouter(context, MaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName));
+  static goMaintDetail(BuildContext context, String custCode, String userId,
+      String deptId, String caseId, String statusName, String accName) {
+    NavigatorRouter(
+        context,
+        MaintDetailPage(
+            custCode: custCode,
+            userId: userId,
+            deptId: deptId,
+            caseId: caseId,
+            statusName: statusName,
+            accName: accName));
   }
+
   ///指派個人列表頁面
   static goAssign(BuildContext context, String accName, {String deptId}) {
-    NavigatorRouter(context, AssignPage(accName: accName, deptId: deptId,));
+    NavigatorRouter(
+        context,
+        AssignPage(
+          accName: accName,
+          deptId: deptId,
+        ));
   }
+
   ///指派個人案件處理詳情頁面
-  static goAssignEmplDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
-    NavigatorRouter(context, AssignDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName,));
+  static goAssignEmplDetail(
+      BuildContext context,
+      String custCode,
+      String userId,
+      String deptId,
+      String caseId,
+      String statusName,
+      String accName) {
+    NavigatorRouter(
+        context,
+        AssignDetailPage(
+          custCode: custCode,
+          userId: userId,
+          deptId: deptId,
+          caseId: caseId,
+          statusName: statusName,
+          accName: accName,
+        ));
   }
+
   ///單位案件處理列表頁面
   static goDPMaint(BuildContext context, String accName, {String deptId}) {
-    NavigatorRouter(context, DPMaintPage(accName: accName, deptId: deptId,));
+    NavigatorRouter(
+        context,
+        DPMaintPage(
+          accName: accName,
+          deptId: deptId,
+        ));
   }
+
   ///單位案件處理詳情頁面
-  static goDPMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
-    NavigatorRouter(context, DPMaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName,));
+  static goDPMaintDetail(BuildContext context, String custCode, String userId,
+      String deptId, String caseId, String statusName, String accName) {
+    NavigatorRouter(
+        context,
+        DPMaintDetailPage(
+          custCode: custCode,
+          userId: userId,
+          deptId: deptId,
+          caseId: caseId,
+          statusName: statusName,
+          accName: accName,
+        ));
   }
+
   ///單位指派列表頁面
   static goDPAssign(BuildContext context, String accName) {
     NavigatorRouter(context, DPAssignPage(accName: accName));
   }
+
   ///單位指派詳情頁面
-  static goDPAssignDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String accName) {
-    NavigatorRouter(context, DPAssignDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, accName: accName,));
+  static goDPAssignDetail(BuildContext context, String custCode, String userId,
+      String deptId, String caseId, String statusName, String accName) {
+    NavigatorRouter(
+        context,
+        DPAssignDetailPage(
+          custCode: custCode,
+          userId: userId,
+          deptId: deptId,
+          caseId: caseId,
+          statusName: statusName,
+          accName: accName,
+        ));
   }
+
   ///案件歸檔/單位結案列表
   static goFileList(BuildContext context, String accName) {
     NavigatorRouter(context, FilePage(accName: accName));
   }
+
   ///案件歸檔詳情
-  static goFileDettail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName, String fromFunc) {
-     NavigatorRouter(context, FileDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName, fromFunc: fromFunc,));
+  static goFileDettail(BuildContext context, String custCode, String userId,
+      String deptId, String caseId, String statusName, String fromFunc) {
+    NavigatorRouter(
+        context,
+        FileDetailPage(
+          custCode: custCode,
+          userId: userId,
+          deptId: deptId,
+          caseId: caseId,
+          statusName: statusName,
+          fromFunc: fromFunc,
+        ));
   }
+
   ///裝機問題通知列表
   static goSalesMaint(BuildContext context, String accName) {
-     NavigatorRouter(context, SalesMaintPage(accName: accName));
+    NavigatorRouter(context, SalesMaintPage(accName: accName));
   }
+
   ///裝機問題通知詳情
-  static goSalesMaintDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName) {
-    NavigatorRouter(context, SalesMaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName));
+  static goSalesMaintDetail(BuildContext context, String custCode,
+      String userId, String deptId, String caseId, String statusName) {
+    NavigatorRouter(
+        context,
+        SalesMaintDetailPage(
+            custCode: custCode,
+            userId: userId,
+            deptId: deptId,
+            caseId: caseId,
+            statusName: statusName));
   }
+
   ///維修插單列表
   static goFixInsert(BuildContext context, String accName, {String deptId}) {
-    NavigatorRouter(context, FixInsertPage(accName: accName, deptId: deptId,));
+    NavigatorRouter(
+        context,
+        FixInsertPage(
+          accName: accName,
+          deptId: deptId,
+        ));
   }
+
   ///維修插單詳情
-  static goFixInsertDetail(BuildContext context, String custCode, String userId, String deptId, String caseId, String statusName) {
-    NavigatorRouter(context, SalesMaintDetailPage(custCode: custCode, userId: userId, deptId: deptId, caseId: caseId, statusName: statusName));
+  static goFixInsertDetail(BuildContext context, String custCode, String userId,
+      String deptId, String caseId, String statusName) {
+    NavigatorRouter(
+        context,
+        SalesMaintDetailPage(
+            custCode: custCode,
+            userId: userId,
+            deptId: deptId,
+            caseId: caseId,
+            statusName: statusName));
   }
+
   ///案件分析列表
   static goAnalyze(BuildContext context) {
     NavigatorRouter(context, AnalyzePage());
   }
+
   ///二次臨時授權
   static goInterimAuth(BuildContext context, bool f) {
-    NavigatorRouter(context, InterimAuthPage(isHasData: f,));
+    NavigatorRouter(
+        context,
+        InterimAuthPage(
+          isHasData: f,
+        ));
   }
-  
+
+  static goInvestigata(BuildContext context, String accName, {String deptId}) {
+    NavigatorRouter(
+        context,
+        InvestigatePage(
+          accName: accName,
+          deptId: deptId,
+        ));
+  }
 }

@@ -22,7 +22,7 @@ class Address {
       "http://labedi.dctv.net.tw:80/WorkInstall/";
   static String workInstallDomainName =
       "http://wos.dctv.net.tw:8083/WorkInstall/";
-  static final String verNo = "3.20.1126";
+  static final String verNo = "3.21.0129";
   static bool isEnterTest = false;
 
   ///檢查是否有更新app
@@ -372,6 +372,44 @@ class Address {
   static getAnalizeCaseList(searchYear, searchMonth) {
     changeEnterTest();
     return "${kCMHostPath}FunctionName=GetDeptCaseCount&SearchYear=$searchYear&SearchMonth=$searchMonth";
+  }
+
+  ///取得工程會勘列表資料
+  static getInvestigateList(
+    iType,
+    userId,
+    searchFunit,
+    searchStatus,
+    searchCaseType,
+    searchSubject,
+    searchCustNo,
+    searchSerial,
+    searchPuser,
+  ) {
+    changeEnterTest();
+    var urlStr =
+        "${kCMHostPath}FunctionName=InvestigateList&UserID=$userId&SearchFUnit=$searchFunit";
+    if (iType == 1) {
+      if (searchStatus != null && searchStatus.length > 0) {
+        urlStr += "&SearchStatus=$searchStatus";
+      }
+      if (searchCaseType != null && searchCaseType.length > 0) {
+        urlStr += "&SearchCaseType=$searchCaseType";
+      }
+      if (searchSubject != null && searchSubject.length > 0) {
+        urlStr += "&SearchSubject=$searchSubject";
+      }
+      if (searchCustNo != null && searchCustNo.length > 0) {
+        urlStr += "&SearchCustNO=$searchCustNo";
+      }
+      if (searchSerial != null && searchSerial.length > 0) {
+        urlStr += "&SearchSerial=$searchSerial";
+      }
+      if (searchPuser != null && searchPuser.length > 0) {
+        urlStr += "&SearchPuser=$searchPuser";
+      }
+    }
+    return urlStr;
   }
 
   ///-------------------- snr api -------------------- ///

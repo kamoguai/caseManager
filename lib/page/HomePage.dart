@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:case_manager/common/config/Config.dart';
 import 'package:case_manager/common/dao/HomeDao.dart';
@@ -16,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:redux/redux.dart';
+
 ///
 ///首頁
 ///Date: 2019-06-05
@@ -26,44 +26,60 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with BaseWidget{
-
+class _HomePageState extends State<HomePage> with BaseWidget {
   ///使用者account
   var _account = "";
+
   ///使用者名稱
   var _accName = "";
+
   ///使用者部門
   var _accDept = "";
+
   ///下拉city選單
   var selectArea = '新北市';
+
   ///使用者新案筆數
   var _newCase = "0";
+
   ///使用者接案筆數
   var _takeCase = "0";
+
   ///使用者超常筆數
   var _overCase = "0";
+
   ///userInfo model
   UserInfo userInfo;
+
   ///使用按鈕權限，維修插單處理
   var isCreateCase = false;
+
   ///使用按鈕權限，指派單位
   var isAssignDept = false;
+
   ///使用按鈕權限，指派個人
   var isAssignEmpl = false;
+
   ///使用按鈕權限，個人案件處理
   var isMaint = false;
 
   var isDPMaint = false;
+
   ///使用按鈕權限，單位案件處理
   var isDeptClose = false;
+
   ///使用按鈕權限，案件歸檔/單位結案
   var isFile = false;
+
   ///使用按鈕權限，區障使用權
   var isAreaBug = false;
+
   ///使用按鈕權限，授權使用權
   var isInterimAuth = false;
+
   ///二次授權list count
   var iaCount = 0;
+
   ///scroll
   ScrollController _scrollController = ScrollController();
 
@@ -81,18 +97,21 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   @override
   autoTextSize(text, style, context) {
     super.autoTextSize(text, style, context);
-    return AutoSizeText(text, style: style, minFontSize: 5.0,);
+    return AutoSizeText(
+      text,
+      style: style,
+      minFontSize: 5.0,
+    );
   }
-  
+
   initParam() async {
-    
     _account = await LocalStorage.get(Config.USER_NAME_KEY);
     _getApiData(_account);
     getSnrConfigData();
     _checkServerMode();
     var userInfoData = await UserInfoDao.getUserInfoLocal();
     if (mounted) {
-      setState(() {  
+      setState(() {
         userInfo = userInfoData.data;
         _accName = userInfo.userData.UserName;
         _accDept = userInfo.userData.DeptName;
@@ -104,13 +123,14 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         isDeptClose = userInfo.authorityData.DeptClose == "Y" ? true : false;
         isFile = userInfo.authorityData.File == "Y" ? true : false;
         isAreaBug = userInfo.authorityData.AreaBug == "Y" ? true : false;
-        isInterimAuth = userInfo.authorityData.InterimAuth == "Y" ? true : false;
+        isInterimAuth =
+            userInfo.authorityData.InterimAuth == "Y" ? true : false;
         getInterimAuthCount();
       });
     }
   }
 
-   Store<SysState> _getStore() {
+  Store<SysState> _getStore() {
     return StoreProvider.of(context);
   }
 
@@ -118,7 +138,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   _checkServerMode() async {
     var text = await LocalStorage.get(Config.SERVERMODE);
     if (text != null && text != "prod") {
-      if(mounted) {
+      if (mounted) {
         setState(() {
           Address.isEnterTest = true;
           Fluttertoast.showToast(msg: '歡迎使用測試機');
@@ -128,7 +148,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   }
 
   ///呼叫api
-  _getApiData(account) async{
+  _getApiData(account) async {
     var res = await HomeDao.getUserCaseType(account);
     if (res != null && res.result) {
       if (mounted) {
@@ -139,15 +159,17 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       }
     }
   }
+
   ///取得snr config
   getSnrConfigData() async {
-     await HomeDao.getSnrConfigAPI();
+    await HomeDao.getSnrConfigAPI();
   }
 
   ///取得二次授權list
   getInterimAuthCount() async {
     if (isInterimAuth) {
-      var res = await InterimAuthDao.getInterimAuthList(userId: userInfo.userData.UserID);
+      var res = await InterimAuthDao.getInterimAuthList(
+          userId: userInfo.userData.UserID);
       if (res != null && res.result) {
         if (mounted) {
           setState(() {
@@ -161,57 +183,57 @@ class _HomePageState extends State<HomePage> with BaseWidget{
   ///區域dialog, ios樣式
   _showAlertSheetController(BuildContext context) {
     showCupertinoModalPopup<String>(
-      context: context,
-      builder: (context) {
-        var dialog = CupertinoActionSheet(
-          title: Text('選擇區域'),
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(context, 'cancel');
-            },
-            child: Text('取消'),
-          ),
-          actions: <Widget>[
-            CupertinoActionSheetAction(
+        context: context,
+        builder: (context) {
+          var dialog = CupertinoActionSheet(
+            title: Text('選擇區域'),
+            cancelButton: CupertinoActionSheetAction(
               onPressed: () {
-                setState(() {
-                  selectArea = '新北市';
-                });
-                Navigator.pop(context);
+                Navigator.pop(context, 'cancel');
               },
-              child: Text('新北市'),
+              child: Text('取消'),
             ),
-            CupertinoActionSheetAction(
-              onPressed: () {
-                setState(() {
-                  selectArea = '台北市';
-                });
-                Navigator.pop(context);
-              },
-              child: Text('台北市'),
-            ),
-          ],
-        );
-        return dialog;
-      });
+            actions: <Widget>[
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  setState(() {
+                    selectArea = '新北市';
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text('新北市'),
+              ),
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  setState(() {
+                    selectArea = '台北市';
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text('台北市'),
+              ),
+            ],
+          );
+          return dialog;
+        });
   }
 
   ///button長度配置
   _buildButtonWidth() {
     double width = 0.0;
-    final deviceHeight = MediaQuery.of(context).size.height; 
+    final deviceHeight = MediaQuery.of(context).size.height;
     if (deviceHeight < 570) {
       width = deviceWidth2(context) * 1.4;
-    }
-    else {
+    } else {
       width = deviceWidth2(context) * 1.2;
     }
     return width;
   }
+
   ///button寬度配置
   _buildButtonHeight() {
     double height = 0.0;
-    final deviceHeight = MediaQuery.of(context).size.height; 
+    final deviceHeight = MediaQuery.of(context).size.height;
     if (deviceHeight < 570) {
       height = titleHeight(context) * 1.5;
     } else if (deviceHeight > 590 && deviceHeight < 720) {
@@ -223,9 +245,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     } else {
       height = titleHeight(context) * 1.5;
     }
-    
+
     return height;
   }
+
   /// app bar action按鈕
   List<Widget> actions() {
     List<Widget> list = [
@@ -234,7 +257,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 // _showAlertSheetController(context);
               },
               child: Container(
@@ -243,7 +266,10 @@ class _HomePageState extends State<HomePage> with BaseWidget{
                 alignment: Alignment.center,
                 width: deviceWidth4(context),
                 // decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.white)),
-                child: Text('', style: TextStyle(color: Colors.white,)),
+                child: Text('',
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
               ),
             ),
             Container(
@@ -253,7 +279,7 @@ class _HomePageState extends State<HomePage> with BaseWidget{
                 icon: Image.asset('static/images/24.png'),
                 color: Colors.transparent,
                 label: Text(''),
-                onPressed: (){
+                onPressed: () {
                   NavigatorUtils.goLogin(context);
                 },
               ),
@@ -268,9 +294,9 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     ];
     return list;
   }
+
   /// body 顯示內文
   Widget bodyColumn() {
-
     Widget body;
     List<Widget> columnList = [];
     List<Widget> columnList2 = [];
@@ -284,8 +310,18 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          autoTextSize('登入者: ', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context),
-          autoTextSize('$_accName ($_accDept)', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context)), context)
+          autoTextSize(
+              '登入者: ',
+              TextStyle(
+                  color: Colors.black,
+                  fontSize: MyScreen.homePageFontSize(context)),
+              context),
+          autoTextSize(
+              '$_accName ($_accDept)',
+              TextStyle(
+                  color: Colors.black,
+                  fontSize: MyScreen.homePageFontSize(context)),
+              context)
         ],
       ),
     );
@@ -293,29 +329,70 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          autoTextSize('新案: ', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
-          autoTextSize('$_newCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
-          Container(padding: EdgeInsets.only(left: 5.0),),
-          autoTextSize('未結案: ', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
-          autoTextSize('$_takeCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
-          Container(padding: EdgeInsets.only(left: 5.0),),
-          autoTextSize('超常: ', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
-          autoTextSize('$_overCase 筆', TextStyle(color: Colors.red, fontSize: MyScreen.normalPageFontSize(context)), context),
+          autoTextSize(
+              '新案: ',
+              TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.normalPageFontSize(context)),
+              context),
+          autoTextSize(
+              '$_newCase 筆',
+              TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.normalPageFontSize(context)),
+              context),
+          Container(
+            padding: EdgeInsets.only(left: 5.0),
+          ),
+          autoTextSize(
+              '未結案: ',
+              TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.normalPageFontSize(context)),
+              context),
+          autoTextSize(
+              '$_takeCase 筆',
+              TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.normalPageFontSize(context)),
+              context),
+          Container(
+            padding: EdgeInsets.only(left: 5.0),
+          ),
+          autoTextSize(
+              '超常: ',
+              TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.normalPageFontSize(context)),
+              context),
+          autoTextSize(
+              '$_overCase 筆',
+              TextStyle(
+                  color: Colors.red,
+                  fontSize: MyScreen.normalPageFontSize(context)),
+              context),
         ],
       ),
     );
     if (userInfo.userData.DeptID == '4' || userInfo.userData.Position == '2') {
       columnList2.add(
         Container(
-          padding: EdgeInsets.only(top: 15.0),   
+          padding: EdgeInsets.only(top: 15.0),
           height: _buildButtonHeight(),
-          width: _buildButtonWidth(),       
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('維修插單處理', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '維修插單處理',
+                TextStyle(
+                    color: Colors.blue,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
-                NavigatorUtils.goFixInsert(context, _accName);
+              NavigatorUtils.goFixInsert(context, _accName);
             },
           ),
         ),
@@ -323,13 +400,20 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     columnList2.add(
       Container(
-        padding: EdgeInsets.only(top: 15.0),   
+        padding: EdgeInsets.only(top: 15.0),
         height: _buildButtonHeight(),
-        width: _buildButtonWidth(),       
+        width: _buildButtonWidth(),
         child: RaisedButton(
           disabledTextColor: Colors.grey,
-          child: autoTextSize('裝機問題通知', TextStyle(color: Colors.blue, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          child: autoTextSize(
+              '裝機問題通知',
+              TextStyle(
+                  color: Colors.blue,
+                  fontSize: MyScreen.homePageFontSize(context),
+                  fontWeight: FontWeight.bold),
+              context),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           onPressed: () {
             NavigatorUtils.goSalesMaint(context, _accName);
           },
@@ -339,13 +423,20 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     if (isMaint) {
       columnList2.add(
         Container(
-          padding: EdgeInsets.only(top: 15.0),   
+          padding: EdgeInsets.only(top: 15.0),
           height: _buildButtonHeight(),
-          width: _buildButtonWidth(),       
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('個人案件處理', TextStyle(color: isMaint == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context), fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '個人案件處理',
+                TextStyle(
+                    color: isMaint == true ? Colors.black : Colors.grey,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isMaint) {
                 NavigatorUtils.goMaint(context, _accName);
@@ -357,14 +448,21 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     if (isAssignEmpl) {
       columnList2.add(
-        Container(  
+        Container(
           padding: EdgeInsets.only(top: 15.0),
           height: _buildButtonHeight(),
-          width: _buildButtonWidth(),              
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('指派個人', TextStyle(color: isAssignEmpl == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '指派個人',
+                TextStyle(
+                    color: isAssignEmpl == true ? Colors.black : Colors.grey,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isAssignEmpl) {
                 NavigatorUtils.goAssign(context, _accName);
@@ -376,14 +474,21 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     if (isDPMaint) {
       columnList2.add(
-        Container(  
+        Container(
           padding: EdgeInsets.only(top: 15.0),
           height: _buildButtonHeight(),
-          width: _buildButtonWidth(),      
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('單位案件處理', TextStyle(color: isDPMaint == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '單位案件處理',
+                TextStyle(
+                    color: isDPMaint == true ? Colors.black : Colors.grey,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isDPMaint) {
                 NavigatorUtils.goDPMaint(context, _accName);
@@ -395,14 +500,21 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     }
     if (isAssignDept) {
       columnList2.add(
-        Container(  
+        Container(
           padding: EdgeInsets.only(top: 15.0),
           height: _buildButtonHeight(),
-          width: _buildButtonWidth(),      
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('指派單位', TextStyle(color: isAssignDept == true ? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '指派單位',
+                TextStyle(
+                    color: isAssignDept == true ? Colors.black : Colors.grey,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isAssignDept) {
                 NavigatorUtils.goDPAssign(context, _accName);
@@ -413,14 +525,21 @@ class _HomePageState extends State<HomePage> with BaseWidget{
       );
     }
     columnList2.add(
-      Container(  
+      Container(
         padding: EdgeInsets.only(top: 15.0),
         height: _buildButtonHeight(),
-        width: _buildButtonWidth(),      
+        width: _buildButtonWidth(),
         child: RaisedButton(
           disabledTextColor: Colors.grey,
-          child: autoTextSize('案件分析', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          child: autoTextSize(
+              '案件分析',
+              TextStyle(
+                  color: Colors.black,
+                  fontSize: MyScreen.homePageFontSize(context),
+                  fontWeight: FontWeight.bold),
+              context),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           onPressed: () {
             NavigatorUtils.goAnalyze(context);
           },
@@ -429,14 +548,21 @@ class _HomePageState extends State<HomePage> with BaseWidget{
     );
     if (isFile) {
       columnList2.add(
-        Container( 
-          padding: EdgeInsets.only(top: 15.0), 
+        Container(
+          padding: EdgeInsets.only(top: 15.0),
           height: _buildButtonHeight(),
-          width: _buildButtonWidth(),      
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('案件歸檔/單位結案', TextStyle(color: isFile == true? Colors.black : Colors.grey, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '案件歸檔/單位結案',
+                TextStyle(
+                    color: isFile == true ? Colors.black : Colors.grey,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               if (isFile) {
                 NavigatorUtils.goFileList(context, _accName);
@@ -446,17 +572,24 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       );
     }
-    
+
     if (isInterimAuth) {
       inderimAuthList.add(
         Container(
           height: _buildButtonHeight(),
           padding: EdgeInsets.only(top: 15.0),
-          width: _buildButtonWidth(),      
+          width: _buildButtonWidth(),
           child: RaisedButton(
             disabledTextColor: Colors.grey,
-            child: autoTextSize('二次臨時授權', TextStyle(color: Colors.black, fontSize: MyScreen.homePageFontSize(context),fontWeight: FontWeight.bold), context),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: autoTextSize(
+                '二次臨時授權',
+                TextStyle(
+                    color: Colors.black,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
             onPressed: () {
               bool f = this.iaCount > 0;
               NavigatorUtils.goInterimAuth(context, f);
@@ -465,50 +598,69 @@ class _HomePageState extends State<HomePage> with BaseWidget{
         ),
       );
       if (this.iaCount > 0) {
-        inderimAuthList.add(
-          Positioned(
-            top: 10,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.red),
-              width: 30,
-              height: 30,
-              alignment: Alignment.center,
-              child: autoTextSize('$iaCount', TextStyle(color: Colors.white), context),
-            ),
-          )
-        );
+        inderimAuthList.add(Positioned(
+          top: 10,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), color: Colors.red),
+            width: 30,
+            height: 30,
+            alignment: Alignment.center,
+            child: autoTextSize(
+                '$iaCount', TextStyle(color: Colors.white), context),
+          ),
+        ));
       }
-      columnList2.add(
-        Stack(
-          children: inderimAuthList
-        )
-      );
+      columnList2.add(Stack(children: inderimAuthList));
     }
-    columnList.add(
-      Expanded(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          controller: _scrollController,
-          child: Column(
-            children: columnList2,
+    if (isDPMaint) {
+      columnList2.add(
+        Container(
+          padding: EdgeInsets.only(top: 15.0),
+          height: _buildButtonHeight(),
+          width: _buildButtonWidth(),
+          child: RaisedButton(
+            disabledTextColor: Colors.grey,
+            child: autoTextSize(
+                '工程會勘案件維護',
+                TextStyle(
+                    color: isDPMaint == true ? Colors.black : Colors.grey,
+                    fontSize: MyScreen.homePageFontSize(context),
+                    fontWeight: FontWeight.bold),
+                context),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            onPressed: () {
+              if (isDPMaint) {
+                NavigatorUtils.goInvestigata(context, _accName);
+              }
+            },
           ),
         ),
-      )
-    );
+      );
+    }
+    columnList.add(Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        controller: _scrollController,
+        child: Column(
+          children: columnList2,
+        ),
+      ),
+    ));
     body = Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: columnList,
       ),
     );
-    
+
     Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: columnList
-    );
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: columnList);
     return body;
   }
+
   ///bottomNavigationBar 按鈕
   Widget bottomBar() {
     Widget bottom = Material(
@@ -521,7 +673,12 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             alignment: Alignment.center,
             height: 42,
             width: deviceWidth4(context),
-            child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.loginTextFieldFontSize(context)), context),
+            child: autoTextSize(
+                '',
+                TextStyle(
+                    color: Colors.white,
+                    fontSize: MyScreen.loginTextFieldFontSize(context)),
+                context),
           ),
           Container(
             height: 42,
@@ -536,33 +693,42 @@ class _HomePageState extends State<HomePage> with BaseWidget{
             alignment: Alignment.center,
             height: 42,
             width: deviceWidth3(context),
-            child: autoTextSize('', TextStyle(color: Colors.white, fontSize: MyScreen.loginTextFieldFontSize(context)), context),
+            child: autoTextSize(
+                '',
+                TextStyle(
+                    color: Colors.white,
+                    fontSize: MyScreen.loginTextFieldFontSize(context)),
+                context),
           ),
         ],
       ),
     );
     return bottom;
   }
+
   @override
   Widget build(BuildContext context) {
     return StoreBuilder<SysState>(builder: (context, store) {
       return SafeArea(
         top: false,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            leading: Container(),
-            elevation: 0.0,
-            actions: actions(),
-          ),
-          body: Container(
-            decoration: BoxDecoration(image: DecorationImage(image: AssetImage("static/images/bg.png"), fit: BoxFit.cover), ),
-            child: userInfo == null ? showLoadingAnimeB(context) : bodyColumn(),
-          ),
-          bottomNavigationBar: bottomBar()
-        ),
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              leading: Container(),
+              elevation: 0.0,
+              actions: actions(),
+            ),
+            body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("static/images/bg.png"),
+                    fit: BoxFit.cover),
+              ),
+              child:
+                  userInfo == null ? showLoadingAnimeB(context) : bodyColumn(),
+            ),
+            bottomNavigationBar: bottomBar()),
       );
     });
   }
-
 }

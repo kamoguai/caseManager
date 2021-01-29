@@ -410,6 +410,17 @@ class MaintListItem extends StatelessWidget with BaseWidget {
                   case 'SalesMaint':
                     NavigatorUtils.goSalesMaintDetail(context, model.custNO,
                         userId, deptId, model.caseID, model.statusName);
+                    break;
+                  case 'Investigate':
+                    NavigatorUtils.goDPMaintDetail(
+                        context,
+                        model.custNO,
+                        userId,
+                        deptId,
+                        model.caseID,
+                        model.statusName,
+                        accName);
+                    break;
                 }
               },
             )),
